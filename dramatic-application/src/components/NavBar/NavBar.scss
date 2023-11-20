@@ -1,0 +1,37 @@
+.nav-bar-main{
+    display: flex;
+    flex-direction: row;
+    font-size: 16px;
+    padding: 20px;
+
+    .nav-item{
+        flex: 33.33%;
+
+        ul{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            justify-content: center;
+        }
+    }
+
+    .nav-logo{
+        flex: 33.33%;
+        text-align: center;
+    }
+
+    .nav-icons{
+        flex: 33.33%;
+
+        .icons{
+            display: flex;
+            gap: 20px;
+            justify-content: end;
+        }
+    }
+
+}
