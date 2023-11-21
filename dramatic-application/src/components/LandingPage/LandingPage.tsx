@@ -1,14 +1,16 @@
 // LandingPage.jsx
 import React, { useState } from 'react';
 import './LandingPage.scss';
+// import myImage from '../../assests/images/Header-bg.png';
 
 const LandingPage = () => {
 
     const cloths = ["T - Shirt", "Frocks", "Denims", "Other", "Shorts", "Sarees"]
     const sizes = ["XS", "S", "M", "L", "XL", "XXL"]
+    const colors = ["Red", "Green", "Yellow", "Black", "White", "Gray"]
 
     const [clickCount, setClickCount] = useState(0); /* Create a use state */
-    const [selectedValues, setSelectedValues] = useState(['asa']);
+    const [selectedValues, setSelectedValues] = useState(['']);
 
 
 
@@ -16,6 +18,13 @@ const LandingPage = () => {
         setClickCount((pre) => pre + 1); /* set value to useState variable */
         console.log(clickCount);
         setSelectedValues([...selectedValues, value]);
+
+        if(clickCount === 2){
+            setClickCount(0);
+        }
+        /* if(clickCount >= 2){
+            setSelectedValues([])
+        } */
     };
     console.log("Selected values...", selectedValues)
 
@@ -24,20 +33,23 @@ const LandingPage = () => {
             <div className="left">
                 <div className="circle-container">
                     <div className="circle-2">
-                        <img src="https://tse4.mm.bing.net/th/id/OIP.syvnaLoh1OeZd5C2bzC-bgHaEo?rs=1&pid=ImgDetMain" alt="Your Image" className="circle-image" />
+                        <img src="https://media.licdn.com/dms/image/C4D03AQE8TbpJ2VnRgA/profile-displayphoto-shrink_800_800/0/1652953157938?e=1706140800&v=beta&t=m7faBrjSUWFtJQdFDbNilQ9IlRtJk2gk8ezFYm7oepc" alt="Your Image" className="circle-image" />
                     </div>
                     {/* <div className="border-text">dfvdsfvdfdbbdb</div> */}
                 </div>
             </div>
             <div className="right">
                 {/* <div className="pie-chart"></div> */}
-                <div className="circle"></div>
-                <div className="circle2"></div>
-                <div className="msg">
-                    <span className='msg-span'>Let's &nbsp; <span style={{ color: 'red' }}>Find</span></span>
-                    <span className='msg-span'>What you</span>
-                    <span className='msg-span'  style={{ color: 'red' }}>Want</span>
-                </div>
+                {clickCount <= 2 &&
+                    <>
+                        <div className="circle"></div>
+                        <div className="circle2"></div>
+                        <div className="msg">
+                            <span className='msg-span'>Let's &nbsp; <span style={{ color: '#D5A589' }}>Find</span></span>
+                            <span className='msg-span'>What you</span>
+                            <span className='msg-span' style={{ color: '#D5A589' }}>Want</span>
+                        </div> 
+                        </>}
                 <div className="chart-main">
                     {clickCount === 0 && <div className="hexagon-container">
 
@@ -55,6 +67,14 @@ const LandingPage = () => {
                         <div className="ball ball4" onClick={() => clickHandle(sizes[3])}><p className='p-text'>{sizes[3]}</p></div>
                         <div className="ball ball5" onClick={() => clickHandle(sizes[4])}><p className='p-text'>{sizes[4]}</p></div>
                         <div className="ball ball6" onClick={() => clickHandle(sizes[5])}><p className='p-text'>{sizes[5]}</p></div>
+                    </div>}
+                    {clickCount === 2 && <div className="hexagon-container">
+                        <div className="ball ball1" onClick={() => clickHandle(colors[0])}><p className='p-text'>{colors[0]}</p></div>
+                        <div className="ball ball2" onClick={() => clickHandle(colors[1])}><p className='p-text'>{colors[1]}</p></div>
+                        <div className="ball ball3" onClick={() => clickHandle(colors[2])}><p className='p-text'>{colors[2]}</p></div>
+                        <div className="ball ball4" onClick={() => clickHandle(colors[3])}><p className='p-text'>{colors[3]}</p></div>
+                        <div className="ball ball5" onClick={() => clickHandle(colors[4])}><p className='p-text'>{colors[4]}</p></div>
+                        <div className="ball ball6" onClick={() => clickHandle(colors[5])}><p className='p-text'>{colors[5]}</p></div>
                     </div>}
 
 
