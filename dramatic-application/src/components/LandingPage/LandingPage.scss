@@ -1,19 +1,24 @@
 @import '../Shared/styles.scss';
 
 .landing-page-main {
-  background-color: $brown3;
-  min-height: 100vh;
+ // background-color: $brown3;
+  height: calc(100vh - 145px);
+  width: 100%;
   padding: 20px;
 
   display: flex;
   flex-direction: row;
+  background-image: url('../../assests/images/Header-bg.png');
+  // object-fit: cover;
+  background-size: cover;
 
   .left {
     flex: 50%;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-
+    margin-top: 60px;
+    scale: 1.1;
     .circle-container {
       display: flex;
       align-items: center;
@@ -53,11 +58,13 @@
     .msg {
       position: absolute;
       font-size: 20px;
-      margin-top: 100px;
+      margin-top: 115px;
       .msg-span {
         display: flex;
         flex-direction: row;
         justify-content: center;
+        color: #EFD5BA;
+        font-weight: bold;
       }
     }
   }
@@ -102,7 +109,7 @@
 }
 
 .ball:hover {
-  background-color: #e8b850;
+  background-color: $brown4;
   cursor: pointer;
 }
 
