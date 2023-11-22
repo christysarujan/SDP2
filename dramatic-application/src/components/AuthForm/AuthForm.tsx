@@ -15,7 +15,7 @@ const AuthForm: React.FC = () => {
 
     const countryOptions = getCountryOptions();
     console.log(countryOptions);
-    const [isSliderClicked, setIsSliderClicked] = useState(false);
+    const [isSliderClicked, setIsSliderClicked] = useState(true);
     const [buttonName, setButtonName] = useState('Sign Up')
 
     const handleSliderClick = () => {
@@ -82,11 +82,9 @@ const AuthForm: React.FC = () => {
             <div className="forms">
                 <div className="form-container">
                     <div className="sign-in-form">
-                        <p>Sign In Form</p>
+                        <p className='welcome-msg'>Welcome Back!</p>
                         <form>
-                            <label htmlFor="username">Username:</label>
                             <input type="text" id="username" placeholder="Enter your username" />
-                            <label htmlFor="password">Password:</label>
                             <input type="password" id="password" placeholder="Enter your password" />
                             <div className="forget-password">
                                 <a href="#">Forgot your password?</a>
@@ -187,7 +185,8 @@ const AuthForm: React.FC = () => {
 
                 </div>
                 <div className={`slider ${isSliderClicked ? 'slider-clicked' : ''}`}>
-                    <button onClick={handleSliderClick}>{buttonName}</button>
+                    {/* {isSliderClicked && <div></div>} */}
+                    <button className='btn btn-outline-light slider-btn' onClick={handleSliderClick}>{buttonName}</button>
                 </div>
             </div>
         </div>
