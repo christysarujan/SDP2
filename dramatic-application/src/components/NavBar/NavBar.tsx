@@ -1,5 +1,6 @@
 import React from 'react'
 import './NavBar.scss'
+import { Link, NavLink } from 'react-router-dom'
 
 const NavBar = () => {
   return (
@@ -15,7 +16,12 @@ const NavBar = () => {
       <div className="nav-icons">
         <div className="icons">
           <i className="bi bi-search"></i>
-          <i className="bi bi-person"></i>
+          <NavLink
+            to={"/auth"}
+          >
+             <i className="bi bi-person"></i>
+          </NavLink>
+         
           <i className="bi bi-bell"></i>
         </div>
 

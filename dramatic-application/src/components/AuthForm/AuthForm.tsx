@@ -1,8 +1,8 @@
 // AuthForm.tsx
-import React, { useState } from 'react';
-import './AuthForm.scss';
+import React, { useEffect, useState } from "react";
+import "./AuthForm.scss";
 
-import { countries } from 'countries-list';
+import { countries } from "countries-list";
 
 const getCountryOptions = () => {
     return Object.keys(countries).map((countryCode) => ({
@@ -11,20 +11,31 @@ const getCountryOptions = () => {
     }));
 };
 
-const AuthForm: React.FC = () => {
 
+/* const AuthForm = () => {
+  return (
+    <div>
+      
+    </div>
+  )
+} */
+
+
+
+
+const AuthForm = () => {
     const countryOptions = getCountryOptions();
-    console.log(countryOptions);
+    //   console.log(countryOptions);
     const [isSliderClicked, setIsSliderClicked] = useState(true);
-    const [buttonName, setButtonName] = useState('Sign Up')
+    const [buttonName, setButtonName] = useState("Sign Up");
 
     const handleSliderClick = () => {
         setIsSliderClicked((prev) => !prev);
 
         if (isSliderClicked) {
-            setButtonName('Sign In')
+            setButtonName("Sign In");
         } else {
-            setButtonName('Sign Up')
+            setButtonName("Sign Up");
         }
     };
 
@@ -35,45 +46,48 @@ const AuthForm: React.FC = () => {
     };
 
     const [userFormData, setUserFormData] = useState({
-        userId: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        gender: '',
-        dob: '',
-        profileImage: '',
-        addressLine1: '',
-        addressLine2: '',
-        addressLine3: '',
-        zipCode: '',
-        country: '',
-        countryCode: '',
-        mobile: '',
+        firstName: "",
+        lastName: "",
+        email: "",
+        gender: "",
+        dob: "",
+        role: "",
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    useEffect(() => {
+        if (isUserRegistration) {
+            console.log("user")
+            setUserFormData((prev) => ({ ...prev, role: 'user' }));
+        } else {
+            setUserFormData((prev) => ({ ...prev, role: 'seller' }));
+            console.log("seller")
+        }
+    }, [isUserRegistration])
+
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
         const { name, value } = e.target;
         setUserFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const 
+    handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Form Data Submitted:', userFormData);
+        setUserFormData((prev) => ({ ...prev, role: 'user' }));
+        /*   if(isUserRegistration){
+              setUserFormData((prev) => ({ ...prev, role: 'user' }));
+          } else {
+              setUserFormData((prev) => ({ ...prev, role: 'seller' }));
+          } */
+        console.log("Form Data Submitted:", userFormData);
         setUserFormData({
-            userId: '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            gender: '',
-            dob: '',
-            profileImage: '',
-            addressLine1: '',
-            addressLine2: '',
-            addressLine3: '',
-            zipCode: '',
-            country: '',
-            countryCode: '',
-            mobile: '',
+            firstName: "",
+            lastName: "",
+            email: "",
+            gender: "",
+            dob: "",
+            role: "",
         });
     };
 
@@ -82,10 +96,18 @@ const AuthForm: React.FC = () => {
             <div className="forms">
                 <div className="form-container">
                     <div className="sign-in-form">
-                        <p className='welcome-msg'>Welcome Back!</p>
+                        <p className="welcome-msg">Welcome Back!</p>
                         <form>
-                            <input type="text" id="username" placeholder="Enter your username" />
-                            <input type="password" id="password" placeholder="Enter your password" />
+                            <input
+                                type="text"
+                                id="username"
+                                placeholder="Enter your username"
+                            />
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="Enter your password"
+                            />
                             <div className="forget-password">
                                 <a href="#">Forgot your password?</a>
                             </div>
@@ -100,93 +122,87 @@ const AuthForm: React.FC = () => {
                         </div>
                     </div>
                     <div className="sign-up-form">
-                        <div className={`toggle-switch ${isUserRegistration ? 'user-registration' : 'seller-registration'}`}>
+                        <div
+                            className={`toggle-switch ${isUserRegistration ? "user-registration" : "seller-registration"
+                                }`}
+                        >
                             <div className="toggle-labels">
-                                <span onClick={handleToggle} className={`label ${isUserRegistration ? 'active' : ''}`}>User Registration</span>
-                                <span onClick={handleToggle} className={`label ${!isUserRegistration ? 'active' : ''}`}>Seller Registration</span>
+                                <span
+                                    onClick={handleToggle}
+                                    className={`label ${isUserRegistration ? "active" : ""}`}
+                                >
+                                    User Registration
+                                </span>
+                                <span
+                                    onClick={handleToggle}
+                                    className={`label ${!isUserRegistration ? "active" : ""}`}
+                                >
+                                    Seller Registration
+                                </span>
                             </div>
                             <div className="toggle-handle" onClick={handleToggle}></div>
                         </div>
                         <div className="reg-forms">
-                            {isUserRegistration && <div className="user-registation">
+
+                            <div className="user-registration">
                                 <form className="registration-form" onSubmit={handleSubmit}>
-                                    <label>
-                                        User ID:
-                                        <input placeholder='User ID:' type="text" name="userId" value={userFormData.userId} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        First Name:
-                                        <input type="text" name="firstName" value={userFormData.firstName} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        Last Name:
-                                        <input type="text" name="lastName" value={userFormData.lastName} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        Email:
-                                        <input type="email" name="email" value={userFormData.email} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        Gender:
-                                        <select name="gender" value={userFormData.gender} onChange={handleChange}>
-                                            <option value="">Select Gender</option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                        </select>
-                                    </label>
-                                    <label>
-                                        Date of Birth:
-                                        <input type="date" name="dob" value={userFormData.dob} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        Profile Image URL:
-                                        <input type="text" name="profileImage" value={userFormData.profileImage} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        Address Line 1:
-                                        <input type="text" name="addressLine1" value={userFormData.addressLine1} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        Address Line 2:
-                                        <input type="text" name="addressLine2" value={userFormData.addressLine2} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        Address Line 3:
-                                        <input type="text" name="addressLine3" value={userFormData.addressLine3} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        Zip Code/Province/State:
-                                        <input type="text" name="zipCode" value={userFormData.zipCode} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        Country:
-                                        <select>
-                                            {countryOptions.map((option, index) => (
-                                                <option key={index} value={option.label}>
-                                                    {option.label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </label>
-                                    <label>
-                                        Country Code:
-                                        <input type="text" name="countryCode" value={userFormData.countryCode} onChange={handleChange} />
-                                    </label>
-                                    <label>
-                                        Mobile:
-                                        <input type="text" name="mobile" value={userFormData.mobile} onChange={handleChange} />
-                                    </label>
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        placeholder="First Name"
+                                        value={userFormData.firstName}
+                                        onChange={handleChange}
+                                    />
+
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        placeholder="Last Name"
+                                        value={userFormData.lastName}
+                                        onChange={handleChange}
+                                    />
+
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        placeholder="Email"
+                                        value={userFormData.email}
+                                        onChange={handleChange}
+                                    />
+
+                                    <select
+                                        name="gender"
+                                        value={userFormData.gender}
+                                        onChange={handleChange}
+                                        className="custom-select"
+                                    >
+                                        <option value="">Select Gender</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+
+                                    <input
+                                        type="date"
+                                        name="dob"
+                                        value={userFormData.dob}
+                                        onChange={handleChange}
+                                    />
+
                                     <button type="submit">Submit</button>
                                 </form>
-                            </div>}
-                            {!isUserRegistration && <button className="registration-button">Register as Seller</button>}
+                            </div>
+
                         </div>
                     </div>
-
                 </div>
-                <div className={`slider ${isSliderClicked ? 'slider-clicked' : ''}`}>
+                <div className={`slider ${isSliderClicked ? "slider-clicked" : ""}`}>
                     {/* {isSliderClicked && <div></div>} */}
-                    <button className='btn btn-outline-light slider-btn' onClick={handleSliderClick}>{buttonName}</button>
+                    <button
+                        className="btn btn-outline-light slider-btn"
+                        onClick={handleSliderClick}
+                    >
+                        {buttonName}
+                    </button>
                 </div>
             </div>
         </div>
