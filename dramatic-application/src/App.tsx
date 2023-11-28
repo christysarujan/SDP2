@@ -5,6 +5,7 @@ import LandingPage from './components/LandingPage/LandingPage';
 import AuthForm from './components/AuthForm/AuthForm';
 import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from './components/Layout/Layout';
+import Footer from './components/Footer/Footer';
 
 const router = createBrowserRouter([
 
