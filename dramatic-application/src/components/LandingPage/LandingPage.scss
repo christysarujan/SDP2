@@ -6,8 +6,9 @@
   width: 100%;
   padding: 20px;
 
-  display: flex;
-  flex-direction: row;
+  display: flex !important;
+  flex-direction: row !important;
+
   background-image: url('../../assests/images/Header-bg.png');
   // object-fit: cover;
   background-size: cover;
