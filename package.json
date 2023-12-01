@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "countries-list": "^3.0.6",
-    "country-list": "^2.3.0",
-    "react-bootstrap-icons": "^1.10.3"
-  }
-}

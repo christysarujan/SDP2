@@ -28,6 +28,41 @@
       display: flex;
       flex-direction: row;
 
+      .field-container{
+        width: 80%;
+/* aaaa */
+        input{
+          width: 100%;
+        }
+        .custom-select {
+          width: 100%;
+          border: 1px solid #154b78;
+          background-color: #f2f2f200;
+          padding: 5px 20px 5px 10px;
+          border-radius: 20px;
+          color: #154b78;
+          font-size: 13px;
+          margin-bottom: 10px;
+        }
+
+        .sub-btn {
+          background-color: #e8775a;
+          color: #ffffff; /* Brown color */
+          padding: 5px;
+          cursor: pointer;
+          border: none;
+          font-size: 16px;
+          border-radius: 30px;
+          width: 100%;
+        }
+        .error {
+          color: red;
+          font-size: 12px;
+          font-weight: 500;
+          margin: -8px 0 0 2px;
+        }
+      }
+
       form {
         display: flex;
         flex-direction: column;
@@ -42,7 +77,7 @@
 
         input {
           margin-bottom: 10px;
-          padding: 10px 10px;
+          padding: 5px 10px;
           font-size: 14px;
           border: 1px solid #154b78;
           color: #154b78;
@@ -62,17 +97,6 @@
             color: #154b78;
             text-decoration: none;
           }
-        }
-
-        button {
-          background-color: #e8775a;
-          color: #ffffff; /* Brown color */
-          padding: 10px;
-          cursor: pointer;
-          border: none;
-          font-size: 16px;
-          border-radius: 20px;
-          width: 80%;
         }
       }
 
@@ -102,7 +126,7 @@
           font-size: 35px;
           font-weight: bold;
           color: #154b78;
-          margin: 0;
+          margin: 0 0 40px 0;
           padding-bottom: 30px;
         }
       }
@@ -144,7 +168,7 @@
 // ToggleSwitch.scss
 .toggle-switch {
   display: flex;
-  align-items: sp;
+  align-items: center;
   justify-content: space-between;
 
   background-color: #dddddd; /* Background color of the switch */
@@ -191,6 +215,13 @@
 
 /* reg forms */
 // RegistrationForm.scss
+.form-names{
+  margin-top: 20px;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
 .registration-form {
   max-width: 100%;
   margin: 20px auto;
@@ -228,4 +259,37 @@
   }
 }
 
+
 /* reg forms */
+/* forget-pwd */
+.forget-pwd{
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.forget-pwd-header{
+  text-align: center;
+  margin-top: -10px;
+  font-size: 14px;
+}
+
+.forgetPwd-felid{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 80%;
+  margin-bottom: 10px;
+  .felid{
+    flex: 75%;
+  }
+  .felid-btn{
+    flex: 25%;
+  }
+}
+
+.reset-success{
+  color: green;
+  font-size: 12px;
+  margin: -18px 10% 10px 10%;
+}
