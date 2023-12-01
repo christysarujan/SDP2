@@ -261,3 +261,35 @@
 
 
 /* reg forms */
+/* forget-pwd */
+.forget-pwd{
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.forget-pwd-header{
+  text-align: center;
+  margin-top: -10px;
+  font-size: 14px;
+}
+
+.forgetPwd-felid{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 80%;
+  margin-bottom: 10px;
+  .felid{
+    flex: 75%;
+  }
+  .felid-btn{
+    flex: 25%;
+  }
+}
+
+.reset-success{
+  color: green;
+  font-size: 12px;
+  margin: -18px 10% 10px 10%;
+}

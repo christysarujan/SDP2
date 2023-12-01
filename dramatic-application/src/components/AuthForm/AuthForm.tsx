@@ -5,7 +5,7 @@ import { countries } from "countries-list";
 import { jwtDecode } from "jwt-decode";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { userLogin, userRegistration } from '../../services/apiService'
+import { getResetCode, pwdResetCode, userLogin, userRegistration } from '../../services/apiService'
 import { useNavigate } from "react-router-dom";
 
 const getCountryOptions = () => {
@@ -25,15 +25,33 @@ const AuthForm = () => {
   const [buttonName, setButtonName] = useState("Sign Up");
   const [decodedToken, setDecodedToken] = useState<any>({});
   const [isUserRegistration, setIsUserRegistration] = useState(true);
+  const [forgetPassword, setForgetPassword] = useState(true);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const navigate = useNavigate();
+
+  const handleForgetPassword = () => {
+    setForgetPassword((prev) => !prev);
+  };
 
   const loginValidationSchema = Yup.object({
     username: Yup.string()
       .required("User Name is required"),
     password: Yup.string()
       .required("Password is required"),
+  });
+  const forgetPwdValidationSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Email is required"),
+  });
+  const resetPwdValidationSchema = Yup.object({
+    code: Yup.string()
+      .required("User Name is required"),
+    password: Yup.string()
+      .required("User Name is required"),
+    confirmPassword: Yup.string()
+      .required("User Name is required"),
   });
   const userRegValidationSchema = Yup.object({
     firstName: Yup.string()
@@ -57,6 +75,14 @@ const AuthForm = () => {
   const loginInitialValues = {
     username: "mgrw",
     password: "1234",
+  };
+  const forgetPwdInitialValues = {
+    email: "mgrwijethilaka@gmail.com",
+  };
+  const resetPwdInitialValues = {
+    code: "",
+    password: "",
+    confirmPassword: "",
   };
   const regFormInitialValues = {
     firstName: "Gihan",
@@ -86,8 +112,6 @@ const AuthForm = () => {
     }
   };
 
-
-
   const handleToggle = () => {
     setIsUserRegistration((prev) => !prev);
   };
@@ -103,6 +127,28 @@ const AuthForm = () => {
       alert('Crediential Invalid')
     }
 
+  }
+  const [resetMsg, setResetMsg] = useState('')
+  const [resetEmail, setResetEmail] = useState('')
+
+  const forgetPasswordSubmit = async (values: any) => {
+    const reset = await getResetCode(values);
+    setResetMsg(reset);
+    setResetEmail(values.email)
+    console.log('Email', resetEmail);
+    console.log('xascac', reset);
+  }
+
+  const resetPasswordSubmit = async (values: any) => {
+
+    const formData = new FormData();
+
+    formData.append('email', resetEmail);
+    formData.append('code', values.code);
+    formData.append('newPassword', values.password);
+
+    const pwdReset = await pwdResetCode(formData)
+    console.log('pwdReset', pwdReset);
   }
 
 
@@ -152,53 +198,141 @@ const AuthForm = () => {
         <div className="form-container">
           <div className="sign-in-form">
             <p className="welcome-msg">Welcome Back!</p>
-            <Formik
-              initialValues={loginInitialValues}
-              validationSchema={loginValidationSchema}
-              onSubmit={loginSubmit}
-            >
-              {({ values, handleChange, handleBlur, touched, errors }) => (
-                <Form>
-                  <div className="field-container">
 
-                    <Field
-                      type="text"
-                      id="username"
-                      name="username"
-                      placeholder='User Name'
-                    />
-                    <ErrorMessage name="username" component="div" className="error" />
+
+            {forgetPassword ? (
+              <div>
+                <Formik
+                  initialValues={loginInitialValues}
+                  validationSchema={loginValidationSchema}
+                  onSubmit={loginSubmit}
+                >
+                  {({ values, handleChange, handleBlur, touched, errors }) => (
+                    <Form>
+                      <div className="field-container">
+
+                        <Field
+                          type="text"
+                          id="username"
+                          name="username"
+                          placeholder='User Name'
+                        />
+                        <ErrorMessage name="username" component="div" className="error" />
+                      </div>
+
+                      <div className="field-container">
+
+                        <Field
+                          type="password"
+                          id="password"
+                          name="password"
+                          placeholder='Password'
+                        />
+                        <ErrorMessage
+                          name="password"
+                          component="div"
+                          className="error"
+                        />
+                      </div>
+
+
+                      <div className="field-container">
+                        <button className="sub-btn" type="submit">Login</button>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+                <p className="forget-pwd" onClick={handleForgetPassword}>Forget Password</p>
+                <div className="login-options">
+                  <p>Login with:</p>
+                  <div className="social-icons">
+                    <i className="bi bi-google"></i>
+                    <i className="bi bi-facebook"></i>
                   </div>
-
-                  <div className="field-container">
-
-                    <Field
-                      type="password"
-                      id="password"
-                      name="password"
-                      placeholder='Password'
-                    />
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="error"
-                    />
-                  </div>
-
-
-                  <div className="field-container">
-                    <button className="sub-btn" type="submit">Login</button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-            <div className="login-options">
-              <p>Login with:</p>
-              <div className="social-icons">
-                <i className="bi bi-google"></i>
-                <i className="bi bi-facebook"></i>
+                </div>
               </div>
-            </div>
+
+            ) : (
+              <div>
+                <h6 className="forget-pwd-header">Forget Password</h6>
+                <Formik
+                  initialValues={forgetPwdInitialValues}
+                  validationSchema={forgetPwdValidationSchema}
+                  onSubmit={forgetPasswordSubmit}
+                >
+                  {({ values, handleChange, handleBlur, touched, errors }) => (
+                    <Form>
+                      <div className="forgetPwd-felid">
+                        <div className="field-container felid">
+                          <Field
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder='Email'
+                          />
+                          <ErrorMessage name="email" component="div" className="error" />
+                        </div>
+
+                        <div className="field-container felid-btn">
+                          <button className="sub-btn" type="submit">Send</button>
+                        </div>
+                      </div>
+                    </Form>
+                  )}
+                </Formik>
+                <p className="reset-success">{resetMsg}</p>
+                {/* <p className="reset-success">{resetEmail}</p> */}
+                {/* reset password form */}
+                <Formik
+                  initialValues={resetPwdInitialValues}
+                  validationSchema={resetPwdValidationSchema}
+                  onSubmit={resetPasswordSubmit}
+                >
+                  {({ values, handleChange, handleBlur, touched, errors }) => (
+                    <Form>
+
+                      <div className="field-container felid">
+                        <Field
+                          type="text"
+                          id="code"
+                          name="code"
+                          placeholder='Reset Code'
+                        />
+                        <ErrorMessage name="code" component="div" className="error" />
+                      </div>
+                      <div className="field-container felid">
+                        <Field
+                          type="password"
+                          id="password"
+                          name="password"
+                          placeholder='New Password'
+                        />
+                        <ErrorMessage name="password" component="div" className="error" />
+                      </div>
+                      <div className="field-container felid">
+                        <Field
+                          type="password"
+                          id="confirmPassword"
+                          name="confirmPassword"
+                          placeholder='Confirm password'
+                        />
+                        <ErrorMessage name="confirmPassword" component="div" className="error" />
+                      </div>
+
+                      <div className="field-container felid-btn">
+                        <button className="sub-btn" type="submit">Reset Password</button>
+                      </div>
+
+
+                    </Form>
+                  )}
+                </Formik>
+                <p className="forget-pwd" onClick={handleForgetPassword}>Back</p>
+              </div>
+
+
+            )}
+
           </div>
           <div className="sign-up-form">
             <div
@@ -360,3 +494,4 @@ const AuthForm = () => {
 };
 
 export default AuthForm;
+

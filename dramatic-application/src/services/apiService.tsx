@@ -30,5 +30,31 @@ const userLogin = async (loginData: any) => {
         console.error(error.response.data);
     }
 };
+/* http://localhost:8080/api/v1/auth-service/auth/forgot-password */
+const getResetCode = async (resetEmail: any) => {
+    try {
+        const response = await axios.post(`${baseurl}/auth/forgot-password`, resetEmail);
+        // console.log(response.data);
+        return response.data;
 
-export { userRegistration, userLogin }
+    } catch (error: any) {
+        console.error(error.response.data);
+    }
+};
+/* http://localhost:8080/api/v1/auth-service/auth/password-reset */
+const pwdResetCode = async (resetPwd: any) => {
+    try {
+        const response = await axios.post(`${baseurl}/auth/password-reset`, resetPwd, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        // console.log(response.data);
+        return response.data;
+
+    } catch (error: any) {
+        console.error(error.response.data);
+    }
+};
+
+export { userRegistration, userLogin, getResetCode, pwdResetCode}
