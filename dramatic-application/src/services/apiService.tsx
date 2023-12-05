@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const baseurl = "http://localhost:8080/api/v1/auth-service";
 // const [log, setLog] = useState<any>({});
@@ -35,10 +36,12 @@ const getResetCode = async (resetEmail: any) => {
     try {
         const response = await axios.post(`${baseurl}/auth/forgot-password`, resetEmail);
         // console.log(response.data);
+        toast.success( response.data);
         return response.data;
 
     } catch (error: any) {
         console.error(error.response.data);
+        toast.error(error.response.data);
     }
 };
 /* http://localhost:8080/api/v1/auth-service/auth/password-reset */
@@ -50,10 +53,12 @@ const pwdResetCode = async (resetPwd: any) => {
             },
         });
         // console.log(response.data);
+        toast.success( response.data);
         return response.data;
 
     } catch (error: any) {
         console.error(error.response.data);
+        toast.error(error.response.data);
     }
 };
 

@@ -1,12 +1,16 @@
-// AuthForm.tsx
 import React, { ChangeEvent, useEffect, useState } from "react";
 import "./AuthForm.scss";
 import { countries } from "countries-list";
 import { jwtDecode } from "jwt-decode";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { getResetCode, pwdResetCode, userLogin, userRegistration } from '../../services/apiService'
-import { useNavigate } from "react-router-dom";
+import { userRegistration } from '../../services/apiService'
+
+import { userRegValidationSchema } from "../../utils/Validation";
+
+import { regFormInitialValues } from "../../utils/Validation";
+import Login from "./Login/Login";
+import ResetPassword from "./ResetPassword/ResetPassword";
+
 
 const getCountryOptions = () => {
   return Object.keys(countries).map((countryCode) => ({
@@ -25,75 +29,11 @@ const AuthForm = () => {
   const [buttonName, setButtonName] = useState("Sign Up");
   const [decodedToken, setDecodedToken] = useState<any>({});
   const [isUserRegistration, setIsUserRegistration] = useState(true);
-  const [forgetPassword, setForgetPassword] = useState(true);
+  const [forgetPassword, setForgetPassword] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  const navigate = useNavigate();
 
   const handleForgetPassword = () => {
     setForgetPassword((prev) => !prev);
-  };
-
-  const loginValidationSchema = Yup.object({
-    username: Yup.string()
-      .required("User Name is required"),
-    password: Yup.string()
-      .required("Password is required"),
-  });
-  const forgetPwdValidationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email format")
-      .required("Email is required"),
-  });
-  const resetPwdValidationSchema = Yup.object({
-    code: Yup.string()
-      .required("User Name is required"),
-    password: Yup.string()
-      .required("User Name is required"),
-    confirmPassword: Yup.string()
-      .required("User Name is required"),
-  });
-  const userRegValidationSchema = Yup.object({
-    firstName: Yup.string()
-      .required("First Name is required"),
-    lastName: Yup.string()
-      .required("Last Name is required"),
-    username: Yup.string()
-      .required("Username is required"),
-    email: Yup.string()
-      .email("Invalid email format")
-      .required("Email is required"),
-    password: Yup.string()
-      .required("Password is required"),
-    gender: Yup.string()
-      .required("Gender is required"),
-    dob: Yup.string()
-      .required("DOB is required")
-
-  });
-
-  const loginInitialValues = {
-    username: "mgrw",
-    password: "1234",
-  };
-  const forgetPwdInitialValues = {
-    email: "mgrwijethilaka@gmail.com",
-  };
-  const resetPwdInitialValues = {
-    code: "",
-    password: "",
-    confirmPassword: "",
-  };
-  const regFormInitialValues = {
-    firstName: "Gihan",
-    lastName: "Ravindrajith",
-    username: "mgrw",
-    password: "1234",
-    email: "mgrwijethilaka@gmail.com",
-    gender: "male",
-    dob: "1998-06-15",
-    role: "user",
-    mobileNo: "07712345678",
   };
 
   /*   useEffect(() => {
@@ -115,42 +55,6 @@ const AuthForm = () => {
   const handleToggle = () => {
     setIsUserRegistration((prev) => !prev);
   };
-
-  const loginSubmit = async (values: any) => {
-    console.log(values);
-    const login = await userLogin(values);
-    //  console.log('sascascc',login);
-
-    if (login) {
-      navigate("/")
-    } else {
-      alert('Crediential Invalid')
-    }
-
-  }
-  const [resetMsg, setResetMsg] = useState('')
-  const [resetEmail, setResetEmail] = useState('')
-
-  const forgetPasswordSubmit = async (values: any) => {
-    const reset = await getResetCode(values);
-    setResetMsg(reset);
-    setResetEmail(values.email)
-    console.log('Email', resetEmail);
-    console.log('xascac', reset);
-  }
-
-  const resetPasswordSubmit = async (values: any) => {
-
-    const formData = new FormData();
-
-    formData.append('email', resetEmail);
-    formData.append('code', values.code);
-    formData.append('newPassword', values.password);
-
-    const pwdReset = await pwdResetCode(formData)
-    console.log('pwdReset', pwdReset);
-  }
-
 
   const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
 
@@ -193,79 +97,100 @@ const AuthForm = () => {
   }
 
   return (
-    <div className="auth-form-main">
-      <div className="forms">
-        <div className="form-container">
-          <div className="sign-in-form">
-            <p className="welcome-msg">Welcome Back!</p>
+    <div className="auth-main">
+      <div className="auth-form-main">
+        <div className="forms">
+          <div className="form-container">
+            <div className="sign-in-form">
+              <p className="welcome-msg">Welcome Back!</p>
 
 
-            {forgetPassword ? (
-              <div>
-                <Formik
-                  initialValues={loginInitialValues}
-                  validationSchema={loginValidationSchema}
-                  onSubmit={loginSubmit}
-                >
-                  {({ values, handleChange, handleBlur, touched, errors }) => (
-                    <Form>
-                      <div className="field-container">
-
-                        <Field
-                          type="text"
-                          id="username"
-                          name="username"
-                          placeholder='User Name'
-                        />
-                        <ErrorMessage name="username" component="div" className="error" />
-                      </div>
-
-                      <div className="field-container">
-
-                        <Field
-                          type="password"
-                          id="password"
-                          name="password"
-                          placeholder='Password'
-                        />
-                        <ErrorMessage
-                          name="password"
-                          component="div"
-                          className="error"
-                        />
-                      </div>
-
-
-                      <div className="field-container">
-                        <button className="sub-btn" type="submit">Login</button>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
-                <p className="forget-pwd" onClick={handleForgetPassword}>Forget Password</p>
-                <div className="login-options">
-                  <p>Login with:</p>
-                  <div className="social-icons">
-                    <i className="bi bi-google"></i>
-                    <i className="bi bi-facebook"></i>
+              {forgetPassword ? (
+                <div>
+                  <Login />
+                  <p className="forget-pwd" onClick={handleForgetPassword}>Forget Password</p>
+                  <div className="login-options">
+                    <p>Login with:</p>
+                    <div className="social-icons">
+                      <i className="bi bi-google"></i>
+                      <i className="bi bi-facebook"></i>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-            ) : (
-              <div>
-                <h6 className="forget-pwd-header">Forget Password</h6>
-                <Formik
-                  initialValues={forgetPwdInitialValues}
-                  validationSchema={forgetPwdValidationSchema}
-                  onSubmit={forgetPasswordSubmit}
-                >
-                  {({ values, handleChange, handleBlur, touched, errors }) => (
-                    <Form>
-                      <div className="forgetPwd-felid">
-                        <div className="field-container felid">
+              ) : (
+                <div>
+                  <ResetPassword />
+                  <p className="forget-pwd" onClick={handleForgetPassword}>Back</p>
+                </div>
+
+
+              )}
+
+            </div>
+            <div className="sign-up-form">
+              <div
+                className={`toggle-switch ${isUserRegistration ? "user-registration" : "seller-registration"
+                  }`}
+              >
+                <div className="toggle-labels">
+                  <span
+                    onClick={handleToggle}
+                    className={`label ${isUserRegistration ? "active" : ""}`}
+                  >
+                    User Registration
+                  </span>
+                  <span
+                    onClick={handleToggle}
+                    className={`label ${!isUserRegistration ? "active" : ""}`}
+                  >
+                    Seller Registration
+                  </span>
+                </div>
+                <div className="toggle-handle" onClick={handleToggle}></div>
+              </div>
+              <div className="reg-forms">
+                <div className="user-registration">
+                  <Formik
+                    initialValues={regFormInitialValues}
+                    validationSchema={userRegValidationSchema}
+                    onSubmit={regFormSubmit}
+                  >
+                    {({ values, handleChange, handleBlur, touched, errors }) => (
+                      <Form>
+                        <div className="form-names">
+                          <div className="field-container">
+                            <Field
+                              type="text"
+                              id="firstName"
+                              name="firstName"
+                              placeholder='First Name'
+                            />
+                            <ErrorMessage name="firstName" component="div" className="error" />
+                          </div>
+                          <div className="field-container">
+                            <Field
+                              type="text"
+                              id="lastName"
+                              name="lastName"
+                              placeholder='Last Name'
+                            />
+                            <ErrorMessage name="lastName" component="div" className="error" />
+                          </div>
+                        </div>
+
+                        <div className="field-container">
                           <Field
-                            type="email"
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder='User Name'
+                          />
+                          <ErrorMessage name="username" component="div" className="error" />
+                        </div>
+                        <div className="field-container">
+                          <Field
+                            type="text"
                             id="email"
                             name="email"
                             placeholder='Email'
@@ -273,220 +198,90 @@ const AuthForm = () => {
                           <ErrorMessage name="email" component="div" className="error" />
                         </div>
 
-                        <div className="field-container felid-btn">
-                          <button className="sub-btn" type="submit">Send</button>
+                        <div className="field-container">
+                          <Field
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder='Password'
+                          />
+                          <ErrorMessage
+                            name="password"
+                            component="div"
+                            className="error"
+                          />
                         </div>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
-                <p className="reset-success">{resetMsg}</p>
-                {/* <p className="reset-success">{resetEmail}</p> */}
-                {/* reset password form */}
-                <Formik
-                  initialValues={resetPwdInitialValues}
-                  validationSchema={resetPwdValidationSchema}
-                  onSubmit={resetPasswordSubmit}
-                >
-                  {({ values, handleChange, handleBlur, touched, errors }) => (
-                    <Form>
+                        <div className="field-container">
 
-                      <div className="field-container felid">
-                        <Field
-                          type="text"
-                          id="code"
-                          name="code"
-                          placeholder='Reset Code'
-                        />
-                        <ErrorMessage name="code" component="div" className="error" />
-                      </div>
-                      <div className="field-container felid">
-                        <Field
-                          type="password"
-                          id="password"
-                          name="password"
-                          placeholder='New Password'
-                        />
-                        <ErrorMessage name="password" component="div" className="error" />
-                      </div>
-                      <div className="field-container felid">
-                        <Field
-                          type="password"
-                          id="confirmPassword"
-                          name="confirmPassword"
-                          placeholder='Confirm password'
-                        />
-                        <ErrorMessage name="confirmPassword" component="div" className="error" />
-                      </div>
+                          <Field
+                            as="select"
+                            id="gender"
+                            name="gender"
+                            placeholder="Select Gender"
+                            className="custom-select"
+                          >
+                            <option value="" label="Select Gender" />
+                            <option value="male" label="Male" />
+                            <option value="female" label="Female" />
+                          </Field>
+                          <ErrorMessage
+                            name="gender"
+                            component="div"
+                            className="error"
+                          />
+                        </div>
+                        <div className="field-container">
 
-                      <div className="field-container felid-btn">
-                        <button className="sub-btn" type="submit">Reset Password</button>
-                      </div>
+                          <Field
+
+                            id="dob"
+                            name="dob"
+                            type="date"
+                            placeholder="scaccaecac"
+                            value={values.dob || ''}
 
 
-                    </Form>
-                  )}
-                </Formik>
-                <p className="forget-pwd" onClick={handleForgetPassword}>Back</p>
+                          />
+                          <ErrorMessage
+                            name="dob"
+                            component="div"
+                            className="error"
+                          />
+                        </div>
+                        <div className="field-container">
+                          <Field
+                            id="profileImage"
+                            name="profileImage"
+                            type="file"
+                            placeholder="profileImage"
+                            onChange={handleImage}
+                          />
+                          <ErrorMessage
+                            name="profileImage"
+                            component="div"
+                            className="error"
+                          />
+                        </div>
+
+                        <div className="field-container">
+                          <button className="sub-btn" type="submit">Register</button>
+                        </div>
+                      </Form>
+                    )}
+                  </Formik>
+                </div>
               </div>
-
-
-            )}
-
+            </div>
           </div>
-          <div className="sign-up-form">
-            <div
-              className={`toggle-switch ${isUserRegistration ? "user-registration" : "seller-registration"
-                }`}
+          <div className={`slider ${isSliderClicked ? "slider-clicked" : ""}`}>
+            {/* {isSliderClicked && <div></div>} */}
+            <button
+              className="btn btn-outline-light slider-btn"
+              onClick={handleSliderClick}
             >
-              <div className="toggle-labels">
-                <span
-                  onClick={handleToggle}
-                  className={`label ${isUserRegistration ? "active" : ""}`}
-                >
-                  User Registration
-                </span>
-                <span
-                  onClick={handleToggle}
-                  className={`label ${!isUserRegistration ? "active" : ""}`}
-                >
-                  Seller Registration
-                </span>
-              </div>
-              <div className="toggle-handle" onClick={handleToggle}></div>
-            </div>
-            <div className="reg-forms">
-              <div className="user-registration">
-                <Formik
-                  initialValues={regFormInitialValues}
-                  validationSchema={userRegValidationSchema}
-                  onSubmit={regFormSubmit}
-                >
-                  {({ values, handleChange, handleBlur, touched, errors }) => (
-                    <Form>
-                      <div className="form-names">
-                        <div className="field-container">
-                          <Field
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            placeholder='First Name'
-                          />
-                          <ErrorMessage name="firstName" component="div" className="error" />
-                        </div>
-                        <div className="field-container">
-                          <Field
-                            type="text"
-                            id="lastName"
-                            name="lastName"
-                            placeholder='Last Name'
-                          />
-                          <ErrorMessage name="lastName" component="div" className="error" />
-                        </div>
-                      </div>
-
-                      <div className="field-container">
-                        <Field
-                          type="text"
-                          id="username"
-                          name="username"
-                          placeholder='User Name'
-                        />
-                        <ErrorMessage name="username" component="div" className="error" />
-                      </div>
-                      <div className="field-container">
-                        <Field
-                          type="text"
-                          id="email"
-                          name="email"
-                          placeholder='Email'
-                        />
-                        <ErrorMessage name="email" component="div" className="error" />
-                      </div>
-
-                      <div className="field-container">
-                        <Field
-                          type="password"
-                          id="password"
-                          name="password"
-                          placeholder='Password'
-                        />
-                        <ErrorMessage
-                          name="password"
-                          component="div"
-                          className="error"
-                        />
-                      </div>
-                      <div className="field-container">
-
-                        <Field
-                          as="select"
-                          id="gender"
-                          name="gender"
-                          placeholder="Select Gender"
-                          className="custom-select"
-                        >
-                          <option value="" label="Select Gender" />
-                          <option value="male" label="Male" />
-                          <option value="female" label="Female" />
-                        </Field>
-                        <ErrorMessage
-                          name="gender"
-                          component="div"
-                          className="error"
-                        />
-                      </div>
-                      <div className="field-container">
-
-                        <Field
-
-                          id="dob"
-                          name="dob"
-                          type="date"
-                          placeholder="scaccaecac"
-                          value={values.dob || ''}
-
-
-                        />
-                        <ErrorMessage
-                          name="dob"
-                          component="div"
-                          className="error"
-                        />
-                      </div>
-                      <div className="field-container">
-                        <Field
-                          id="profileImage"
-                          name="profileImage"
-                          type="file"
-                          placeholder="profileImage"
-                          onChange={handleImage}
-                        />
-                        <ErrorMessage
-                          name="profileImage"
-                          component="div"
-                          className="error"
-                        />
-                      </div>
-
-                      <div className="field-container">
-                        <button className="sub-btn" type="submit">Register</button>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
-              </div>
-            </div>
+              {buttonName}
+            </button>
           </div>
-        </div>
-        <div className={`slider ${isSliderClicked ? "slider-clicked" : ""}`}>
-          {/* {isSliderClicked && <div></div>} */}
-          <button
-            className="btn btn-outline-light slider-btn"
-            onClick={handleSliderClick}
-          >
-            {buttonName}
-          </button>
         </div>
       </div>
     </div>
