@@ -1,0 +1,77 @@
+/*  background-image: url('../../assests/images/Header-bg.png');
+  // object-fit: cover;
+  background-size: cover; */
+
+.verify-email-main {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .image {
+    // margin-top: 50px;
+    background-image: url("../../assests/images/Email.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 50%;
+    background-position: center;
+  }
+  .msg-header {
+    text-align: center;
+    margin-top: 15px;
+  }
+  .msg {
+    padding: 10px 100px;
+    text-align: center;
+    font-size: 14px;
+  }
+  .msg-login {
+    margin-top: 10px;
+    padding: 10px 100px;
+    text-align: center;
+    font-size: 16px;
+    color: red;
+    font-weight: bold;
+  }
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+  }
+  .btn-outline-secondary {
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    .google-icon {
+      background-image: url("../../assests/images/google-icon.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 20px;
+      height: 20px;
+      background-position: center;
+      margin-right: 5px;
+    }
+    .yahoo-icon {
+      background-image: url("../../assests/images/yahoo-icon.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 20px;
+      height: 20px;
+      background-position: center;
+      margin-right: 5px;
+    }
+    .outlook-icon {
+      background-image: url("../../assests/images/outlook-icon.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 20px;
+      height: 20px;
+      background-position: center;
+      margin-right: 5px;
+    }
+  }
+}
