@@ -36,6 +36,14 @@ export const userRegValidationSchema = Yup.object({
   dob: Yup.string().required("DOB is required"),
 });
 
+export const sellerStoreValidationSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  contactNo: Yup.string().required("Contact no is required"),
+  category: Yup.string().required("Category is required"),
+  address: Yup.string().required("Address is required"),
+  country: Yup.string().required("Country is required"),
+});
+
 /* Initial Values */
 
 export const loginInitialValues = {
@@ -62,4 +70,12 @@ export const regFormInitialValues = {
   gender: "male",
   dob: "1998-06-15",
   role: "user",
+};
+
+export const sellerStoreFormInitialValues = {
+  name: "Dark Pixel Studio",
+  contactNo: "0775588760",
+  category: "Digital Marketing",
+  address: "No92/C, Pallegama, Pepiliyawala",
+  country: "Sri Lanka",
 };
