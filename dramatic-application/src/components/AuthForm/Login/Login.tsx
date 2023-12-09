@@ -1,11 +1,12 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { loginInitialValues, loginValidationSchema } from '../../../utils/Validation'
 import { userLogin } from '../../../services/apiService'
 import { useNavigate } from 'react-router-dom'
 import "../AuthForm.scss";
 import "./Login.scss";
 import { toast } from 'react-toastify';
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
 
@@ -14,20 +15,30 @@ const Login = () => {
 
     const loginSubmit = async (values: any) => {
         setLoading(true);
-        console.log(values);
-        const login = await userLogin(values);
+        try {
+            const login = await userLogin(values);
 
-        if (login) {
-            console.log(login);
-            navigate("/")
+            if (login && login.accessToken) {
+                const accessToken = login.accessToken;
+                const tokenDecode = jwtDecode(accessToken);
+                console.log('Access Token :', accessToken);
+                sessionStorage.setItem('decodedToken', JSON.stringify(tokenDecode));
+                sessionStorage.setItem('userData', JSON.stringify(login));
+
+                navigate("/")
+                setLoading(false);
+                toast.success('Successfully Login');
+            } else {
+                setLoading(false);
+                toast.error('Login failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
             setLoading(false);
-            toast.success('Successfully Login');
-        } else {
-            setLoading(false);
-            toast.error('Login failed. Please try again.');
+            toast.error('An error occurred during login. Please try again.');
         }
-
     }
+
 
     return (
         <div>

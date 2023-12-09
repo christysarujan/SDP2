@@ -7,8 +7,8 @@ const NavBarVisible = ({children}:any) => {
     const [showNavBar, setShowNavBar] = useState(false);
 
     useEffect(() => {
-        console.log('This is location', location);
-        if(location.pathname === '/auth'){
+        // console.log('This is location', location);
+        if(location.pathname === '/auth' || location.pathname === '/verifyEmail'){
             setShowNavBar(false)
         }else{
             setShowNavBar(true)

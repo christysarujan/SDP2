@@ -31,6 +31,14 @@
             display: flex;
             gap: 20px;
             justify-content: end;
+            align-items: center;
+            cursor: pointer;
+
+            .btn-outline-secondary{
+                font-size: 12px;
+                padding: 3px 5px;
+                margin: 0;
+            }
         }
     }
 
