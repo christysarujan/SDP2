@@ -60,12 +60,10 @@ const pwdResetCode = async (resetPwd: any) => {
 const findUserByEmail = async (email: any) => {
     try {
         const response = await axiosInstance.get(`${baseurl}/users/${email}`,);
-        toast.success(response.data);
         return response.data;
 
     } catch (error: any) {
-        console.error(error.response.data);
-        toast.error(error.response.data);
+        // console.error(error.response.data);
     }
 };
 

@@ -84,39 +84,6 @@
     flex: calc(100% - 300px);
     box-shadow: 5px 10px 10px 5px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
-
-    .addNewProdBtn {
-      margin: 1% 0;
-      float: right;
-    }
-    .item-table {
-      thead {
-        border-top: 1px solid rgb(201, 201, 201);
-        th {
-          font-size: 12px;
-          text-align: center;
-        }
-      }
-      tbody {
-        td {
-          font-size: 12px;
-          font-weight: 600;
-          vertical-align: middle;
-          text-align: center;
-
-          .actions-tab {
-            margin-right: 5px;
-          }
-        }
-      }
-    }
-    .product-img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      padding: 2px;
-      // background-size: cover;
-      // background-position: center;
-    }
+    padding: 10px;
   }
 }

@@ -22,7 +22,7 @@ const NavBar = () => {
   };
 
   const decodedToken = sessionStorage.getItem('decodedToken');
-  console.log('sas', decodedToken);
+  // console.log('sas', decodedToken);
 
  /*  const profileNavigation = () => {
     if(decodedToken && decodedToken.verificationStatus === 'VERIFIED'){

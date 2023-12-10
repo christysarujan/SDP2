@@ -1,0 +1,129 @@
+.store-main {
+  width: 100%;
+  padding: 10px 30px;
+  .header {
+  }
+
+  .store-form {
+    font-size: 14px;
+    .field-container {
+      margin: 10px 0;
+      //   display: flex;
+      //   flex-direction: column;
+
+      .field-input {
+        display: flex;
+        flex-direction: row;
+
+        label {
+          flex: 200px;
+        }
+
+        input {
+          flex: calc(100% - 200px);
+          padding: 3px 10px;
+          border: 1px solid #b4b4b4;
+          color: #000000;
+          border-radius: 8px;
+          background-color: #ffffff00;
+        }
+      }
+      .preview-main {
+        display: flex;
+        justify-content: flex-end;
+        .preview {
+          width: calc(100% - 200px);
+          height: 100px;
+          border: 1px solid #b4b4b4;
+          border-radius: 10px;
+            padding: 10px;
+          p {
+            text-align: center;
+            margin-top: 35px;
+          }
+          img{
+            height: 80px;
+            width: auto;
+          }
+        }
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 20px;
+        .btn {
+          width: 100px;
+          padding: 2px;
+          font-size: 14px;
+        }
+      }
+
+      .file-input-container {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+      }
+
+      .file-input-label {
+        /*   display: inline-block;
+        position: relative;
+        overflow: hidden;
+        padding: 8px;
+        cursor: pointer; */
+        /* display: flex;
+        flex-direction: row; */
+        // flex: 200px;
+      }
+      .file-label {
+        flex: 200px;
+      }
+      .name {
+        display: flex;
+        flex-direction: row;
+        flex: calc(100% - 200px);
+        height: 29px;
+        border: 1px solid #b4b4b4;
+        border-radius: 8px;
+        // padding: 3px 10px;
+
+        label {
+          flex: 100px;
+        }
+        .fileName {
+          flex: calc(100% - 100px);
+          padding: 3px 10px;
+        }
+      }
+
+      .file-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .button {
+        display: inline-block;
+        background-color: #6c757d;
+        color: #fff;
+        // padding: 8px 16px;
+        border-radius: 4px 0 0 4px;
+        cursor: pointer;
+        width: 100px;
+        height: 29px;
+        padding: 3px 5px;
+      }
+
+      .file-name {
+        // margin-left: 8px;
+        font-size: 14px;
+      }
+    }
+  }
+}
