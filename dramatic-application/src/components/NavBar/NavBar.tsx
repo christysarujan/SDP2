@@ -1,5 +1,6 @@
 import React from 'react'
 import './NavBar.scss'
+// import {logo} from '../../assests/images/logo.png'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 
 interface DecodedToken {
@@ -62,7 +63,9 @@ const NavBar = () => {
           <li>Kid</li>
         </ul>
       </div>
-      <div className="nav-logo">Logo</div>
+      <div className="nav-logo">
+        <img src="../../assests/images/logo.png" alt="" />
+      </div>
       <div className="nav-icons">
         <div className="icons">
           <i className="bi bi-search"></i>

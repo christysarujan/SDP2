@@ -1,9 +1,10 @@
 .user-profile-main {
-  background-color: antiquewhite;
+  // background-color: antiquewhite;
+  background-color: white;
   min-height: calc(100vh - 67px);
   display: flex;
   flex-direction: row;
-  padding: 20px 100px;
+  padding: 20px 50px;
   gap: 15px;
 
   .user-profile-left {
@@ -52,9 +53,9 @@
       align-items: center;
 
       .v-line {
-        background-color: black;
-        height: 50px;
-        width: 2px;
+        background-color: rgb(170, 170, 170);
+        height: 40px;
+        width: 1px;
         border-radius: 2px;
       }
       p {
@@ -73,16 +74,49 @@
         font-size: 14px;
       }
     }
-    .btn-outline-success{
-        width: 100%;
-        margin-top: 20px;
-        padding: 5px;
-        
+    .btn-outline-success {
+      width: 100%;
+      margin-top: 20px;
+      padding: 5px;
     }
   }
   .user-profile-right {
     flex: calc(100% - 300px);
     box-shadow: 5px 10px 10px 5px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
+
+    .addNewProdBtn {
+      margin: 1% 0;
+      float: right;
+    }
+    .item-table {
+      thead {
+        border-top: 1px solid rgb(201, 201, 201);
+        th {
+          font-size: 12px;
+          text-align: center;
+        }
+      }
+      tbody {
+        td {
+          font-size: 12px;
+          font-weight: 600;
+          vertical-align: middle;
+          text-align: center;
+
+          .actions-tab {
+            margin-right: 5px;
+          }
+        }
+      }
+    }
+    .product-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      padding: 2px;
+      // background-size: cover;
+      // background-position: center;
+    }
   }
 }
