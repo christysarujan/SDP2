@@ -29,24 +29,36 @@ const AuthForm = () => {
   const [buttonName, setButtonName] = useState("Sign Up");
   const [decodedToken, setDecodedToken] = useState<any>({});
   const [isUserRegistration, setIsUserRegistration] = useState(true);
-  const [forgetPassword, setForgetPassword] = useState(false);
+  const [forgetPassword, setForgetPassword] = useState(true);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleForgetPassword = () => {
     setForgetPassword((prev) => !prev);
   };
 
-  /*   useEffect(() => {
-      setDecodedToken(jwtDecode(token));
-    }, []);
-  
-    console.log('decode token', decodedToken); */
+  /* useEffect(() => {
+    setDecodedToken(jwtDecode(token));
+  }, []);
 
-  const handleSliderClick = () => {
+  console.log('decode token', decodedToken); */
+
+  const handleSliderClickUser = () => {
     setIsSliderClicked((prev) => !prev);
 
     if (isSliderClicked) {
       setButtonName("Sign In");
+      setIsUserRegistration(true)
+    } else {
+      setButtonName("Sign Up");
+    }
+  };
+  const handleSliderClickSeller = () => {
+    setIsSliderClicked((prev) => !prev);
+
+    if (isSliderClicked) {
+      setButtonName("Sign In");
+      setIsUserRegistration(false)
     } else {
       setButtonName("Sign Up");
     }
@@ -63,12 +75,11 @@ const AuthForm = () => {
       const file = files[0];
       setSelectedFile(file)
     }
-
     console.log('select file', selectedFile);
   }
 
   const regFormSubmit = async (values: any) => {
-
+    setLoading(true)
     const formData = new FormData();
 
     formData.append('username', values.username);
@@ -78,7 +89,7 @@ const AuthForm = () => {
     formData.append('email', values.email);
     formData.append('gender', values.gender);
     formData.append('dob', values.dob);
-    formData.append('mobileNo', values.mobileNo);
+
 
     if (isUserRegistration) {
       console.log("user");
@@ -93,7 +104,13 @@ const AuthForm = () => {
       console.log('qqqqqqqq', selectedFile);
     }
 
-    userRegistration(formData);
+    const userReg = await userRegistration(formData);
+
+    if (userReg) {
+      setLoading(false)
+    } else {
+      setLoading(false)
+    }
   }
 
   return (
@@ -103,8 +120,6 @@ const AuthForm = () => {
           <div className="form-container">
             <div className="sign-in-form">
               <p className="welcome-msg">Welcome Back!</p>
-
-
               {forgetPassword ? (
                 <div>
                   <Login />
@@ -264,7 +279,11 @@ const AuthForm = () => {
                         </div>
 
                         <div className="field-container">
-                          <button className="sub-btn" type="submit">Register</button>
+                          {/* <button className="sub-btn" type="submit">Register</button> */}
+                          <button className="sub-btn" type="submit" disabled={loading}> {loading ? (<div className='loader'>
+                            <span>Loading...</span>
+                            <div className="spinner" />
+                          </div>) : 'Register'}</button>
                         </div>
                       </Form>
                     )}
@@ -275,12 +294,48 @@ const AuthForm = () => {
           </div>
           <div className={`slider ${isSliderClicked ? "slider-clicked" : ""}`}>
             {/* {isSliderClicked && <div></div>} */}
-            <button
-              className="btn btn-outline-light slider-btn"
-              onClick={handleSliderClick}
-            >
-              {buttonName}
-            </button>
+            {isSliderClicked ? (
+              <div className="login-slide">
+
+                <div className="img"></div>
+                {/* <p>sa</p> */}
+                <div className="login-content">
+                  <p>Dont' you have an account ?</p>
+                  <button
+                    className="btn btn-outline-light slide-btn"
+                    onClick={handleSliderClickUser}
+                  >
+                    {buttonName}
+                  </button>
+                  <p>Want to sell with us</p>
+                  <button
+                    className="btn btn-outline-light slide-btn"
+                    onClick={handleSliderClickSeller}
+                  >
+                    Register Now
+                  </button>
+                </div>
+
+              </div>
+            ) : (
+              <div className="reg-slide">
+
+                <div className="img"></div>
+                {/* <p>sa</p> */}
+                <div className="login-content">
+                  <p>Alredy have an account ?</p>
+                  <button
+                    className="btn btn-outline-light slide-btn"
+                    onClick={handleSliderClickUser}
+                  >
+                    {buttonName}
+                  </button>
+                </div>
+
+              </div>
+            )}
+
+
           </div>
         </div>
       </div>

@@ -6,6 +6,8 @@ import AuthForm from './components/AuthForm/AuthForm';
 import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from './components/Layout/Layout';
 import Footer from './components/Footer/Footer';
+import VerifyEmail from './components/VerifyEmail/VerifyEmail';
+import UserProfile from './components/UserProfile/UserProfile';
 
 const router = createBrowserRouter([
 
@@ -20,9 +22,18 @@ const router = createBrowserRouter([
       {
         path: '/auth',
         element: <AuthForm />
-      }
+      },
+      {
+        path: '/verifyEmail',
+        element: <VerifyEmail />,
+      },
+      {
+        path: '/userProfile',
+        element: <UserProfile />,
+      },
     ] 
   },
+
 ]);
 function App() {
   return (

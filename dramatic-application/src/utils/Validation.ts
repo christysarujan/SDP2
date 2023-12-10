@@ -19,22 +19,69 @@ export const resetPwdValidationSchema = Yup.object({
 });
 
 export const userRegValidationSchema = Yup.object({
-  firstName: Yup.string().required("First Name is required"),
-  lastName: Yup.string().required("Last Name is required"),
+  firstName: Yup.string()
+    .required("First Name is required")
+    .matches(/^[a-zA-Z]+$/, "Only letters are allowed"),
+  lastName: Yup.string()
+    .required("Last Name is required")
+    .matches(/^[a-zA-Z]+$/, "Only letters are allowed"),
   username: Yup.string().required("Username is required"),
   email: Yup.string()
     .email("Invalid email format")
-    .required("Email is required"),
+    .required("Email is required")
+    .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/, "Invalid characters before '@' in email")
+    ,
   password: Yup.string().required("Password is required"),
   gender: Yup.string().required("Gender is required"),
   dob: Yup.string().required("DOB is required"),
 });
 
+export const sellerStoreValidationSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  contactNo: Yup.string().required("Contact no is required"),
+  category: Yup.string().required("Category is required"),
+  address: Yup.string().required("Address is required"),
+  country: Yup.string().required("Country is required"),
+});
+
 /* Initial Values */
 
 export const loginInitialValues = {
+  username: "",
+  password: "",
+};
+
+export const forgetPwdInitialValues = {
+  email: "",
+};
+
+export const resetPwdInitialValues = {
+  code: "",
+  password: "",
+  confirmPassword: "",
+};
+
+export const regFormInitialValues = {
+  firstName: "",
+  lastName: "",
+  username: "",
+  password: "",
+  email: "",
+  gender: "",
+  dob: "",
+  role: "",
+};
+
+export const sellerStoreFormInitialValues = {
+  name: "",
+  category: "",
+  address: "",
+  country: "",
+  contactNo: "",
+};
+/* export const loginInitialValues = {
   username: "mgrw",
-  password: "3333",
+  password: "1234",
 };
 
 export const forgetPwdInitialValues = {
@@ -56,5 +103,13 @@ export const regFormInitialValues = {
   gender: "male",
   dob: "1998-06-15",
   role: "user",
-  mobileNo: "07712345678",
 };
+
+export const sellerStoreFormInitialValues = {
+  name: "Dark Pixel Studio",
+  category: "Digital Marketing",
+  address: "No92/C, Pallegama, Pepiliyawala",
+  country: "Sri Lanka",
+  contactNo: "0775588760",
+};
+ */
