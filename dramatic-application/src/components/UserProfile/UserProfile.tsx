@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import './UserProfile.scss'
 import { findUserByEmail } from '../../services/apiService'
-import StoreCreation from '../StoreCreation/StoreCreation';
+import StoreCreation from '../Store/StoreCreation/StoreCreation';
+import Store from '../Store/Store';
 
 interface UserData {
     sub: string;
@@ -48,7 +49,7 @@ const UserProfile = () => {
     const getUserDataByEmail = async () => {
         try {
             const response = await findUserByEmail(userData?.email);
-            console.log('res',response);
+            // console.log('res',response);
             const { firstName, lastName, role, username, email } = response;
             setProfileData({ firstName, lastName, role, username, email });
         } catch (error) {
@@ -90,7 +91,7 @@ const UserProfile = () => {
                 <button className="btn btn-outline-success">Edit Profile</button>
             </div>
             <div className="user-profile-right">
-                <StoreCreation/>
+                <Store/>
             </div>
         </div>
     )
