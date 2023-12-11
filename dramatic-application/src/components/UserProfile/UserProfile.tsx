@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import './UserProfile.scss'
 import { findUserByEmail } from '../../services/apiService'
 import StoreCreation from '../StoreCreation/StoreCreation';
+import SellerProductList from '../SellerProductList/SellerProductList';
+import SellerPaymentDetails from '../SellerPaymentDetails/SellerPaymentDetails';
+import UserAddressManagement from '../UserAddressManagement/UserAddressManagament';
 
 interface UserData {
   sub: string;
@@ -90,7 +93,10 @@ const UserProfile = () => {
                 <button className="btn btn-outline-success">Edit Profile</button>
             </div>
             <div className="user-profile-right">
-                <StoreCreation/>
+                {/* <StoreCreation/> */}
+                {/* <SellerProductList/> */}
+                {/* <SellerPaymentDetails/> */}
+                <UserAddressManagement/>
             </div>
         </div>
     )
