@@ -80,6 +80,17 @@ const findUserByEmail = async (email: any) => {
   }
 };
 
+const getProfileImage = async (email: any) => {
+    try {
+      const response = await axiosInstance.get(
+        `${baseurl}/auth-service/users/profileImage/${email}`
+      ,{ responseType: 'blob' });
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
 /* Store Management */
 
 const sellerStoreRegistration = async (storeData: object) => {
@@ -120,4 +131,5 @@ export {
   findUserByEmail,
   sellerStoreRegistration,
   findStoreByEmail,
+  getProfileImage
 };
