@@ -1,17 +1,17 @@
 .my-store-main {
   display: flex;
   flex-direction: column;
-  margin: 40px 10%;
+  margin: 40px 25px;
 
   .header {
     display: flex;
     flex-direction: row;
 
     .img {
-      flex: 200px;
+      flex: 150px;
 
-      width: 200px;
-      height: 200px;
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
       border: 2px solid #ccc;
       overflow: hidden;
@@ -19,8 +19,8 @@
       justify-content: center;
       align-items: center;
       .store-img {
-        width: 180px;
-        height: 180px;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
         padding: 2px;
         background-image: url("https://img.freepik.com/free-vector/shop-with-sign-we-are-open_52683-38687.jpg");
@@ -30,7 +30,7 @@
       }
     }
     .header-content {
-      flex: calc(100% - 300px);
+      flex: calc(100% - 250px);
       padding-left: 40px;
       display: flex;
       flex-direction: column;
@@ -46,7 +46,7 @@
   .store-content {
     display: flex;
     flex-direction: column;
-    width: 75%;
+    width: 80%;
     margin: auto;
     
     .content {

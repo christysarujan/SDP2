@@ -46,7 +46,7 @@ export const sellerStoreValidationSchema = Yup.object({
 
 /* Initial Values */
 
-export const loginInitialValues = {
+/* export const loginInitialValues = {
   username: "",
   password: "",
 };
@@ -78,8 +78,8 @@ export const sellerStoreFormInitialValues = {
   address: "",
   country: "",
   contactNo: "",
-};
-/* export const loginInitialValues = {
+}; */
+export const loginInitialValues = {
   username: "mgrw",
   password: "1234",
 };
@@ -112,4 +112,3 @@ export const sellerStoreFormInitialValues = {
   country: "Sri Lanka",
   contactNo: "0775588760",
 };
- */
