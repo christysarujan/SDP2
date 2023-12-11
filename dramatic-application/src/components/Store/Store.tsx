@@ -5,12 +5,12 @@ import { findStoreByEmail } from '../../services/apiService';
 import MyStore from './MyStore/MyStore';
 
 const Store = () => {
-    const [accountStatus, setAccountStatus] = useState(true);
+    const [accountStatus, setAccountStatus] = useState(false);
     const [reviewStatus, setReviewStatus] = useState(false);
 
     const getStoreData = async () => {
-        // const email = sessionStorage.getItem('email');
-        const email = 'mgrwijethilaka@gmail.com';
+        const email = sessionStorage.getItem('email');
+        // const email = 'mgrwijethilaka@gmail.com';
 
         if (email) {
             try {
