@@ -20,9 +20,13 @@ const Login = () => {
 
             if (login && login.accessToken) {
                 const accessToken = login.accessToken;
-                const tokenDecode = jwtDecode(accessToken);
+                const tokenDecode: any = jwtDecode(accessToken);
+                const email = tokenDecode.email;
+
                 console.log('Access Token :', accessToken);
+                console.log('tokenDecode :', tokenDecode);
                 sessionStorage.setItem('decodedToken', JSON.stringify(tokenDecode));
+                 sessionStorage.setItem('email', email); 
                 sessionStorage.setItem('userData', JSON.stringify(login));
 
                 navigate("/")

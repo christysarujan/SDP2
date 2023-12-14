@@ -1,6 +1,5 @@
 .user-profile-main {
-  // background-color: antiquewhite;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   min-height: calc(100vh - 67px);
   display: flex;
   flex-direction: row;
@@ -30,7 +29,7 @@
         height: 180px;
         border-radius: 50%;
         padding: 2px;
-        background-image: url("https://media.licdn.com/dms/image/C5103AQEuXTCBE_RUEQ/profile-displayphoto-shrink_800_800/0/1568432085578?e=2147483647&v=beta&t=9Xpp44b5g1LtUmkYbI1oD69SnDGSaPiWH3qJ5PpDKko");
+        // background-image: url("https://tse1.mm.bing.net/th/id/OIP.PB3QCTk1kCZZ6ZvvVqpM5gHaHa?rs=1&pid=ImgDetMain");
         // background-image: url("../../assests/images/google-icon.png");
         background-size: cover;
         background-position: center;
@@ -85,5 +84,34 @@
     box-shadow: 5px 10px 10px 5px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     padding: 10px;
+  }
+}
+
+.main-content {
+  .nav-bar {
+    .nav-item {
+      list-style-type: none;
+      color: rgb(0, 0, 0);
+      text-decoration: none;
+
+     &.active {
+        color: #0000ff; /* Color of the active label text */
+        border-bottom: 2px solid #0000ff;
+        padding-bottom: 2px;
+        transition: color 0.3s ease;
+      }
+    }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+
+      gap: 20px;
+
+      li {
+      }
+    }
   }
 }

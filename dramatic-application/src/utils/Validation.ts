@@ -73,6 +73,39 @@ export const addNewAddressValidationSchema = Yup.object({
 
 /* Initial Values */
 
+/* export const loginInitialValues = {
+  username: "",
+  password: "",
+};
+
+export const forgetPwdInitialValues = {
+  email: "",
+};
+
+export const resetPwdInitialValues = {
+  code: "",
+  password: "",
+  confirmPassword: "",
+};
+
+export const regFormInitialValues = {
+  firstName: "",
+  lastName: "",
+  username: "",
+  password: "",
+  email: "",
+  gender: "",
+  dob: "",
+  role: "",
+};
+
+export const sellerStoreFormInitialValues = {
+  name: "",
+  category: "",
+  address: "",
+  country: "",
+  contactNo: "",
+}; */
 export const loginInitialValues = {
   username: "mgrw",
   password: "1234",
@@ -101,10 +134,10 @@ export const regFormInitialValues = {
 
 export const sellerStoreFormInitialValues = {
   name: "Dark Pixel Studio",
-  contactNo: "0775588760",
   category: "Digital Marketing",
   address: "No92/C, Pallegama, Pepiliyawala",
   country: "Sri Lanka",
+  contactNo: "0775588760",
 };
 
 export const addNewItemFormInitialValues = {

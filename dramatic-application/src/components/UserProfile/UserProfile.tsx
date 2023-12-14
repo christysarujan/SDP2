@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import './UserProfile.scss'
-import { findUserByEmail } from '../../services/apiService'
-import StoreCreation from '../StoreCreation/StoreCreation';
-import SellerProductList from '../SellerProductList/SellerProductList';
-import SellerPaymentDetails from '../SellerPaymentDetails/SellerPaymentDetails';
-import UserAddressManagement from '../UserAddressManagement/UserAddressManagament';
+import { findUserByEmail, getProfileImage } from '../../services/apiService'
+import StoreCreation from '../Store/StoreCreation/StoreCreation';
+import Store from '../Store/Store';
+import { Outlet } from 'react-router';
+import { NavLink } from 'react-router-dom';
 
 interface UserData {
   sub: string;
@@ -22,10 +22,11 @@ interface ProfileData {
     role: string;
     username: string;
     email: string;
+    profileImage: string;
 }
 const UserProfile = () => {
 
-
+    const [profileImg, setProfileImg] = useState('');
     const [userData, setUserData] = useState<UserData | null>(null);
     const [profileData, setProfileData] = useState<ProfileData | null>({
         firstName: 'null',
@@ -33,8 +34,11 @@ const UserProfile = () => {
         role: 'null',
         username: 'null',
         email: 'null',
+        profileImage: 'null',
+
     });
     useEffect(() => {
+        getProfilePhoto();
         const tokenData = sessionStorage.getItem('decodedToken');
 
         if (tokenData) {
@@ -51,20 +55,44 @@ const UserProfile = () => {
     const getUserDataByEmail = async () => {
         try {
             const response = await findUserByEmail(userData?.email);
-            console.log('res',response);
-            const { firstName, lastName, role, username, email } = response;
-            setProfileData({ firstName, lastName, role, username, email });
+            // console.log('resss',response);
+            const { firstName, lastName, role, username, email, profileImage } = response;
+            setProfileData({ firstName, lastName, role, username, email, profileImage });
         } catch (error) {
             // console.error('Error in getUserDataByEmail:', error);
         }
     };
 
+
+    const getProfilePhoto = async () => {
+        try {
+            const imageData = await getProfileImage('266ec336-d9a7-48bd-a93d-703742a94729.png');
+
+            const blob = new Blob([imageData], { type: 'image/png' });
+            const imageUrl = URL.createObjectURL(blob);
+
+            setProfileImg(prevState => imageUrl);
+
+            // Move this inside the then block
+            console.log('ImgUrl:', imageUrl);
+        } catch (error) {
+            console.error('Error fetching profile image:', error);
+        }
+    };
+
+    /* useEffect(() => {
+        // Log profileImg changes
+        console.log('Updated:', profileImg);
+    }, [profileImg]); */
+
+
+
     return (
         <div className='user-profile-main'>
             <div className="user-profile-left">
-
+                {/* {profileImg && <img src={profileImg} alt="Profile" />} */}
                 <div className="profile-img-container">
-                    <div className="profile-img"></div>
+                    <div className="profile-img" style={{ backgroundImage: `url(${profileImg})` }}></div>
                 </div>
 
                 <p className="user-name">{profileData?.firstName} {profileData?.lastName}</p>
@@ -93,10 +121,18 @@ const UserProfile = () => {
                 <button className="btn btn-outline-success">Edit Profile</button>
             </div>
             <div className="user-profile-right">
-                {/* <StoreCreation/> */}
-                {/* <SellerProductList/> */}
-                {/* <SellerPaymentDetails/> */}
-                <UserAddressManagement/>
+                {/* <Store /> */}
+                <div className="main-content">
+                    <div className="nav-bar">
+                        <ul>
+                            <NavLink to="store" className="nav-item" ><li>My Store</li>  </NavLink>
+                            <NavLink to="productList" className="nav-item"><li>Product List</li>  </NavLink>
+                            <li>Payment Information</li>
+                        </ul>
+                    </div>
+                    {/* <Outlet /> */}
+                </div>
+                <Outlet />
             </div>
         </div>
     )

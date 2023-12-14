@@ -18,6 +18,8 @@ const NavBar = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     sessionStorage.removeItem('decodedToken');
+    sessionStorage.removeItem('userData');
+    sessionStorage.removeItem('email');
     navigate("/")
   };
 
