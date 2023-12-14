@@ -26,6 +26,11 @@
           color: #000000;
           border-radius: 8px;
           background-color: #ffffff00;
+
+          :disabled{
+            background-color: #ffffff63;
+
+          }
         }
       }
       .preview-main {
