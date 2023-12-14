@@ -3,7 +3,7 @@
   min-height: calc(100vh - 67px);
   display: flex;
   flex-direction: row;
-  padding: 20px 100px;
+  padding: 20px 50px;
   gap: 15px;
 
   .user-profile-left {
@@ -29,7 +29,7 @@
         height: 180px;
         border-radius: 50%;
         padding: 2px;
-        background-image: url("https://tse1.mm.bing.net/th/id/OIP.PB3QCTk1kCZZ6ZvvVqpM5gHaHa?rs=1&pid=ImgDetMain");
+        // background-image: url("https://tse1.mm.bing.net/th/id/OIP.PB3QCTk1kCZZ6ZvvVqpM5gHaHa?rs=1&pid=ImgDetMain");
         // background-image: url("../../assests/images/google-icon.png");
         background-size: cover;
         background-position: center;
@@ -52,9 +52,9 @@
       align-items: center;
 
       .v-line {
-        background-color: black;
-        height: 50px;
-        width: 2px;
+        background-color: rgb(170, 170, 170);
+        height: 40px;
+        width: 1px;
         border-radius: 2px;
       }
       p {
@@ -73,11 +73,10 @@
         font-size: 14px;
       }
     }
-    .btn-outline-success{
-        width: 100%;
-        margin-top: 20px;
-        padding: 5px;
-        
+    .btn-outline-success {
+      width: 100%;
+      margin-top: 20px;
+      padding: 5px;
     }
   }
   .user-profile-right {
@@ -85,5 +84,34 @@
     box-shadow: 5px 10px 10px 5px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     padding: 10px;
+  }
+}
+
+.main-content {
+  .nav-bar {
+    .nav-item {
+      list-style-type: none;
+      color: rgb(0, 0, 0);
+      text-decoration: none;
+
+     &.active {
+        color: #0000ff; /* Color of the active label text */
+        border-bottom: 2px solid #0000ff;
+        padding-bottom: 2px;
+        transition: color 0.3s ease;
+      }
+    }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+
+      gap: 20px;
+
+      li {
+      }
+    }
   }
 }

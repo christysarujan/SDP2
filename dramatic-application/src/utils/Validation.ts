@@ -43,6 +43,36 @@ export const sellerStoreValidationSchema = Yup.object({
   address: Yup.string().required("Address is required"),
   country: Yup.string().required("Country is required"),
 });
+export const addNewItemValidationSchema = Yup.object({
+  productName: Yup.string().required("Product Name is required"),
+  category: Yup.string().required("Category is required"),
+  material: Yup.string().required("Material is required"),
+  price: Yup.string().required("Price is required"),
+});
+export const addNewPaymentTypeValidationSchema = Yup.object({
+  paymentType: Yup.string().required("Payment Type is required"),
+  accNumber: Yup.string().required("Account Number is required"),
+  accHoldersName: Yup.string().required("Holder's Name is required"),
+  bankName: Yup.string().required("Bank Name is required"),
+  branchName: Yup.string().required("Branch Name is required"),
+  paypalEmail: Yup.string().required("Email is required"),
+  accountType: Yup.string().required("Account Type is required"),
+  accountNumber: Yup.string().required("Account Number is required"),
+});
+export const addNewAddressValidationSchema = Yup.object({
+  addressType: Yup.string().required("Address Type is required"),
+  addressLine_01: Yup.string().required("Address Line 1 is required"),
+  city: Yup.string().required("City is required"),
+  zipCode: Yup.string().required("Zipcode is required"),
+  province: Yup.string().required("Province Name is required"),
+  country: Yup.string().required("Country Name is required"),
+  countryCode: Yup.string().required("Country Code is required"),
+  mobileNo: Yup.string().required("Telephone Number is required"),
+
+});
+export const paymentTypeFilterValidationSchema = Yup.object({
+  addressType: Yup.string().required("Please Select an Address Type"),
+});
 
 /* Initial Values */
 
@@ -112,3 +142,50 @@ export const sellerStoreFormInitialValues = {
   country: "Sri Lanka",
   contactNo: "0775588760",
 };
+
+export const addNewItemFormInitialValues = {
+  productName: "",
+  category: "",
+  material: "",
+  price: "",
+  images: "",
+
+}
+export const addNewPaymentTypeInitialValues = {
+  paymentType: "",
+  accNumber: "",
+  accHoldersName: "",
+  bankName: "",
+  branchName: "",
+  paypalEmail: "",
+  accountType: "",
+  accountNumber: "",
+
+}
+export const addNewAddressInitialValues = {
+  addressType: "",
+  addressLine_01: "",
+  addressLine_02: "",
+  city: "",
+  zipCode: "",
+  province: "",
+  country: "",
+  countryCode: "",
+  mobileNo: "",
+
+}
+export const paymentTypeFilterInitialValues = {
+  paymentType: "",
+}
+/* export const addNewAddressInitialValues = {
+  addressType: "shipping",
+  addressLine_01: "No:92/C, Hanwella Road",
+  addressLine_02: "Pallegama, Pepiliyawala",
+  city: "Kirindiwela",
+  zipCode: "1131",
+  province: "Western",
+  country: "LK",
+  countryCode: "94",
+  mobileNo: "0758011310",
+
+} */

@@ -3,6 +3,7 @@ import StoreCreation from './StoreCreation/StoreCreation';
 import './Store.scss';
 import { findStoreByEmail } from '../../services/apiService';
 import MyStore from './MyStore/MyStore';
+import { Outlet } from 'react-router-dom';
 
 const Store = () => {
     const [accountStatus, setAccountStatus] = useState(false);
@@ -46,7 +47,10 @@ const Store = () => {
         <div className='store-main'>
             {/*  */}
             {accountStatus ? (
-                <MyStore />
+             
+                    <MyStore />
+                   
+
             ) : (
                 <>
                     {reviewStatus ? (
