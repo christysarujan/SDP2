@@ -173,6 +173,25 @@ const getStoreImage = async (email: any) => {
     }
   };
 
+  const sellerStoreEdit = async (storeData: object) => {
+    try {
+      const response = await axiosInstance.put(
+        `${storeBaseurl}/seller-store-management-service/stores/updateStore`,
+        storeData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
 export {
   userRegistration,
   userLogin,
@@ -185,5 +204,6 @@ export {
   getStoreImage,
   addUserAddress,
   findUsersAddressByType,
-  deleteUserAddress
+  deleteUserAddress,
+  sellerStoreEdit
 };

@@ -43,6 +43,13 @@ export const sellerStoreValidationSchema = Yup.object({
   address: Yup.string().required("Address is required"),
   country: Yup.string().required("Country is required"),
 });
+export const sellerStoreEditValidationSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  contactNo: Yup.string().required("Contact no is required"),
+  category: Yup.string().required("Category is required"),
+  address: Yup.string().required("Address is required"),
+  country: Yup.string().required("Country is required"),
+});
 export const addNewItemValidationSchema = Yup.object({
   productName: Yup.string().required("Product Name is required"),
   category: Yup.string().required("Category is required"),
@@ -136,6 +143,13 @@ export const regFormInitialValues = {
 };
 
 export const sellerStoreFormInitialValues = {
+  name: "Dark Pixel Studio",
+  category: "Digital Marketing",
+  address: "No92/C, Pallegama, Pepiliyawala",
+  country: "Sri Lanka",
+  contactNo: "0775588760",
+};
+export const sellerStoreEditFormInitialValues = {
   name: "Dark Pixel Studio",
   category: "Digital Marketing",
   address: "No92/C, Pallegama, Pepiliyawala",

@@ -124,9 +124,9 @@ const UserAddressManagement = () => {
       const addressType = e.target.value;
       setAddressType(addressType);
       // console.log(addressType);
-      const userAddress = await findUsersAddressByType(email, addressType);
-
-      setAddresses(userAddress);
+      const userAddress = await findUsersAddressByType(email, addressType)
+      setAddresses(prevState => userAddress);
+      // setAddresses(userAddress);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
