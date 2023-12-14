@@ -3,8 +3,11 @@
     padding: 0px 10px 10px 10px;
   
     .addNewProdBtn {
-      margin: 1% 0;
+      margin: 5px 0;
       float: right;
+      text-decoration: underline;
+      color: blue;
+      cursor: pointer;
     }
     .payment-details{
         margin-top: 5%;
@@ -44,6 +47,9 @@
             color: #000000;
             border-radius: 8px;
             background-color: #ffffff00;
+          }
+          error{
+            flex: calc(100% - 200px);
           }
           select {
             flex: calc(100% - 200px);

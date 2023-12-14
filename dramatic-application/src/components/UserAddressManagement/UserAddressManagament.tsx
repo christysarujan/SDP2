@@ -6,8 +6,8 @@ import {
 } from "../../utils/Validation";
 import "./UserAddressManagement.scss";
 import {
-  addNewPaymentTypeInitialValues,
-  addNewPaymentTypeValidationSchema,
+  addNewAddressInitialValues,
+  addNewAddressValidationSchema,
 } from "../../utils/Validation";
 import { Tooltip } from "react-tooltip";
 import { findUserByEmail } from "../../services/apiService";
@@ -101,8 +101,8 @@ const UserAddressManagement = () => {
             <hr /> <h5>Choose the Address Type</h5>
             <div className="new-item-form">
               <Formik
-                initialValues={addNewPaymentTypeInitialValues}
-                validationSchema={addNewPaymentTypeValidationSchema}
+                initialValues={addNewAddressInitialValues}
+                validationSchema={addNewAddressValidationSchema}
                 onSubmit={addNewItemFormSubmit}
               >
                 {({ values, handleChange, handleBlur, touched, errors }) => (
@@ -116,7 +116,7 @@ const UserAddressManagement = () => {
                           name="paymentType"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.paymentType}
+                          value={values.addressType}
                         >
                           <option value="shipping" label="Shipping" />
                           <option value="billing" label="Billing" />
@@ -126,32 +126,34 @@ const UserAddressManagement = () => {
                   </Form>
                 )}
               </Formik>
-              <hr/>
-              <br/>
+              <hr />
+              <br />
             </div>
             <div className="address-component">
-                <div className="row">
-                    <div className="col-md-10">
-                    <p>1. Address Line 1, Addressline 2, City, province, zipcode Country Telephone Number</p>
-
-                    </div>
-                    <div className="col-md-2">
-                    <i
-                      className="bi bi-pencil-square actions-tab"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content="Edit"
-                      data-tooltip-place="top"
-                    ></i>
-                    <i
-                      className="bi bi-trash-fill"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content="Delete"
-                      data-tooltip-place="top"
-                    ></i>
-
-                    <Tooltip id="my-tooltip" />
-                    </div>
+              <div className="row">
+                <div className="col-md-10">
+                  <p>
+                    1. Address Line 1, Addressline 2, City, province, zipcode
+                    Country Telephone Number
+                  </p>
                 </div>
+                <div className="col-md-2">
+                  <i
+                    className="bi bi-pencil-square actions-tab"
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content="Edit"
+                    data-tooltip-place="top"
+                  ></i>
+                  <i
+                    className="bi bi-trash-fill"
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content="Delete"
+                    data-tooltip-place="top"
+                  ></i>
+
+                  <Tooltip id="my-tooltip" />
+                </div>
+              </div>
             </div>
           </div>
         ) : (
@@ -159,8 +161,8 @@ const UserAddressManagement = () => {
             {" "}
             <div className="new-item-form">
               <Formik
-                initialValues={addNewPaymentTypeInitialValues}
-                validationSchema={addNewPaymentTypeValidationSchema}
+                initialValues={addNewAddressInitialValues}
+                validationSchema={addNewAddressValidationSchema}
                 onSubmit={addNewItemFormSubmit}
               >
                 {({ values, handleChange, handleBlur, touched, errors }) => (
@@ -170,136 +172,133 @@ const UserAddressManagement = () => {
                         <label>Address Type :</label>
                         <Field
                           as="select"
-                          id="paymentType"
-                          name="paymentType"
+                          id="addressType"
+                          name="addressType"
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          value={values.paymentType}
+                          value={values.addressType}
                         >
-                          <option value="" label="Select a Payment Type" />
-                          <option value="bank" label="Bank" />
-                          <option value="paypal" label="Paypal" />
+                          <option value="" label="Select Address Type" />
+                          <option value="shipping" label="Shipping" />
+                          <option value="billing" label="Billing" />
                         </Field>
                       </div>
 
                       <ErrorMessage
-                        name="paymentType"
+                        name="addressType"
                         component="div"
                         className="error"
                       />
                     </div>
-                    {values.paymentType === "bank" && (
-                      <>
-                        <hr />
-                        <div className="field-container">
-                          <div className="field-input">
-                            <label>Account Number :</label>
-                            <Field
-                              type="text"
-                              id="accNumber"
-                              name="accNumber"
-                            />
-                          </div>
-                          <ErrorMessage
-                            name="accNumber"
-                            component="div"
-                            className="error"
-                          />
-                        </div>
-                        <div className="field-container">
-                          <div className="field-input">
-                            <label>Account Holder's Name :</label>
-                            <Field
-                              type="text"
-                              id="accHoldersName"
-                              name="accHoldersName"
-                            />
-                          </div>
-                          <ErrorMessage
-                            name="accHoldersName"
-                            component="div"
-                            className="error"
-                          />
-                        </div>
-                        <div className="field-container">
-                          <div className="field-input">
-                            <label>Bank Name :</label>
-                            <Field type="text" id="bankName" name="bankName" />
-                          </div>
-                          <ErrorMessage
-                            name="bankName"
-                            component="div"
-                            className="error"
-                          />
-                        </div>
-                        <div className="field-container">
-                          <div className="field-input">
-                            <label>Branch Name :</label>
-                            <Field
-                              type="text"
-                              id="branchName"
-                              name="branchName"
-                            />
-                          </div>
-                          <ErrorMessage
-                            name="branchName"
-                            component="div"
-                            className="error"
-                          />
-                        </div>
-                      </>
-                    )}
-                    {values.paymentType === "paypal" && (
-                      <>
-                        <hr />
-                        <div className="field-container">
-                          <div className="field-input">
-                            <label>Paypal Email :</label>
-                            <Field
-                              type="text"
-                              id="paypalEmail"
-                              name="paypalEmail"
-                            />
-                          </div>
-                          <ErrorMessage
-                            name="paypalEmail"
-                            component="div"
-                            className="error"
-                          />
-                        </div>
-                        <div className="field-container">
-                          <div className="field-input">
-                            <label>Account Type :</label>
-                            <Field
-                              type="text"
-                              id="accountType"
-                              name="accountType"
-                            />
-                          </div>
-                          <ErrorMessage
-                            name="accountType"
-                            component="div"
-                            className="error"
-                          />
-                        </div>
-                        <div className="field-container">
-                          <div className="field-input">
-                            <label>Account Number :</label>
-                            <Field
-                              type="text"
-                              id="accountNumber"
-                              name="accountNumber"
-                            />
-                          </div>
-                          <ErrorMessage
-                            name="accountNumber"
-                            component="div"
-                            className="error"
-                          />
-                        </div>
-                      </>
-                    )}
 
+                    <div className="field-container">
+                      <div className="field-input">
+                        <label>Address Line 1 :</label>
+                        <Field type="text" id="addressLine_01" name="addressLine_01" />
+                      </div>
+                      <ErrorMessage
+                        name="addressLine_01"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+                    <div className="field-container">
+                      <div className="field-input">
+                        <label>Address Line 2 :</label>
+                        <Field
+                          type="text"
+                          id="accHoldersName"
+                          name="accHoldersName"
+                        />
+                      </div>
+                      {/* <ErrorMessage
+                        name="accHoldersName"
+                        component="div"
+                        className="error"
+                      /> */}
+                    </div>
+                    <div className="field-container">
+                      <div className="field-input">
+                        <label>City :</label>
+                        <Field type="text" id="city" name="city" />
+                      </div>
+                      <ErrorMessage
+                        name="city"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+                    <div className="field-container">
+                      <div className="field-input">
+                        <label>Zip Code :</label>
+                        <Field type="text" id="zipCode" name="zipCode" />
+                      </div>
+                      <ErrorMessage
+                        name="zipCode"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+                    <div className="field-container">
+                      <div className="field-input">
+                        <label>Province :</label>
+                        <Field
+                          type="text"
+                          id="province"
+                          name="province"
+                        />
+                      </div>
+                      <ErrorMessage
+                        name="province"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+                    <div className="field-container">
+                      <div className="field-input">
+                        <label>Country :</label>
+                        <Field
+                          type="text"
+                          id="country"
+                          name="country"
+                        />
+                      </div>
+                      <ErrorMessage
+                        name="country"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+                    <div className="field-container">
+                      <div className="field-input">
+                        <label>Country Code :</label>
+                        <Field
+                          type="text"
+                          id="countryCode"
+                          name="countryCode"
+                        />
+                      </div>
+                      <ErrorMessage
+                        name="countryCode"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+                    <div className="field-container">
+                      <div className="field-input">
+                        <label>Telephone Number :</label>
+                        <Field
+                          type="text"
+                          id="mobileNo"
+                          name="mobileNo"
+                        />
+                      </div>
+                      <ErrorMessage
+                        name="mobileNo"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
                     <div className="field-container">
                       <div className="buttons">
                         <button

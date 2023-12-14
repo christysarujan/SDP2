@@ -61,12 +61,13 @@ export const addNewPaymentTypeValidationSchema = Yup.object({
 });
 export const addNewAddressValidationSchema = Yup.object({
   addressType: Yup.string().required("Address Type is required"),
-  addressLine_1: Yup.string().required("Address Line 1 is required"),
+  addressLine_01: Yup.string().required("Address Line 1 is required"),
+  city: Yup.string().required("City is required"),
   zipCode: Yup.string().required("Zipcode is required"),
   province: Yup.string().required("Province Name is required"),
   country: Yup.string().required("Country Name is required"),
   countryCode: Yup.string().required("Country Code is required"),
-  telephoneNumber: Yup.string().required("Telephone Number is required"),
+  mobileNo: Yup.string().required("Telephone Number is required"),
 
 });
 
