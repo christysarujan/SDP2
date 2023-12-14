@@ -70,6 +70,9 @@ export const addNewAddressValidationSchema = Yup.object({
   mobileNo: Yup.string().required("Telephone Number is required"),
 
 });
+export const paymentTypeFilterValidationSchema = Yup.object({
+  addressType: Yup.string().required("Please Select an Address Type"),
+});
 
 /* Initial Values */
 
@@ -161,13 +164,28 @@ export const addNewPaymentTypeInitialValues = {
 }
 export const addNewAddressInitialValues = {
   addressType: "",
-  addressLine_1: "",
-  addressLine_2: "",
-  addressLine_3: "",
+  addressLine_01: "",
+  addressLine_02: "",
+  city: "",
   zipCode: "",
   province: "",
   country: "",
   countryCode: "",
-  telephoneNumber: "",
+  mobileNo: "",
 
 }
+export const paymentTypeFilterInitialValues = {
+  paymentType: "",
+}
+/* export const addNewAddressInitialValues = {
+  addressType: "shipping",
+  addressLine_01: "No:92/C, Hanwella Road",
+  addressLine_02: "Pallegama, Pepiliyawala",
+  city: "Kirindiwela",
+  zipCode: "1131",
+  province: "Western",
+  country: "LK",
+  countryCode: "94",
+  mobileNo: "0758011310",
+
+} */

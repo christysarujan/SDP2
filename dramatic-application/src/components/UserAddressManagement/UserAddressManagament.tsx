@@ -3,6 +3,8 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import {
   loginInitialValues,
   loginValidationSchema,
+  paymentTypeFilterInitialValues,
+  paymentTypeFilterValidationSchema,
 } from "../../utils/Validation";
 import "./UserAddressManagement.scss";
 import {
@@ -10,7 +12,7 @@ import {
   addNewAddressValidationSchema,
 } from "../../utils/Validation";
 import { Tooltip } from "react-tooltip";
-import { findUserByEmail } from "../../services/apiService";
+import { addUserAddress, deleteUserAddress, findUserByEmail, findUsersAddressByType } from "../../services/apiService";
 
 interface UserData {
   sub: string;
@@ -23,7 +25,21 @@ interface UserData {
   username: string;
 }
 
+interface Address {
+  id: string;
+  addressType: string;
+  addressLine_01: string;
+  addressLine_02: string;
+  city: string;
+  zipCode: string;
+  province: string;
+  country: string;
+  countryCode: string;
+  mobileNo: string;
+}
+
 const UserAddressManagement = () => {
+  const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -31,9 +47,9 @@ const UserAddressManagement = () => {
   const [variations, setVariations] = useState([
     { color: "", size: "", quantity: "" },
   ]);
-  const handleAddVariation = () => {
-    setVariations([...variations, { color: "", size: "", quantity: "" }]);
-  };
+
+  const [addressType, setAddressType] = useState('Shipping')
+
   useEffect(() => {
     const tokenData = sessionStorage.getItem("decodedToken");
 
@@ -47,7 +63,7 @@ const UserAddressManagement = () => {
   const [addNewAddress, setAddNewAddress] = useState(true);
   const [buttonName, setButtonName] = useState("Add New Address");
 
-  const addNewProductSubmit = async (values: any) => {};
+  const addNewProductSubmit = async (values: any) => { };
 
   const name = "aa";
   const getUserDataByEmail = async () => {
@@ -85,10 +101,57 @@ const UserAddressManagement = () => {
       reader.readAsDataURL(file);
     }
   };
-  const addNewItemFormSubmit = async (values: any) => {
+  const addNewAddressFormSubmit = async (values: any, { resetForm }: any) => {
     try {
-    } catch (error) {}
+      console.log('Address Details :', values);
+      const email = sessionStorage.getItem('email');
+      const addressSubmit = await addUserAddress(email, values);
+    } catch (error) { }
+    finally {
+      resetForm();
+      handleToggle();
+    }
   };
+
+
+  const filterAddressType = async (e: any) => {
+    try {
+      const email = sessionStorage.getItem('email');
+      const addressType = e.target.value
+      setAddressType(addressType);
+      // console.log(addressType);
+      const userAddress = await findUsersAddressByType(email, addressType)
+
+      setAddresses(userAddress);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+
+    }
+  };
+
+  const getBillingAddress = async () => {
+    try {
+      const email = sessionStorage.getItem('email');
+      const userAddress = await findUsersAddressByType(email, addressType)
+
+      setAddresses(userAddress);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+
+    }
+  };
+  useEffect(() => {
+    getBillingAddress();
+  }, []);
+  useEffect(() => {
+    getBillingAddress();
+  }, [addNewAddress]);
+
+  const deleteAddress = async (id: any) => {
+    const addressDelete = await deleteUserAddress(id)
+    getBillingAddress();
+  }
+
   return (
     <div className="user-address-details">
       <div className="container">
@@ -100,44 +163,37 @@ const UserAddressManagement = () => {
           <div>
             <hr /> <h5>Choose the Address Type</h5>
             <div className="new-item-form">
-              <Formik
-                initialValues={addNewAddressInitialValues}
-                validationSchema={addNewAddressValidationSchema}
-                onSubmit={addNewItemFormSubmit}
-              >
-                {({ values, handleChange, handleBlur, touched, errors }) => (
-                  <Form>
-                    <div className="field-container">
-                      <div className="field-input">
-                        <label>Address Type :</label>
-                        <Field
-                          as="select"
-                          id="paymentType"
-                          name="paymentType"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.addressType}
-                        >
-                          <option value="shipping" label="Shipping" />
-                          <option value="billing" label="Billing" />
-                        </Field>
-                      </div>
-                    </div>
-                  </Form>
-                )}
-              </Formik>
+
+              <div className="field-container">
+                <div className="field-input">
+                  <label>Address Type :</label>
+                  <select
+                    id="paymentType"
+                    name="paymentType"
+                    onChange={(e: any) => filterAddressType(e)}
+                  >
+                    {/* <option value="" label="-- Select Address Type --">-- Select Address Type --</option> */}
+                    <option value="Shipping" label="Shipping" >Shipping</option>
+                    <option value="Billing" label="Billing">Billing</option>
+                  </select>
+                </div>
+              </div>
+
               <hr />
               <br />
             </div>
             <div className="address-component">
               <div className="row">
-                <div className="col-md-10">
-                  <p>
-                    1. Address Line 1, Addressline 2, City, province, zipcode
-                    Country Telephone Number
-                  </p>
+                <div className="col-md-11" >
+                  {addresses && addresses.map((address) => (
+                    <div key={address.id}>
+                      <p>{address.addressLine_01},{address.addressLine_02},{address.city},{address.province},{address.zipCode},{address.country},{address.mobileNo}</p>
+                      <button onClick={() => deleteAddress(address.id)}>Delete</button>
+                    </div>
+                  ))}
+
                 </div>
-                <div className="col-md-2">
+                <div className="col-md-1">
                   <i
                     className="bi bi-pencil-square actions-tab"
                     data-tooltip-id="my-tooltip"
@@ -145,7 +201,7 @@ const UserAddressManagement = () => {
                     data-tooltip-place="top"
                   ></i>
                   <i
-                    className="bi bi-trash-fill"
+                    className="bi bi-trash-fill p-3"
                     data-tooltip-id="my-tooltip"
                     data-tooltip-content="Delete"
                     data-tooltip-place="top"
@@ -163,7 +219,7 @@ const UserAddressManagement = () => {
               <Formik
                 initialValues={addNewAddressInitialValues}
                 validationSchema={addNewAddressValidationSchema}
-                onSubmit={addNewItemFormSubmit}
+                onSubmit={addNewAddressFormSubmit}
               >
                 {({ values, handleChange, handleBlur, touched, errors }) => (
                   <Form>
@@ -207,8 +263,8 @@ const UserAddressManagement = () => {
                         <label>Address Line 2 :</label>
                         <Field
                           type="text"
-                          id="accHoldersName"
-                          name="accHoldersName"
+                          id="addressLine_02"
+                          name="addressLine_02"
                         />
                       </div>
                       {/* <ErrorMessage

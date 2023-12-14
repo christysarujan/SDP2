@@ -127,7 +127,10 @@ const UserProfile = () => {
                         <ul>
                             <NavLink to="store" className="nav-item" ><li>My Store</li>  </NavLink>
                             <NavLink to="productList" className="nav-item"><li>Product List</li>  </NavLink>
-                            <li>Payment Information</li>
+                            <NavLink to="paymentInfo" className="nav-item"><li>Payment Information</li>  </NavLink>
+                            <NavLink to="paymentInfo" className="nav-item"><li>Order Details</li>  </NavLink>
+                            <NavLink to="addressManagement" className="nav-item"><li>Billing and Shipping Address</li>  </NavLink>
+                         
                         </ul>
                     </div>
                     {/* <Outlet /> */}

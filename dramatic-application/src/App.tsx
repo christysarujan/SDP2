@@ -11,6 +11,9 @@ import UserProfile from './components/UserProfile/UserProfile';
 import MyStore from './components/Store/MyStore/MyStore';
 import Store from './components/Store/Store';
 import ProductList from './components/Store/ProductList/ProductList';
+import SellerProductList from './components/SellerProductList/SellerProductList';
+import SellerPaymentDetails from './components/SellerPaymentDetails/SellerPaymentDetails';
+import UserAddressManagement from './components/UserAddressManagement/UserAddressManagament';
 
 const router = createBrowserRouter([
   {
@@ -39,7 +42,15 @@ const router = createBrowserRouter([
           },
           {
             path: 'productList', // Use a relative path here
-            element: <ProductList />
+            element: <SellerProductList />
+          },
+          {
+            path: 'paymentInfo', // Use a relative path here
+            element: <SellerPaymentDetails />
+          },
+          {
+            path: 'addressManagement', // Use a relative path here
+            element: <UserAddressManagement />
           }
         ]
       },
