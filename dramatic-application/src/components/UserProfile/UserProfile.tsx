@@ -3,6 +3,8 @@ import './UserProfile.scss'
 import { findUserByEmail, getProfileImage } from '../../services/apiService'
 import StoreCreation from '../Store/StoreCreation/StoreCreation';
 import Store from '../Store/Store';
+import { Outlet } from 'react-router';
+import { NavLink } from 'react-router-dom';
 
 interface UserData {
     sub: string;
@@ -61,21 +63,16 @@ const UserProfile = () => {
         }
     };
 
-    /*   const getProfilePhoto =async () => {
-          const profileImg = await getProfileImage('266ec336-d9a7-48bd-a93d-703742a94729.png')
-          console.log('Profile Image: ', profileImg);
-      }
-   */
 
-      const getProfilePhoto = async () => {
+    const getProfilePhoto = async () => {
         try {
             const imageData = await getProfileImage('266ec336-d9a7-48bd-a93d-703742a94729.png');
-    
+
             const blob = new Blob([imageData], { type: 'image/png' });
             const imageUrl = URL.createObjectURL(blob);
-           
+
             setProfileImg(prevState => imageUrl);
-    
+
             // Move this inside the then block
             console.log('ImgUrl:', imageUrl);
         } catch (error) {
@@ -83,10 +80,10 @@ const UserProfile = () => {
         }
     };
 
-    useEffect(() => {
+    /* useEffect(() => {
         // Log profileImg changes
         console.log('Updated:', profileImg);
-    }, [profileImg]);
+    }, [profileImg]); */
 
 
 
@@ -124,7 +121,18 @@ const UserProfile = () => {
                 <button className="btn btn-outline-success">Edit Profile</button>
             </div>
             <div className="user-profile-right">
-                <Store />
+                {/* <Store /> */}
+                <div className="main-content">
+                    <div className="nav-bar">
+                        <ul>
+                            <NavLink to="store" className="nav-item" ><li>My Store</li>  </NavLink>
+                            <NavLink to="productList" className="nav-item"><li>Product List</li>  </NavLink>
+                            <li>Payment Information</li>
+                        </ul>
+                    </div>
+                    {/* <Outlet /> */}
+                </div>
+                <Outlet />
             </div>
         </div>
     )

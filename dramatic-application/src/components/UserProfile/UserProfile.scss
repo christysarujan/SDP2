@@ -73,11 +73,10 @@
         font-size: 14px;
       }
     }
-    .btn-outline-success{
-        width: 100%;
-        margin-top: 20px;
-        padding: 5px;
-        
+    .btn-outline-success {
+      width: 100%;
+      margin-top: 20px;
+      padding: 5px;
     }
   }
   .user-profile-right {
@@ -85,5 +84,34 @@
     box-shadow: 5px 10px 10px 5px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     padding: 10px;
+  }
+}
+
+.main-content {
+  .nav-bar {
+    .nav-item {
+      list-style-type: none;
+      color: rgb(0, 0, 0);
+      text-decoration: none;
+
+     &.active {
+        color: #0000ff; /* Color of the active label text */
+        border-bottom: 2px solid #0000ff;
+        padding-bottom: 2px;
+        transition: color 0.3s ease;
+      }
+    }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+
+      gap: 20px;
+
+      li {
+      }
+    }
   }
 }

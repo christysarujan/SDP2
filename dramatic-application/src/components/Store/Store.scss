@@ -24,3 +24,22 @@
           }
     }
 }
+
+.main-content{
+  .nav-bar{
+
+    ul{
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+
+      gap: 20px;
+
+      li{
+       
+      }
+    }
+  }
+}
