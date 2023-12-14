@@ -1,163 +1,204 @@
 .user-address-details {
-    width: 100%;
-    padding: 0px 10px 10px 10px;
-  
-    .addNewProdBtn {
-      margin: 5px 0;
-      float: right;
-      text-decoration: underline;
-      color: blue;
-      cursor: pointer;
-    }
-    .payment-details{
-        margin-top: 5%;
-    }
-    .address-component{
-        border-radius: 10px;
-        padding: 5px 15px;
-        background-color: #eceaea;
-    }
-    .new-item-form {
-      font-size: 14px;
-  
-      .variation-header{
-        display: flex;
-        justify-content: space-between;
-        .addNew-success-button{
-          border-radius: 50%;
+  width: 100%;
+  min-height: calc(100vh - 100px);
+  margin-top: 1rem;
+  padding: 0px 0px 10px 0px;
+  background-color: white;
+  border-radius: 10px;
+
+  .addNewProdBtn {
+    margin: 5px 0;
+    font-size: small;
+    float: right;
+    // text-decoration: underline;
+    color: rgb(73, 73, 237);
+    cursor: pointer;
+  }
+  .payment-details {
+    margin-top: 5%;
+  }
+  .address-selection-form {
+    background-color: white;
+    padding: 0px 10px;
+    border-radius: 10px;
+  }
+  .address-component {
+    border-radius: 10px;
+    padding: 5px 15px;
+    // background-color: #eceaea;
+
+    .address-item {
+      background-color: white;
+      margin-bottom: 10px;
+      border-radius: 10px;
+
+      .button-font-medium {
+        font-size: 12px;
+
+        i {
+          padding: 0px !important;
+          margin-right: 5px;
         }
       }
-      .field-container {
-        margin: 10px 0;
-        //   display: flex;
-        //   flex-direction: column;
-  
-        .field-input {
-          display: flex;
-          flex-direction: row;
-  
-          label {
-            flex: 200px;
+
+      p {
+        font-size: 12px;
+        margin: 1rem 0;
+      }
+      i {
+        padding: 0;
+      }
+    }
+  }
+  .new-item-form {
+    font-size: 14px;
+
+    .variation-header {
+      display: flex;
+      justify-content: space-between;
+      .addNew-success-button {
+        border-radius: 50%;
+      }
+    }
+    .field-container {
+      margin: 10px 0;
+      //   display: flex;
+      //   flex-direction: column;
+
+      .error {
+        font-size: 10px;
+        color: rgb(255, 0, 0);
+        flex: calc(100% - 200px);
+        margin-left: 205px;
+      }
+
+      .field-input {
+        display: flex;
+        flex-direction: row;
+        font-size: 12px;
+
+        label {
+          flex: 200px;
+        }
+
+        input {
+          flex: calc(100% - 200px);
+          padding: 3px 10px;
+          border: 1px solid #b4b4b4;
+          color: #000000;
+          border-radius: 8px;
+          background-color: #ffffff00;
+        }
+        
+        select {
+          flex: calc(100% - 200px);
+          padding: 3px 10px;
+          border: 1px solid #b4b4b4;
+          color: #000000;
+          border-radius: 8px;
+          background-color: #ffffff00;
+        }
+      }
+      .preview-main {
+        display: flex;
+        justify-content: flex-end;
+        .preview {
+          width: calc(100% - 200px);
+          height: 100px;
+          border: 1px solid #b4b4b4;
+          border-radius: 10px;
+          padding: 10px;
+          p {
+            text-align: center;
+            margin-top: 35px;
           }
-  
-          input {
-            flex: calc(100% - 200px);
-            padding: 3px 10px;
-            border: 1px solid #b4b4b4;
-            color: #000000;
-            border-radius: 8px;
-            background-color: #ffffff00;
-          }
-          error{
-            flex: calc(100% - 200px);
-          }
-          select {
-            flex: calc(100% - 200px);
-            padding: 3px 10px;
-            border: 1px solid #b4b4b4;
-            color: #000000;
-            border-radius: 8px;
-            background-color: #ffffff00;
+          img {
+            height: 80px;
+            width: auto;
           }
         }
-        .preview-main {
-          display: flex;
-          justify-content: flex-end;
-          .preview {
-            width: calc(100% - 200px);
-            height: 100px;
-            border: 1px solid #b4b4b4;
-            border-radius: 10px;
-              padding: 10px;
-            p {
-              text-align: center;
-              margin-top: 35px;
-            }
-            img{
-              height: 80px;
-              width: auto;
-            }
-          }
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 20px;
+        .btn {
+          width: 100px;
+          padding: 2px;
+          font-size: 14px;
         }
-  
-        .buttons {
-          display: flex;
-          flex-direction: row;
-          gap: 10px;
-          justify-content: flex-end;
-          margin-top: 20px;
-          .btn {
-            width: 100px;
-            padding: 2px;
-            font-size: 14px;
-          }
-        }
-  
-        .file-input-container {
-          position: relative;
-          display: flex;
-          flex-direction: row;
-        }
-  
-        .file-input-label {
-          /*   display: inline-block;
+      }
+
+      .file-input-container {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+      }
+
+      .file-input-label {
+        /*   display: inline-block;
           position: relative;
           overflow: hidden;
           padding: 8px;
           cursor: pointer; */
-          /* display: flex;
+        /* display: flex;
           flex-direction: row; */
-          // flex: 200px;
+        // flex: 200px;
+      }
+      .file-label {
+        flex: 200px;
+      }
+      .name {
+        display: flex;
+        flex-direction: row;
+        flex: calc(100% - 200px);
+        height: 29px;
+        border: 1px solid #b4b4b4;
+        border-radius: 8px;
+        // padding: 3px 10px;
+
+        label {
+          flex: 100px;
         }
-        .file-label {
-          flex: 200px;
+        .fileName {
+          flex: calc(100% - 100px);
+          padding: 3px 10px;
         }
-        .name {
-          display: flex;
-          flex-direction: row;
-          flex: calc(100% - 200px);
-          height: 29px;
-          border: 1px solid #b4b4b4;
-          border-radius: 8px;
-          // padding: 3px 10px;
-  
-          label {
-            flex: 100px;
-          }
-          .fileName {
-            flex: calc(100% - 100px);
-            padding: 3px 10px;
-          }
-        }
-  
-        .file-input {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          opacity: 0;
-          cursor: pointer;
-        }
-  
-        .button {
-          display: inline-block;
-          background-color: #6c757d;
-          color: #fff;
-          // padding: 8px 16px;
-          border-radius: 4px 0 0 4px;
-          cursor: pointer;
-          width: 100px;
-          height: 29px;
-          padding: 3px 5px;
-        }
-  
-        .file-name {
-          // margin-left: 8px;
-          font-size: 14px;
-        }
+      }
+
+      .file-input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .button {
+        display: inline-block;
+        background-color: #6c757d;
+        color: #fff;
+        // padding: 8px 16px;
+        border-radius: 4px 0 0 4px;
+        cursor: pointer;
+        width: 100px;
+        height: 29px;
+        padding: 3px 5px;
+      }
+
+      .file-name {
+        // margin-left: 8px;
+        font-size: 14px;
       }
     }
   }
-  
-  
+}
+.sub-heading {
+  font-size: 14px;
+  font-weight: 400;
+}

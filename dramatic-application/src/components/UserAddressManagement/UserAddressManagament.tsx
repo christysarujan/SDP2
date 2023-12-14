@@ -12,7 +12,12 @@ import {
   addNewAddressValidationSchema,
 } from "../../utils/Validation";
 import { Tooltip } from "react-tooltip";
-import { addUserAddress, deleteUserAddress, findUserByEmail, findUsersAddressByType } from "../../services/apiService";
+import {
+  addUserAddress,
+  deleteUserAddress,
+  findUserByEmail,
+  findUsersAddressByType,
+} from "../../services/apiService";
 
 interface UserData {
   sub: string;
@@ -48,7 +53,7 @@ const UserAddressManagement = () => {
     { color: "", size: "", quantity: "" },
   ]);
 
-  const [addressType, setAddressType] = useState('Shipping')
+  const [addressType, setAddressType] = useState("Shipping");
 
   useEffect(() => {
     const tokenData = sessionStorage.getItem("decodedToken");
@@ -63,7 +68,7 @@ const UserAddressManagement = () => {
   const [addNewAddress, setAddNewAddress] = useState(true);
   const [buttonName, setButtonName] = useState("Add New Address");
 
-  const addNewProductSubmit = async (values: any) => { };
+  const addNewProductSubmit = async (values: any) => {};
 
   const name = "aa";
   const getUserDataByEmail = async () => {
@@ -103,41 +108,38 @@ const UserAddressManagement = () => {
   };
   const addNewAddressFormSubmit = async (values: any, { resetForm }: any) => {
     try {
-      console.log('Address Details :', values);
-      const email = sessionStorage.getItem('email');
+      console.log("Address Details :", values);
+      const email = sessionStorage.getItem("email");
       const addressSubmit = await addUserAddress(email, values);
-    } catch (error) { }
-    finally {
+    } catch (error) {
+    } finally {
       resetForm();
       handleToggle();
     }
   };
 
-
   const filterAddressType = async (e: any) => {
     try {
-      const email = sessionStorage.getItem('email');
-      const addressType = e.target.value
+      const email = sessionStorage.getItem("email");
+      const addressType = e.target.value;
       setAddressType(addressType);
       // console.log(addressType);
-      const userAddress = await findUsersAddressByType(email, addressType)
+      const userAddress = await findUsersAddressByType(email, addressType);
 
       setAddresses(userAddress);
     } catch (error) {
-      console.error('Error fetching data:', error);
-
+      console.error("Error fetching data:", error);
     }
   };
 
   const getBillingAddress = async () => {
     try {
-      const email = sessionStorage.getItem('email');
-      const userAddress = await findUsersAddressByType(email, addressType)
+      const email = sessionStorage.getItem("email");
+      const userAddress = await findUsersAddressByType(email, addressType);
 
       setAddresses(userAddress);
     } catch (error) {
-      console.error('Error fetching data:', error);
-
+      console.error("Error fetching data:", error);
     }
   };
   useEffect(() => {
@@ -148,9 +150,9 @@ const UserAddressManagement = () => {
   }, [addNewAddress]);
 
   const deleteAddress = async (id: any) => {
-    const addressDelete = await deleteUserAddress(id)
+    const addressDelete = await deleteUserAddress(id);
     getBillingAddress();
-  }
+  };
 
   return (
     <div className="user-address-details">
@@ -161,59 +163,61 @@ const UserAddressManagement = () => {
         <br />
         {addNewAddress ? (
           <div>
-            <hr /> <h5>Choose the Address Type</h5>
-            <div className="new-item-form">
-
-              <div className="field-container">
-                <div className="field-input">
-                  <label>Address Type :</label>
-                  <select
-                    id="paymentType"
-                    name="paymentType"
-                    onChange={(e: any) => filterAddressType(e)}
-                  >
-                    {/* <option value="" label="-- Select Address Type --">-- Select Address Type --</option> */}
-                    <option value="Shipping" label="Shipping" >Shipping</option>
-                    <option value="Billing" label="Billing">Billing</option>
-                  </select>
+            <hr className="brown-hr"></hr>
+            <div className="address-selection-form">
+              <p className="sub-heading">
+                <b>Choose the Address Type</b>
+              </p>
+              <div className="new-item-form">
+                <div className="field-container">
+                  <div className="field-input">
+                    <label>Address Type :</label>
+                    <select
+                      id="paymentType"
+                      name="paymentType"
+                      onChange={(e: any) => filterAddressType(e)}
+                    >
+                      {/* <option value="" label="-- Select Address Type --">-- Select Address Type --</option> */}
+                      <option value="Shipping" label="Shipping">
+                        Shipping
+                      </option>
+                      <option value="Billing" label="Billing">
+                        Billing
+                      </option>
+                    </select>
+                  </div>
                 </div>
               </div>
-
-              <hr />
-              <br />
             </div>
+            <hr />
             <div className="address-component">
-              <div className="row">
-                <div className="col-md-11" >
-                  {addresses && addresses.map((address) => (
+              <div>
+                {addresses &&
+                  addresses.map((address) => (
                     <div key={address.id}>
-                      <p>{address.addressLine_01},{address.addressLine_02},{address.city},{address.province},{address.zipCode},{address.country},{address.mobileNo}</p>
-                      <button onClick={() => deleteAddress(address.id)}>Delete</button>
+                      <div className="row address-item">
+                        <div className="col-md-10">
+                          <p>
+                            {address.addressLine_01},{address.addressLine_02},
+                            {address.city},{address.province},{address.zipCode},
+                            {address.country},{address.mobileNo}
+                          </p>
+                        </div>
+                        <div className="col-md-2">
+                          <button className="btn btn-outline-danger button-font-medium" onClick={() => deleteAddress(address.id)}>
+                            <i className="bi bi-trash-fill p-3"></i>Delete
+                          </button>
+                        </div>
+                        <hr/>
+                      </div>
                     </div>
                   ))}
-
-                </div>
-                <div className="col-md-1">
-                  <i
-                    className="bi bi-pencil-square actions-tab"
-                    data-tooltip-id="my-tooltip"
-                    data-tooltip-content="Edit"
-                    data-tooltip-place="top"
-                  ></i>
-                  <i
-                    className="bi bi-trash-fill p-3"
-                    data-tooltip-id="my-tooltip"
-                    data-tooltip-content="Delete"
-                    data-tooltip-place="top"
-                  ></i>
-
-                  <Tooltip id="my-tooltip" />
-                </div>
               </div>
             </div>
           </div>
         ) : (
           <div>
+            <hr/>
             {" "}
             <div className="new-item-form">
               <Formik
@@ -250,7 +254,11 @@ const UserAddressManagement = () => {
                     <div className="field-container">
                       <div className="field-input">
                         <label>Address Line 1 :</label>
-                        <Field type="text" id="addressLine_01" name="addressLine_01" />
+                        <Field
+                          type="text"
+                          id="addressLine_01"
+                          name="addressLine_01"
+                        />
                       </div>
                       <ErrorMessage
                         name="addressLine_01"
@@ -298,11 +306,7 @@ const UserAddressManagement = () => {
                     <div className="field-container">
                       <div className="field-input">
                         <label>Province :</label>
-                        <Field
-                          type="text"
-                          id="province"
-                          name="province"
-                        />
+                        <Field type="text" id="province" name="province" />
                       </div>
                       <ErrorMessage
                         name="province"
@@ -313,11 +317,7 @@ const UserAddressManagement = () => {
                     <div className="field-container">
                       <div className="field-input">
                         <label>Country :</label>
-                        <Field
-                          type="text"
-                          id="country"
-                          name="country"
-                        />
+                        <Field type="text" id="country" name="country" />
                       </div>
                       <ErrorMessage
                         name="country"
@@ -343,11 +343,7 @@ const UserAddressManagement = () => {
                     <div className="field-container">
                       <div className="field-input">
                         <label>Telephone Number :</label>
-                        <Field
-                          type="text"
-                          id="mobileNo"
-                          name="mobileNo"
-                        />
+                        <Field type="text" id="mobileNo" name="mobileNo" />
                       </div>
                       <ErrorMessage
                         name="mobileNo"

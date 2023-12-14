@@ -1,5 +1,5 @@
 .user-profile-main {
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(247, 247, 247);
   min-height: calc(100vh - 67px);
   display: flex;
   flex-direction: row;
@@ -8,7 +8,8 @@
 
   .user-profile-left {
     flex: 300px;
-    box-shadow: 5px 10px 10px 5px rgba(0, 0, 0, 0.3);
+    background-color: #ffffff;
+    // box-shadow: 5px 10px 10px 5px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     padding: 10px;
     display: flex;
@@ -81,7 +82,7 @@
   }
   .user-profile-right {
     flex: calc(100% - 300px);
-    box-shadow: 5px 10px 10px 5px rgba(0, 0, 0, 0.3);
+    // box-shadow: 5px 10px 10px 5px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     padding: 10px;
   }
@@ -93,10 +94,11 @@
       list-style-type: none;
       color: rgb(0, 0, 0);
       text-decoration: none;
+      font-size: 12px;
 
      &.active {
-        color: #0000ff; /* Color of the active label text */
-        border-bottom: 2px solid #0000ff;
+        // color: #0000ff; /* Color of the active label text */
+        border-bottom: 2px solid #D5A589;
         padding-bottom: 2px;
         transition: color 0.3s ease;
       }
