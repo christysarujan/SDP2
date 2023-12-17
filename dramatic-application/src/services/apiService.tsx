@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 const baseurl = "http://localhost:8080/api/v1";
 const storeBaseurl = "http://localhost:8082/api/v1";
+const productBaseurl = "http://localhost:8083/api/v1/product-service";
 
 const userRegistration = async (userData: object) => {
   try {
@@ -192,6 +193,51 @@ const getStoreImage = async (email: any) => {
     }
   };
 
+  const getSellerPaymentInfoByEmail = async (email: any) => {
+    try {
+      const response = await axiosInstance.get(
+        `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}`
+      );
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
+  const paymentDataSubmit = async (email:any, bankType:any, data:any) => {
+    try {
+      const response = await axios.post(
+        `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}?payment-method=${bankType}`,
+        data
+      );
+      toast.success('Payment Details Added Successfully');
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
+  /* Product Management */
+  const addProduct = async (productData: object) => {
+    try {
+      const response = await axios.post(
+        `${productBaseurl}/products/add-product`,
+        productData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
 export {
   userRegistration,
   userLogin,
@@ -205,5 +251,8 @@ export {
   addUserAddress,
   findUsersAddressByType,
   deleteUserAddress,
-  sellerStoreEdit
+  sellerStoreEdit,
+  getSellerPaymentInfoByEmail,
+  paymentDataSubmit,
+  addProduct
 };

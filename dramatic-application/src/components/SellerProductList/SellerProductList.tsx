@@ -10,7 +10,7 @@ import {
   addNewItemFormInitialValues,
   addNewItemValidationSchema,
 } from "../../utils/Validation";
-import { findUserByEmail } from "../../services/apiService";
+import { addProduct, findUserByEmail } from "../../services/apiService";
 
 interface UserData {
   sub: string;
@@ -28,11 +28,11 @@ const SellerProductList = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [variations, setVariations] = useState([
+  const [variation, setVariations] = useState([
     { color: "", size: "", quantity: "" },
   ]);
   const handleAddVariation = () => {
-    setVariations([...variations, { color: "", size: "", quantity: "" }]);
+    setVariations([...variation, { color: "", size: "", quantity: "" }]);
   };
   useEffect(() => {
     const tokenData = sessionStorage.getItem("decodedToken");
@@ -47,23 +47,7 @@ const SellerProductList = () => {
   const [addNewItem, setAddNewItem] = useState(false);
   const [buttonName, setButtonName] = useState("Add New Item");
 
-  const addNewProductSubmit = async (values: any) => {};
 
-  const name = "aa";
-  const getUserDataByEmail = async () => {
-    try {
-      const response = await findUserByEmail("mgrwijethilaka@gmail.com");
-      console.log("getByEmail", response);
-
-      // Accessing the firstName property
-      const firstName = response?.firstName;
-      console.log("First Name:", firstName);
-
-      // Now you can use the firstName in your React component's state or JSX
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
   const handleToggle = () => {
     setAddNewItem((prev) => !prev);
     if (addNewItem) {
@@ -85,10 +69,41 @@ const SellerProductList = () => {
       reader.readAsDataURL(file);
     }
   };
-  const addNewItemFormSubmit = async (values: any) => {
+
+  const addProductFormSubmit = async (values: any) => {
+    console.log('Product form values', values);
+
+
     try {
-    } catch (error) {}
+      const email = sessionStorage.getItem("email");
+      const productDataForm = new FormData();
+
+      if(email){
+        productDataForm.append('sellerEmail', email);
+      }
+      productDataForm.append('name', values.name);
+      productDataForm.append('category', values.category);
+      productDataForm.append('material', values.material);
+      productDataForm.append('price', values.price);
+      // productDataForm.append('variation', values.variation);
+      productDataForm.append('variation', JSON.stringify(values.variation));
+
+
+      if (selectedFile) {
+        productDataForm.append('productImages', selectedFile, selectedFile.name);
+    }
+
+      console.log('productDataForm:', productDataForm);
+      for (const entry of productDataForm.entries()) {
+        console.log(entry[0], ':', entry[1]);
+      }
+
+      const products = await addProduct(productDataForm);
+
+    } catch (error) { }
   };
+
+
   return (
     <div className="seller-product-list">
       <div className="container">
@@ -117,12 +132,12 @@ const SellerProductList = () => {
                     {" "}
                     <img
                       className="product-img"
-                      src="https://media.licdn.com/dms/image/C5103AQEuXTCBE_RUEQ/profile-displayphoto-shrink_800_800/0/1568432085578?e=2147483647&v=beta&t=9Xpp44b5g1LtUmkYbI1oD69SnDGSaPiWH3qJ5PpDKko"
+                      src="https://th.bing.com/th/id/R.2b1935c6d3eb13ad67f1748c3790c914?rik=HZfvzIeD%2fiEOlg&riu=http%3a%2f%2fstylearena.net%2fwp-content%2fuploads%2f2015%2f04%2f6-velvet-red-anarkali-frocks.jpg&ehk=naaX%2bMI%2b6QMnvsFo6jgWZZNyPhR%2b7ww8nnyYBB%2b2mng%3d&risl=&pid=ImgRaw&r=0"
                       alt="Product-img"
                     />
                   </td>
                   <td>Hellio Frock</td>
-                  <td>Womens</td>
+                  <td>Women</td>
                   <td>$25.99</td>
                   <td>
                     <i
@@ -157,7 +172,7 @@ const SellerProductList = () => {
               <Formik
                 initialValues={addNewItemFormInitialValues}
                 validationSchema={addNewItemValidationSchema}
-                onSubmit={addNewItemFormSubmit}
+                onSubmit={addProductFormSubmit}
               >
                 {({ values, handleChange, handleBlur, touched, errors }) => (
                   <Form>
@@ -166,13 +181,13 @@ const SellerProductList = () => {
                         <label>Product Name :</label>
                         <Field
                           type="text"
-                          id="productName"
-                          name="productName"
+                          id="name"
+                          name="name"
                         />
                       </div>
 
                       <ErrorMessage
-                        name="productName"
+                        name="name"
                         component="div"
                         className="error"
                       />
@@ -202,7 +217,7 @@ const SellerProductList = () => {
                     <div className="field-container">
                       <div className="field-input">
                         <label>Price :</label>
-                        <Field type="text" id="price" name="price" />
+                        <Field type="number" id="price" name="price" />
                       </div>
                       <ErrorMessage
                         name="price"
@@ -251,58 +266,42 @@ const SellerProductList = () => {
                       </button>
                     </div>
 
-                    {variations.map((variations, index) => (
+                    {variation.map((variation, index) => (
                       <div key={index} className="field-container">
                         <div className="field-input">
                           <Field
                             type="text"
-                            name={`variations[${index}].color`}
+                            name={`variation[${index}].color`}
                             placeholder="Color"
                           />
                           <Field
                             type="text"
-                            name={`variations[${index}].size`}
+                            name={`variation[${index}].size`}
                             placeholder="Size"
                           />
                           <Field
                             type="text"
-                            name={`variations[${index}].quantity`}
+                            name={`variation[${index}].quantity`}
                             placeholder="Quantity"
                           />
                         </div>
                         <ErrorMessage
-                          name={`variations[${index}].color`}
+                          name={`variation[${index}].color`}
                           component="div"
                           className="error"
                         />
                         <ErrorMessage
-                          name={`variations[${index}].size`}
+                          name={`variation[${index}].size`}
                           component="div"
                           className="error"
                         />
                         <ErrorMessage
-                          name={`variations[${index}].quantity`}
+                          name={`variation[${index}].quantity`}
                           component="div"
                           className="error"
                         />
                       </div>
                     ))}
-                    {/* <div className="field-container">
-                      <div className="preview-main">
-                        <div className="preview">
-                          {selectedFile && (
-                            <div>
-                              <div>
-                                {imageSrc && (
-                                  <img src={imageSrc} alt="Selected" />
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div> */}
-
                     <div className="field-container">
                       <div className="buttons">
                         <button className="btn btn-secondary" onClick={handleToggle} >Cancel</button>
@@ -310,7 +309,7 @@ const SellerProductList = () => {
                           className="btn btn-success"
                           type="submit"
                           disabled={loading}
-                          
+
                         >
                           {" "}
                           {loading ? (
