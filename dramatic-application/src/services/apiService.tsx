@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 const baseurl = "http://localhost:8080/api/v1";
 const storeBaseurl = "http://localhost:8082/api/v1";
+const productBaseurl = "http://localhost:8083/api/v1/product-service";
 
 const userRegistration = async (userData: object) => {
   try {
@@ -217,6 +218,26 @@ const getStoreImage = async (email: any) => {
     }
   };
 
+  /* Product Management */
+  const addProduct = async (productData: object) => {
+    try {
+      const response = await axios.post(
+        `${productBaseurl}/products/add-product`,
+        productData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
 export {
   userRegistration,
   userLogin,
@@ -232,5 +253,6 @@ export {
   deleteUserAddress,
   sellerStoreEdit,
   getSellerPaymentInfoByEmail,
-  paymentDataSubmit
+  paymentDataSubmit,
+  addProduct
 };

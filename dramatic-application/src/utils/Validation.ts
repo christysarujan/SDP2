@@ -51,7 +51,7 @@ export const sellerStoreEditValidationSchema = Yup.object({
   country: Yup.string().required("Country is required"),
 });
 export const addNewItemValidationSchema = Yup.object({
-  productName: Yup.string().required("Product Name is required"),
+  name: Yup.string().required("Product Name is required"),
   category: Yup.string().required("Category is required"),
   material: Yup.string().required("Material is required"),
   price: Yup.string().required("Price is required"),
@@ -128,11 +128,11 @@ export const sellerStoreEditFormInitialValues = {
 };
 
 export const addNewItemFormInitialValues = {
-  productName: "",
+  name: "",
   category: "",
   material: "",
-  price: "",
-  images: "",
+  price: 0,
+  variation:[{"color":"", "quantity":"", "size":""}]
 
 }
 export const addNewPaymentTypeInitialValues = {
