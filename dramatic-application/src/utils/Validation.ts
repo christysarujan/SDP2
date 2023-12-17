@@ -80,42 +80,12 @@ export const addNewAddressValidationSchema = Yup.object({
 export const paymentTypeFilterValidationSchema = Yup.object({
   addressType: Yup.string().required("Please Select an Address Type"),
 });
+export const paypalFormValidationSchema = Yup.object({
+  paypalEmail: Yup.string().required("Paypal email is required"),
+  accountType: Yup.string().required("Account type is required"),
+  paypalAccountNo: Yup.string().required("Paypal account No is required"),
+});
 
-/* Initial Values */
-
-/* export const loginInitialValues = {
-  username: "",
-  password: "",
-};
-
-export const forgetPwdInitialValues = {
-  email: "",
-};
-
-export const resetPwdInitialValues = {
-  code: "",
-  password: "",
-  confirmPassword: "",
-};
-
-export const regFormInitialValues = {
-  firstName: "",
-  lastName: "",
-  username: "",
-  password: "",
-  email: "",
-  gender: "",
-  dob: "",
-  role: "",
-};
-
-export const sellerStoreFormInitialValues = {
-  name: "",
-  category: "",
-  address: "",
-  country: "",
-  contactNo: "",
-}; */
 export const loginInitialValues = {
   username: "mgrw",
   password: "1234",
@@ -191,6 +161,12 @@ export const addNewAddressInitialValues = {
 export const paymentTypeFilterInitialValues = {
   paymentType: "",
 }
+
+export const paypalFormInitialValues = {
+  paypalEmail: "",
+  accountType: "",
+  paypalAccountNo: "",
+};
 /* export const addNewAddressInitialValues = {
   addressType: "shipping",
   addressLine_01: "No:92/C, Hanwella Road",
@@ -203,3 +179,39 @@ export const paymentTypeFilterInitialValues = {
   mobileNo: "0758011310",
 
 } */
+
+/* Initial Values */
+
+/* export const loginInitialValues = {
+  username: "",
+  password: "",
+};
+
+export const forgetPwdInitialValues = {
+  email: "",
+};
+
+export const resetPwdInitialValues = {
+  code: "",
+  password: "",
+  confirmPassword: "",
+};
+
+export const regFormInitialValues = {
+  firstName: "",
+  lastName: "",
+  username: "",
+  password: "",
+  email: "",
+  gender: "",
+  dob: "",
+  role: "",
+};
+
+export const sellerStoreFormInitialValues = {
+  name: "",
+  category: "",
+  address: "",
+  country: "",
+  contactNo: "",
+}; */

@@ -192,6 +192,31 @@ const getStoreImage = async (email: any) => {
     }
   };
 
+  const getSellerPaymentInfoByEmail = async (email: any) => {
+    try {
+      const response = await axiosInstance.get(
+        `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}`
+      );
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
+  const paymentDataSubmit = async (email:any, bankType:any, data:any) => {
+    try {
+      const response = await axios.post(
+        `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}?payment-method=${bankType}`,
+        data
+      );
+      toast.success('Payment Details Added Successfully');
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
 export {
   userRegistration,
   userLogin,
@@ -205,5 +230,7 @@ export {
   addUserAddress,
   findUsersAddressByType,
   deleteUserAddress,
-  sellerStoreEdit
+  sellerStoreEdit,
+  getSellerPaymentInfoByEmail,
+  paymentDataSubmit
 };
