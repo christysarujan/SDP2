@@ -85,6 +85,12 @@ export const paypalFormValidationSchema = Yup.object({
   accountType: Yup.string().required("Account type is required"),
   paypalAccountNo: Yup.string().required("Paypal account No is required"),
 });
+export const bankFormValidationSchema = Yup.object({
+  accountNo: Yup.string().required("Account no is required"),
+  accountHolderName: Yup.string().required("Account holder name is required"),
+  bankName: Yup.string().required("Bank Name is required"),
+  branch: Yup.string().required("Branch is required"),
+});
 
 export const loginInitialValues = {
   username: "mgrw",
@@ -166,6 +172,12 @@ export const paypalFormInitialValues = {
   paypalEmail: "",
   accountType: "",
   paypalAccountNo: "",
+};
+export const bankFormInitialValues = {
+  accountNo: "",
+  accountHolderName: "",
+  bankName: "",
+  branch: "",
 };
 /* export const addNewAddressInitialValues = {
   addressType: "shipping",

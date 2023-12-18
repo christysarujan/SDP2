@@ -217,6 +217,19 @@ const getStoreImage = async (email: any) => {
       toast.error(error.response.data);
     }
   };
+  const paymentDataEdit = async (email:any, bankType:any, data:any) => {
+    try {
+      const response = await axios.put(
+        `${storeBaseurl}/seller-store-management-service/seller-payment-details/update/${email}?payment-method=${bankType}`,
+        data
+      );
+      toast.success('Payment Details Edit Successfully');
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
 
   /* Product Management */
   const addProduct = async (productData: object) => {
@@ -254,5 +267,6 @@ export {
   sellerStoreEdit,
   getSellerPaymentInfoByEmail,
   paymentDataSubmit,
-  addProduct
+  addProduct,
+  paymentDataEdit
 };
