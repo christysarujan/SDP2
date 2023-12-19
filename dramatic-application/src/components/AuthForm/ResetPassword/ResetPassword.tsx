@@ -18,7 +18,7 @@ const ResetPassword = () => {
         setResetMsg(reset);
         setResetEmail(values.email)
         // setDisableInput(reset === null || reset === '');
-        if (reset) {
+        if (reset && reset.length > 0) {
             setLoading(false)
             setDisableInput(false)
         }else{
@@ -36,10 +36,14 @@ const ResetPassword = () => {
         formData.append('newPassword', values.password);
 
         const pwdReset = await pwdResetCode(formData)
+
         if (pwdReset) {
             setLoadingReset(false)
+            window.location.reload();
         }else{
             setLoadingReset(false)
+            window.location.reload();
+
         }
         console.log('pwdReset', pwdReset);
     }

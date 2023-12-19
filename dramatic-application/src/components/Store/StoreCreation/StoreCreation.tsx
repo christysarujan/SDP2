@@ -67,7 +67,7 @@ const StoreCreation = () => {
             }
 
             const storeCreate = await sellerStoreRegistration(formData);
-
+            window.location.reload();
         } catch (error) {
             console.log(error);
         }

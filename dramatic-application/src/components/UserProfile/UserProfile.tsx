@@ -60,10 +60,12 @@ const UserProfile = () => {
         }
     }, []);
 
+  
     useEffect(() => {
         getUserDataByEmail();
     }, [userData]);
 
+  
     const getStoreData = async () => {
         const email = sessionStorage.getItem('email');
 
@@ -153,10 +155,10 @@ const UserProfile = () => {
                         <div className="nav-bar">
                             <ul>
                                 <NavLink to="store" className="nav-item" ><li>My Store</li>  </NavLink>
-                                {storeData.storeStatus === "VERIFIED" &&
+                                {storeData && storeData.storeStatus === "VERIFIED" &&
                                     <NavLink to="productList" className="nav-item"><li>Product List</li>  </NavLink>
                                 }
-                                {storeData.storeStatus === "VERIFIED" &&
+                                {storeData && storeData.storeStatus === "VERIFIED" &&
                                     <NavLink to="paymentInfo" className="nav-item"><li>Payment Information</li>  </NavLink>
                                 }
                             </ul>

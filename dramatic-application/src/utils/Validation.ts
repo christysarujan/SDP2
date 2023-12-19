@@ -154,14 +154,14 @@ export const addNewPaymentTypeInitialValues = {
 }
 export const addNewAddressInitialValues = {
   addressType: "",
-  addressLine_01: "",
-  addressLine_02: "",
-  city: "",
-  zipCode: "",
-  province: "",
-  country: "",
-  countryCode: "",
-  mobileNo: "",
+  addressLine_01: "No:92/C, Hanwella Road",
+  addressLine_02: "Pallegama",
+  city: "Kirindiwela",
+  zipCode: "11741",
+  province: "Western",
+  country: "Sri Lanka",
+  countryCode: "+94",
+  mobileNo: "0775588760",
 
 }
 export const paymentTypeFilterInitialValues = {
