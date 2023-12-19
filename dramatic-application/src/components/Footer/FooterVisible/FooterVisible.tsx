@@ -7,7 +7,7 @@ const FooterVisible = ({children}:any) => {
 
     useEffect(() => {
         // console.log('This is location', location);
-        if(location.pathname === '/auth' || location.pathname === '/userProfile' || location.pathname === '/verifyEmail'){
+        if(location.pathname === '/auth' || location.pathname === '/profile' || location.pathname === '/verifyEmail'){
             setShowFooter(false)
         }else{
             setShowFooter(true)

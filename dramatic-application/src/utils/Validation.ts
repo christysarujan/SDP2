@@ -110,9 +110,9 @@ export const resetPwdInitialValues = {
 export const regFormInitialValues = {
   firstName: "Gihan",
   lastName: "Ravindrajith",
-  username: "mgrw",
+  username: "mg",
   password: "1234",
-  email: "mgrwijethilaka@gmail.com",
+  email: "gwijethilaka@virtusa.com",
   gender: "male",
   dob: "1998-06-15",
   role: "user",

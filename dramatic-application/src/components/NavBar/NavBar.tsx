@@ -36,6 +36,7 @@ const NavBar = () => {
     const checkVerificationStatus = () => {
       // Retrieve the decodedToken from sessionStorage
       const decodedTokenString = sessionStorage.getItem('decodedToken');
+      const role = sessionStorage.getItem('role');
   
       if (decodedTokenString) {
         const decodedToken: DecodedToken = JSON.parse(decodedTokenString);
@@ -43,7 +44,11 @@ const NavBar = () => {
         // Check if verificationStatus is VERIFIED
         if (decodedToken && decodedToken.verificationStatus === 'VERIFIED') {
           // Navigate to the profile page
-          navigate("/userProfile")
+          if(role === 'seller'){
+            navigate("/profile/store")
+          } else if (role === 'user'){
+            navigate("/profile/addressManagement")
+          }
         } else {
           // Navigate to the email verification pageverifyEmail
           navigate("/verifyEmail")

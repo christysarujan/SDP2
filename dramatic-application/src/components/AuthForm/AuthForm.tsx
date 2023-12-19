@@ -78,7 +78,7 @@ const AuthForm = () => {
     console.log('select file', selectedFile);
   }
 
-  const regFormSubmit = async (values: any) => {
+  const regFormSubmit = async (values: any,  { resetForm }: any) => {
     setLoading(true)
     const formData = new FormData();
 
@@ -108,6 +108,8 @@ const AuthForm = () => {
 
     if (userReg) {
       setLoading(false)
+      setIsSliderClicked(true)
+      resetForm();
     } else {
       setLoading(false)
     }

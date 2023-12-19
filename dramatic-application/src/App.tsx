@@ -33,7 +33,7 @@ const router = createBrowserRouter([
         element: <VerifyEmail />,
       },
       {
-        path: '/userProfile',
+        path: '/profile',
         element: <UserProfile />,
         children: [
           {
