@@ -44,7 +44,7 @@ const SellerProductList = () => {
     }
   }, []);
 
-  const [addNewItem, setAddNewItem] = useState(false);
+  const [addNewItem, setAddNewItem] = useState(true);
   const [buttonName, setButtonName] = useState("Add New Item");
 
 

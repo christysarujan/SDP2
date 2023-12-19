@@ -85,6 +85,12 @@ export const paypalFormValidationSchema = Yup.object({
   accountType: Yup.string().required("Account type is required"),
   paypalAccountNo: Yup.string().required("Paypal account No is required"),
 });
+export const bankFormValidationSchema = Yup.object({
+  accountNo: Yup.string().required("Account no is required"),
+  accountHolderName: Yup.string().required("Account holder name is required"),
+  bankName: Yup.string().required("Bank Name is required"),
+  branch: Yup.string().required("Branch is required"),
+});
 
 export const loginInitialValues = {
   username: "mgrw",
@@ -104,9 +110,9 @@ export const resetPwdInitialValues = {
 export const regFormInitialValues = {
   firstName: "Gihan",
   lastName: "Ravindrajith",
-  username: "mgrw",
+  username: "mg",
   password: "1234",
-  email: "mgrwijethilaka@gmail.com",
+  email: "gwijethilaka@virtusa.com",
   gender: "male",
   dob: "1998-06-15",
   role: "user",
@@ -148,14 +154,14 @@ export const addNewPaymentTypeInitialValues = {
 }
 export const addNewAddressInitialValues = {
   addressType: "",
-  addressLine_01: "",
-  addressLine_02: "",
-  city: "",
-  zipCode: "",
-  province: "",
-  country: "",
-  countryCode: "",
-  mobileNo: "",
+  addressLine_01: "No:92/C, Hanwella Road",
+  addressLine_02: "Pallegama",
+  city: "Kirindiwela",
+  zipCode: "11741",
+  province: "Western",
+  country: "Sri Lanka",
+  countryCode: "+94",
+  mobileNo: "0775588760",
 
 }
 export const paymentTypeFilterInitialValues = {
@@ -166,6 +172,12 @@ export const paypalFormInitialValues = {
   paypalEmail: "",
   accountType: "",
   paypalAccountNo: "",
+};
+export const bankFormInitialValues = {
+  accountNo: "",
+  accountHolderName: "",
+  bankName: "",
+  branch: "",
 };
 /* export const addNewAddressInitialValues = {
   addressType: "shipping",

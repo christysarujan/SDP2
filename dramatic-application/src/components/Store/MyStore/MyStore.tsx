@@ -93,6 +93,9 @@ const MyStore = () => {
             console.log('Form Data:', formData);
     
             const editStore = await sellerStoreEdit(formData);
+            await getStoreData();
+            await getStorePhoto();
+            await defaultPageToggle();
             // console.log('Edit Store Response:', editStore);
     
             // Add more console logs or actions here
@@ -168,7 +171,13 @@ const MyStore = () => {
                 </div>
                 <div className="store-form">
                     <Formik
-                        initialValues={sellerStoreEditFormInitialValues}
+                        initialValues={{
+                            name: storeData?.name || '',
+                            category: storeData?.category || '',
+                            address: storeData?.address || '',
+                            country: storeData?.country || '',
+                            contactNo: storeData?.contactNo || '',
+                          }}
                         validationSchema={sellerStoreEditValidationSchema}
                         onSubmit={storeFormEditSubmit}
                     >

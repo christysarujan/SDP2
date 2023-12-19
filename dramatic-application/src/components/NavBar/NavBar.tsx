@@ -17,44 +17,50 @@ interface DecodedToken {
 const NavBar = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
-    sessionStorage.removeItem('decodedToken');
-    sessionStorage.removeItem('userData');
-    sessionStorage.removeItem('email');
+    /*     sessionStorage.removeItem('decodedToken');
+        sessionStorage.removeItem('userData');
+        sessionStorage.removeItem('email'); */
+    sessionStorage.clear();
     navigate("/")
   };
 
   const decodedToken = sessionStorage.getItem('decodedToken');
   // console.log('sas', decodedToken);
 
- /*  const profileNavigation = () => {
-    if(decodedToken && decodedToken.verificationStatus === 'VERIFIED'){
-      navigate("/")
-    }else{
-      navigate("/")
-    } */
+  /*  const profileNavigation = () => {
+     if(decodedToken && decodedToken.verificationStatus === 'VERIFIED'){
+       navigate("/")
+     }else{
+       navigate("/")
+     } */
 
-    const checkVerificationStatus = () => {
-      // Retrieve the decodedToken from sessionStorage
-      const decodedTokenString = sessionStorage.getItem('decodedToken');
-  
-      if (decodedTokenString) {
-        const decodedToken: DecodedToken = JSON.parse(decodedTokenString);
-  
-        // Check if verificationStatus is VERIFIED
-        if (decodedToken && decodedToken.verificationStatus === 'VERIFIED') {
-          // Navigate to the profile page
-          navigate("/userProfile")
-        } else {
-          // Navigate to the email verification pageverifyEmail
-          navigate("/verifyEmail")
+  const checkVerificationStatus = () => {
+    // Retrieve the decodedToken from sessionStorage
+    const decodedTokenString = sessionStorage.getItem('decodedToken');
+    const role = sessionStorage.getItem('role');
+
+    if (decodedTokenString) {
+      const decodedToken: DecodedToken = JSON.parse(decodedTokenString);
+
+      // Check if verificationStatus is VERIFIED
+      if (decodedToken && decodedToken.verificationStatus === 'VERIFIED') {
+        // Navigate to the profile page
+        if (role === 'seller') {
+          navigate("/profile/store")
+        } else if (role === 'user') {
+          navigate("/profile/addressManagement")
         }
       } else {
-        // Handle the case where decodedToken is not found in sessionStorage
-        console.error('Decoded token not found in sessionStorage');
+        // Navigate to the email verification pageverifyEmail
+        navigate("/verifyEmail")
       }
-    };
-   
-  
+    } else {
+      // Handle the case where decodedToken is not found in sessionStorage
+      console.error('Decoded token not found in sessionStorage');
+    }
+  };
+
+
 
   return (
     <div className="nav-bar-main">
@@ -66,7 +72,8 @@ const NavBar = () => {
         </ul>
       </div>
       <div className="nav-logo">
-        <img src="../../assests/images/logo.png" alt="" />
+        {/* <img src="../../assests/images/logo.png" alt="" /> */}
+        <div className="logo"></div>
       </div>
       <div className="nav-icons">
         <div className="icons">

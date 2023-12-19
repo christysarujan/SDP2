@@ -22,11 +22,14 @@ const Login = () => {
                 const accessToken = login.accessToken;
                 const tokenDecode: any = jwtDecode(accessToken);
                 const email = tokenDecode.email;
+                const role = tokenDecode.role;
+
 
                 console.log('Access Token :', accessToken);
                 console.log('tokenDecode :', tokenDecode);
                 sessionStorage.setItem('decodedToken', JSON.stringify(tokenDecode));
-                 sessionStorage.setItem('email', email); 
+                sessionStorage.setItem('email', email);
+                sessionStorage.setItem('role', role);
                 sessionStorage.setItem('userData', JSON.stringify(login));
 
                 navigate("/")

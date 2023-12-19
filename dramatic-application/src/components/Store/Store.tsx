@@ -21,9 +21,9 @@ const Store = () => {
                 if (storeData.storeStatus === 'PENDING') {
                     setAccountStatus(false);
                     setReviewStatus(true);
-                    console.log('acc not veri');
+                    // console.log('acc not veri');
                 } else if (storeData.storeStatus === 'VERIFIED') {
-                    console.log('summa summa');
+                    // console.log('summa summa');
                     setAccountStatus(true);
                     setReviewStatus(false);
                 } else {

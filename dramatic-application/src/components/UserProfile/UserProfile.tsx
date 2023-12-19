@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import './UserProfile.scss'
-import { findUserByEmail, getProfileImage } from '../../services/apiService'
+import { findStoreByEmail, findUserByEmail, getProfileImage } from '../../services/apiService'
 import StoreCreation from '../Store/StoreCreation/StoreCreation';
 import Store from '../Store/Store';
 import { Outlet } from 'react-router';
 import { NavLink } from 'react-router-dom';
 
 interface UserData {
-  sub: string;
-  role: string;
-  verificationStatus: string;
-  iss: string;
-  exp: number;
-  iat: number;
-  email: string;
-  username: string;
+    sub: string;
+    role: string;
+    verificationStatus: string;
+    iss: string;
+    exp: number;
+    iat: number;
+    email: string;
+    username: string;
 }
 interface ProfileData {
     firstName: string;
@@ -27,6 +27,8 @@ interface ProfileData {
 const UserProfile = () => {
 
     const [profileImg, setProfileImg] = useState('');
+    const [userNav, setUserNav] = useState(false);
+    const [sellerNav, setSellerNav] = useState(false);
     const [userData, setUserData] = useState<UserData | null>(null);
     const [profileData, setProfileData] = useState<ProfileData | null>({
         firstName: 'null',
@@ -37,20 +39,46 @@ const UserProfile = () => {
         profileImage: 'null',
 
     });
+    const [storeData, setStoreData] = useState<any>({});
+
     useEffect(() => {
         getProfilePhoto();
+        getStoreData();
         const tokenData = sessionStorage.getItem('decodedToken');
+        const role = sessionStorage.getItem('role');
 
         if (tokenData) {
             const parsedUserData: UserData = JSON.parse(tokenData);
             // console.log('sasas', parsedUserData);
             setUserData(parsedUserData);
         }
+
+        if (role === 'seller') {
+            setSellerNav(true);
+        } else if (role === 'user') {
+            setUserNav(true);
+        }
     }, []);
 
+  
     useEffect(() => {
         getUserDataByEmail();
     }, [userData]);
+
+  
+    const getStoreData = async () => {
+        const email = sessionStorage.getItem('email');
+
+        try {
+            const data = await findStoreByEmail(email);
+            setStoreData(data);
+            console.log('dataaaa', data);
+        } catch (error) {
+            console.error('Error fetching store data:', error);
+        }
+    };
+
+    console.log('storeDataa', storeData);
 
     const getUserDataByEmail = async () => {
         try {
@@ -123,16 +151,27 @@ const UserProfile = () => {
             <div className="user-profile-right">
                 {/* <Store /> */}
                 <div className="main-content">
-                    <div className="nav-bar">
-                        <ul>
-                            <NavLink to="store" className="nav-item" ><li>My Store</li>  </NavLink>
-                            <NavLink to="productList" className="nav-item"><li>Product List</li>  </NavLink>
-                            <NavLink to="paymentInfo" className="nav-item"><li>Payment Information</li>  </NavLink>
-                            <NavLink to="paymentInfo" className="nav-item"><li>Order Details</li>  </NavLink>
-                            <NavLink to="addressManagement" className="nav-item"><li>Billing and Shipping Address</li>  </NavLink>
-                         
-                        </ul>
-                    </div>
+                    {sellerNav &&
+                        <div className="nav-bar">
+                            <ul>
+                                <NavLink to="store" className="nav-item" ><li>My Store</li>  </NavLink>
+                                {storeData && storeData.storeStatus === "VERIFIED" &&
+                                    <NavLink to="productList" className="nav-item"><li>Product List</li>  </NavLink>
+                                }
+                                {storeData && storeData.storeStatus === "VERIFIED" &&
+                                    <NavLink to="paymentInfo" className="nav-item"><li>Payment Information</li>  </NavLink>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    {userNav &&
+                        <div className="nav-bar">
+                            <ul>
+                                <NavLink to="addressManagement" className="nav-item"><li>Billing and Shipping Address</li>  </NavLink>
+                            </ul>
+                        </div>
+                    }
+
                     {/* <Outlet /> */}
                 </div>
                 <Outlet />
