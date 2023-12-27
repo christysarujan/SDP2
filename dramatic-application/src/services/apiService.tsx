@@ -251,6 +251,40 @@ const getStoreImage = async (email: any) => {
     }
   };
 
+  const getProductsBySellerEmail = async (email: any) => {
+    try {
+      const response = await axiosInstance.get(
+        `${productBaseurl}/products/all/${email}`
+      );
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
+  const getProductImages = async (name: any) => {
+    try {
+      const response = await axiosInstance.get(
+        `${productBaseurl}/products/images/${name}`
+      ,{ responseType: 'blob' });
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
+  const deleteProduct = async (id: any,) => {
+    try {
+      const response = await axiosInstance.delete(
+        `${productBaseurl}/products/${id}`
+      );
+      toast.success('Product deleted successfully');
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+    }
+  };
+
 export {
   userRegistration,
   userLogin,
@@ -268,5 +302,8 @@ export {
   getSellerPaymentInfoByEmail,
   paymentDataSubmit,
   addProduct,
-  paymentDataEdit
+  paymentDataEdit,
+  getProductsBySellerEmail,
+  getProductImages,
+  deleteProduct
 };
