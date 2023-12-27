@@ -1,16 +1,17 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import {
-  loginInitialValues,
-  loginValidationSchema,
-} from "../../utils/Validation";
 import "./SellerProductList.scss";
 import { Tooltip } from "react-tooltip";
 import {
   addNewItemFormInitialValues,
   addNewItemValidationSchema,
 } from "../../utils/Validation";
-import { addProduct, findUserByEmail } from "../../services/apiService";
+import {
+  addProduct,
+  deleteProduct,
+  getProductImages,
+  getProductsBySellerEmail,
+} from "../../services/apiService";
 
 interface UserData {
   sub: string;
@@ -23,30 +24,164 @@ interface UserData {
   username: string;
 }
 
+interface SizeQuantity {
+  size: string;
+  qty: string;
+}
+
+interface Variation {
+  color: string;
+  sizeQuantityDTOS: SizeQuantity[];
+}
+
+interface Product {
+  productId: string;
+  sellerEmail: string;
+  name: string;
+  material: string;
+  price: number;
+  category: string;
+  productImages: Array<{ productImageUrl: string }>;
+  variations: Array<{
+    color: string;
+    sizeQuantities: Array<{
+      size: string;
+      qty: number;
+    }>;
+  }>;
+}
+
+
 const SellerProductList = () => {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [variation, setVariations] = useState([
-    { color: "", size: "", quantity: "" },
-  ]);
-  const handleAddVariation = () => {
-    setVariations([...variation, { color: "", size: "", quantity: "" }]);
-  };
-  useEffect(() => {
-    const tokenData = sessionStorage.getItem("decodedToken");
-
-    if (tokenData) {
-      const parsedUserData: UserData = JSON.parse(tokenData);
-      console.log("sasas", parsedUserData);
-      setUserData(parsedUserData);
-    }
-  }, []);
-
   const [addNewItem, setAddNewItem] = useState(true);
   const [buttonName, setButtonName] = useState("Add New Item");
+  const [productImg, setProductImg] = useState("");
 
+  const [variation, setVariations] = useState<Variation[]>([
+    {
+      color: "",
+      sizeQuantityDTOS: [{ size: "", qty: "" }],
+    },
+  ]);
+
+  const handleAddVariation = () => {
+    setVariations([...variation, { color: "", sizeQuantityDTOS: [{ size: "", qty: "" }] }]);
+  };
+
+  const [products, setProducts] = useState<Product[]>([]);
+
+  const [resolvedElements, setResolvedElements] = useState<JSX.Element[]>([]);
+
+  const fetchProductImages = async (productName: string): Promise<string | null> => {
+    try {
+      const imageData = await getProductImages(productName);
+      const blob = new Blob([imageData], { type: "image/png" });
+      const imageUrl = URL.createObjectURL(blob);
+      return imageUrl;
+    } catch (error) {
+      console.error("Error fetching product image:", error);
+      return null;
+    }
+  };
+
+  const fetchAndSetProductImages = async () => {
+    setLoading(true);
+  
+    // Check if products is defined and not empty
+    if (products && products.length > 0) {
+      const productImagesPromises = products.map(async (product) => {
+        // Check if productImages is defined
+        if (product.productImages && product.productImages.length > 0) {
+          const imageUrl = await fetchProductImages(product.productImages[0].productImageUrl);
+  
+          return (
+            <tr key={product.productId}>
+              <td>
+                {imageUrl ? (
+                  <div className="profile-img" style={{ backgroundImage: `url(${imageUrl})` }}></div>
+                ) : (
+                  "No Image"
+                )}
+              </td>
+              <td>{product.name}</td>
+              <td>{product.category}</td>
+              <td>${product.price}</td>
+              <td>
+                <i
+                  className="bi bi-eye-fill actions-tab"
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-content="View More"
+                  data-tooltip-place="top"
+                ></i>
+                <i
+                  className="bi bi-pencil-square actions-tab"
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-content="Edit"
+                  data-tooltip-place="top"
+                ></i>
+                <i
+                  className="bi bi-trash-fill"
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-content="Delete"
+                  data-tooltip-place="top"
+                  onClick={() => deleteSellerProduct(product.productId)}
+                ></i>
+                <Tooltip id="my-tooltip" />
+              </td>
+            </tr>
+          );
+        } else {
+          // Handle the case where product.productImages is undefined or empty
+          return null;
+        }
+      });
+  
+      try {
+        const resolvedElements = await Promise.all(productImagesPromises);
+  
+        // Filter out null values (products without images)
+        const validElements = resolvedElements.filter((element) => element !== null);
+  
+        // Set state with type casting
+        setResolvedElements(validElements as React.ReactElement[]);
+  
+      } catch (error) {
+        // Handle error
+        console.error("Error fetching product images:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    // If products is empty, you might want to handle this case or return early
+  };
+  
+
+
+  useEffect(() => {
+    getSellerProducts();
+  }, []);
+
+  useEffect(() => {
+    fetchAndSetProductImages();
+  }, [products]);
+
+  const getSellerProducts = async () => {
+    const email = sessionStorage.getItem("email");
+
+    try {
+      setLoading(true);
+      const products = await getProductsBySellerEmail(email);
+      setProducts(products);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      // Handle error
+    }
+  };
 
   const handleToggle = () => {
     setAddNewItem((prev) => !prev);
@@ -56,6 +191,72 @@ const SellerProductList = () => {
       setButtonName("Add New Item");
     }
   };
+
+
+
+  const addProductFormSubmit = async (values: any, { resetForm }: any) => {
+    try {
+      const email = sessionStorage.getItem("email");
+      const productDataForm = new FormData();
+
+      if (email) {
+        productDataForm.append("sellerEmail", email);
+      }
+      productDataForm.append("name", values.name);
+      productDataForm.append("category", values.category);
+      productDataForm.append("material", values.material);
+      productDataForm.append("price", values.price);
+      productDataForm.append("variation", JSON.stringify(values.variation));
+
+      if (selectedFile) {
+        productDataForm.append(
+          "productImages",
+          selectedFile,
+          selectedFile.name
+        );
+      }
+
+      const products = await addProduct(productDataForm);
+
+      if (products) {
+        setLoading(false);
+        resetForm();
+        resetForm({
+          values: addNewItemFormInitialValues,
+          errors: {},
+          touched: {},
+          isValidating: false,
+          isSubmitting: false,
+        });
+
+        setVariations([
+          {
+            color: "",
+            sizeQuantityDTOS: [{ size: "", qty: "" }],
+          },
+        ]);
+
+        setSelectedFile(null);
+      } else {
+        setLoading(false);
+      }
+    } catch (error) { }
+  };
+
+  const handleAddColor = () => {
+    setVariations([...variation, { color: "", sizeQuantityDTOS: [{ size: "", qty: "" }] }]);
+  };
+
+  const handleAddSizeQuantity = (index: number) => {
+    const newVariations = [...variation];
+    newVariations[index].sizeQuantityDTOS.push({ size: "", qty: "" });
+    setVariations(newVariations);
+  };
+  const deleteSellerProduct = async (id: any) => {
+    const prodDelete = await deleteProduct(id);
+    getSellerProducts();
+  };
+
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     setSelectedFile(file || null);
@@ -68,40 +269,11 @@ const SellerProductList = () => {
       };
       reader.readAsDataURL(file);
     }
+
   };
 
-  const addProductFormSubmit = async (values: any) => {
-    console.log('Product form values', values);
 
 
-    try {
-      const email = sessionStorage.getItem("email");
-      const productDataForm = new FormData();
-
-      if(email){
-        productDataForm.append('sellerEmail', email);
-      }
-      productDataForm.append('name', values.name);
-      productDataForm.append('category', values.category);
-      productDataForm.append('material', values.material);
-      productDataForm.append('price', values.price);
-      // productDataForm.append('variation', values.variation);
-      productDataForm.append('variation', JSON.stringify(values.variation));
-
-
-      if (selectedFile) {
-        productDataForm.append('productImages', selectedFile, selectedFile.name);
-    }
-
-      console.log('productDataForm:', productDataForm);
-      for (const entry of productDataForm.entries()) {
-        console.log(entry[0], ':', entry[1]);
-      }
-
-      const products = await addProduct(productDataForm);
-
-    } catch (error) { }
-  };
 
 
   return (
@@ -113,56 +285,19 @@ const SellerProductList = () => {
         <br />
         {addNewItem ? (
           <div>
-            {" "}
             <table className="table table-striped item-table">
               <thead className="thead-light">
                 <tr>
-                  <th scope="col">#</th>
+                  {/* <th scope="col">#</th> */}
                   <th scope="col">Image</th>
                   <th scope="col">Name</th>
                   <th scope="col">Category</th>
                   <th scope="col">Price</th>
-                  <th scope="col">Actions</th>
+                  <th scope="col">Action</th>
+                  {/* Add other columns as needed */}
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td scope="row">1</td>
-                  <td>
-                    {" "}
-                    <img
-                      className="product-img"
-                      src="https://th.bing.com/th/id/R.2b1935c6d3eb13ad67f1748c3790c914?rik=HZfvzIeD%2fiEOlg&riu=http%3a%2f%2fstylearena.net%2fwp-content%2fuploads%2f2015%2f04%2f6-velvet-red-anarkali-frocks.jpg&ehk=naaX%2bMI%2b6QMnvsFo6jgWZZNyPhR%2b7ww8nnyYBB%2b2mng%3d&risl=&pid=ImgRaw&r=0"
-                      alt="Product-img"
-                    />
-                  </td>
-                  <td>Hellio Frock</td>
-                  <td>Women</td>
-                  <td>$25.99</td>
-                  <td>
-                    <i
-                      className="bi bi-eye-fill actions-tab"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content="View More"
-                      data-tooltip-place="top"
-                    ></i>
-                    <i
-                      className="bi bi-pencil-square actions-tab"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content="Edit"
-                      data-tooltip-place="top"
-                    ></i>
-                    <i
-                      className="bi bi-trash-fill"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content="Delete"
-                      data-tooltip-place="top"
-                    ></i>
-
-                    <Tooltip id="my-tooltip" />
-                  </td>
-                </tr>
-              </tbody>
+              <tbody>{resolvedElements}</tbody>
             </table>
           </div>
         ) : (
@@ -258,50 +393,55 @@ const SellerProductList = () => {
                     <hr />
                     <div className="variation-header">
                       <p>Variations</p>
-                      <button
-                        className="btn btn-success addNew-success-button"
-                        onClick={handleAddVariation}
-                      >
-                        +
-                      </button>
-                    </div>
+                      {variation.map((v, index) => (
+                        <div key={index} className="form-container">
+                          <div className="buttons">
+                            <button
+                              className="btn btn-success addNew-success-button"
+                              onClick={() => handleAddSizeQuantity(index)}
+                              type="button"
+                            >
+                              +
+                            </button>
+                          </div>
 
-                    {variation.map((variation, index) => (
-                      <div key={index} className="field-container">
-                        <div className="field-input">
-                          <Field
-                            type="text"
-                            name={`variation[${index}].color`}
-                            placeholder="Color"
-                          />
-                          <Field
-                            type="text"
-                            name={`variation[${index}].size`}
-                            placeholder="Size"
-                          />
-                          <Field
-                            type="text"
-                            name={`variation[${index}].quantity`}
-                            placeholder="Quantity"
-                          />
+                          <div key={index} className="field-container">
+                            <div className="field-input">
+                              <Field
+                                type="text"
+                                name={`variation[${index}].color`}
+                                placeholder="Color"
+                              />
+                            </div>
+                            {v.sizeQuantityDTOS.map((sq, sqIndex) => (
+                              <div key={sqIndex} className="field-input">
+                                <Field
+                                  type="text"
+                                  name={`variation[${index}].sizeQuantityDTOS[${sqIndex}].size`}
+                                  placeholder="Size"
+
+                                />
+                                <Field
+                                  type="text"
+                                  name={`variation[${index}].sizeQuantityDTOS[${sqIndex}].qty`}
+                                  placeholder="Quantity"
+
+                                />
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                        <ErrorMessage
-                          name={`variation[${index}].color`}
-                          component="div"
-                          className="error"
-                        />
-                        <ErrorMessage
-                          name={`variation[${index}].size`}
-                          component="div"
-                          className="error"
-                        />
-                        <ErrorMessage
-                          name={`variation[${index}].quantity`}
-                          component="div"
-                          className="error"
-                        />
+                      ))}
+                      <div className="buttons">
+                        <button
+                          className="btn btn-info addNew-danger-button"
+                          onClick={handleAddColor}
+                          type="button"
+                        >
+                          + Add Variation
+                        </button>
                       </div>
-                    ))}
+                    </div>
                     <div className="field-container">
                       <div className="buttons">
                         <button className="btn btn-secondary" onClick={handleToggle} >Cancel</button>
