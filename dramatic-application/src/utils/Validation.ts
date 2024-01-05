@@ -13,9 +13,11 @@ export const forgetPwdValidationSchema = Yup.object({
 });
 
 export const resetPwdValidationSchema = Yup.object({
-  code: Yup.string().required("Reset code is required"),
-  password: Yup.string().required("New Password is required"),
-  confirmPassword: Yup.string().required("Confirm Password is required"),
+  currentPassword: Yup.string().required("Current Password is required"),
+  newPassword: Yup.string().required("New Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('newPassword')], 'Passwords must match')
+    .required('Confirm Password is required'),
 });
 
 export const userRegValidationSchema = Yup.object({
@@ -32,6 +34,22 @@ export const userRegValidationSchema = Yup.object({
     .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/, "Invalid characters before '@' in email")
     ,
   password: Yup.string().required("Password is required"),
+  gender: Yup.string().required("Gender is required"),
+  dob: Yup.string().required("DOB is required"),
+});
+export const userDetailsUpdateSchema = Yup.object({
+  firstName: Yup.string()
+    .required("First Name is required")
+    .matches(/^[a-zA-Z]+$/, "Only letters are allowed"),
+  lastName: Yup.string()
+    .required("Last Name is required")
+    .matches(/^[a-zA-Z]+$/, "Only letters are allowed"),
+  username: Yup.string().required("Username is required"),
+  email: Yup.string()
+    .email("Invalid email format")
+    .required("Email is required")
+    .matches(/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/, "Invalid characters before '@' in email")
+    ,
   gender: Yup.string().required("Gender is required"),
   dob: Yup.string().required("DOB is required"),
 });
@@ -102,8 +120,8 @@ export const forgetPwdInitialValues = {
 };
 
 export const resetPwdInitialValues = {
-  code: "",
-  password: "",
+  currentPassword: "",
+  newPassword: "",
   confirmPassword: "",
 };
 

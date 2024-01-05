@@ -109,6 +109,25 @@ const getProfileImage = async (email: any) => {
       toast.error(error.response.data);
     }
   };
+  const updateUser = async (email:any, userData:object) => {
+    try {
+      console.log(`${baseurl}/auth-service/auth/${email}/update`)
+      const response = await axiosInstance.put(
+        `${baseurl}/auth-service/auth/${email}/update`,
+        userData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Details Updated Successfully.");
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
 
   const findUsersAddressByType = async (email: any, addressType:any) => {
     try {
@@ -268,5 +287,6 @@ export {
   getSellerPaymentInfoByEmail,
   paymentDataSubmit,
   addProduct,
-  paymentDataEdit
+  paymentDataEdit,
+  updateUser
 };
