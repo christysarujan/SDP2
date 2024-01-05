@@ -156,7 +156,7 @@ const UserProfile = () => {
                             <ul>
                                 <NavLink to="store" className="nav-item" ><li>My Store</li>  </NavLink>
                                 {storeData && storeData.storeStatus === "VERIFIED" &&
-                                    <NavLink to="productList" className="nav-item"><li>Product List</li>  </NavLink>
+                                    <NavLink to="product" className="nav-item"><li>Product List</li>  </NavLink>
                                 }
                                 {storeData && storeData.storeStatus === "VERIFIED" &&
                                     <NavLink to="paymentInfo" className="nav-item"><li>Payment Information</li>  </NavLink>

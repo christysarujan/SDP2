@@ -285,6 +285,37 @@ const getStoreImage = async (email: any) => {
     }
   };
 
+  const getProductsByProductId = async (id: string) => {
+    try {
+      const response = await axiosInstance.get(
+        `${productBaseurl}/products/get/${id}`
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+    }
+  };
+
+  const editProduct = async (productData: object, id:string) => {
+    try {
+      const response = await axios.put(
+        `${productBaseurl}/products/updateProduct/${id}`,
+        productData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
+
 export {
   userRegistration,
   userLogin,
@@ -305,5 +336,7 @@ export {
   paymentDataEdit,
   getProductsBySellerEmail,
   getProductImages,
-  deleteProduct
+  deleteProduct,
+  getProductsByProductId,
+  editProduct
 };
