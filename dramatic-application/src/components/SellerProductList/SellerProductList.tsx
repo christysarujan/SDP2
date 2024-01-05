@@ -77,6 +77,7 @@ const SellerProductList = () => {
     setVariations([...variation, { color: "", sizeQuantityDTOS: [{ size: "", qty: "" }] }]);
   };
 
+  const [modalShow, setModalShow] = useState(false)
   const [products, setProducts] = useState<Product[]>([]);
 
   const [resolvedElements, setResolvedElements] = useState<JSX.Element[]>([]);
@@ -105,6 +106,7 @@ const SellerProductList = () => {
 
           return (
             <tr key={product.productId}>
+              <td>{product.productId}</td>
               <td>
                 {imageUrl ? (
                   <div className="profile-img" style={{ backgroundImage: `url(${imageUrl})` }}></div>
@@ -121,6 +123,9 @@ const SellerProductList = () => {
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content="View More"
                   data-tooltip-place="top"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                  onClick={() => viewProduct(product.productId)}
                 ></i>
                 <i
                   className="bi bi-pencil-square actions-tab"
@@ -281,15 +286,15 @@ const SellerProductList = () => {
     setEditProductStatus((prev) => !prev);
   };
 
-  const [showModal, setShowModal] = useState(false);
+  const viewProduct = (productId: string) => {
+    setSelectedProductId(productId);
+    modalView();
+    console.log(productId);
 
-  const handleOpenModal = () => {
-    setShowModal(true);
   };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+  const modalView = () => {
+    setModalShow((prev) => !prev)
+  }
 
   return (
     <div className="seller-product-list">
@@ -307,7 +312,7 @@ const SellerProductList = () => {
                 <table className="table table-striped item-table">
                   <thead className="thead-light">
                     <tr>
-                      {/* <th scope="col">#</th> */}
+                      <th scope="col">#</th>
                       <th scope="col">Image</th>
                       <th scope="col">Name</th>
                       <th scope="col">Category</th>
@@ -497,18 +502,14 @@ const SellerProductList = () => {
         Launch demo modal
       </button>
 
-      <div className="modal fade" id="exampleModal"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="modal fade" id="exampleModal" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
             <div className="modal-body">
-              <SellerProductSingleView/>
+              {modalShow && <SellerProductSingleView productId={selectedProductId} />}
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => modalView()}>Close</button>
               <button type="button" className="btn btn-primary">Save changes</button>
             </div>
           </div>
