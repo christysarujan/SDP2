@@ -15,6 +15,8 @@ import ProductList from './components/Store/ProductList/ProductList';
 import SellerProductList from './components/SellerProductList/SellerProductList';
 import SellerPaymentDetails from './components/SellerPaymentDetails/SellerPaymentDetails';
 import UserAddressManagement from './components/UserAddressManagement/UserAddressManagament';
+import SellerProductEdit from './components/SellerProductList/SellerProductEdit/SellerProductEdit';
+import StoreRequests from './components/admin/storeRequests';
 
 const router = createBrowserRouter([
   {
@@ -34,7 +36,7 @@ const router = createBrowserRouter([
         element: <VerifyEmail />,
       },
       {
-        path: '/profile',
+        path: '/',
         element: <UserProfile />,
         children: [
           {
@@ -42,8 +44,14 @@ const router = createBrowserRouter([
             element: <Store />
           },
           {
-            path: 'productList', // Use a relative path here
-            element: <SellerProductList />
+            path: 'product', // Use a relative path here
+            element: <SellerProductList />,
+            children: [
+              {
+                path: 'productEdit', // Use a relative path here
+                element: <SellerProductEdit productId="" onClose={() => console.log("Close function")}/>
+              }
+            ]
           },
           {
             path: 'paymentInfo', // Use a relative path here
@@ -56,6 +64,10 @@ const router = createBrowserRouter([
           {
             path:'userProfileEdit',
             element: <UserProfileEdit />,
+          },
+          {
+            path:'storeRequests',
+            element: <StoreRequests />,
           }
         ]
       },

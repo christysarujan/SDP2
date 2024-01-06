@@ -156,9 +156,9 @@ export const addNewItemFormInitialValues = {
   category: "",
   material: "",
   price: 0,
-  variation:[{"color":"", "quantity":"", "size":""}]
+  variation: [{ color: "", sizeQuantityDTOS: [{ qty: "", size: "" }] }]
+};
 
-}
 export const addNewPaymentTypeInitialValues = {
   paymentType: "",
   accNumber: "",

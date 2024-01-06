@@ -8,7 +8,7 @@ import {
   resetPwdValidationSchema,
   resetPwdInitialValues,
 } from "../../../utils/Validation";
-import { findUserByEmail, updateUser } from "../../../services/apiService";
+import { findUserByEmail, updateUser, getPendingStoreApprovals, changePassword } from "../../../services/apiService";
 import { useNavigate } from "react-router";
 
 interface UserData {
@@ -70,15 +70,18 @@ const UserProfileEdit = () => {
   const formRef = useRef<FormikProps<any>>(null);
   const modalRef = useRef(null);
 
-  const modalReset = (e:React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    console.log('Badu Awa')
-    if(formRef.current){
-      console.log('if Awa', formRef.current)
-
-      formRef.current.setValues(resetPwdInitialValues);
+  const modalReset = (form: FormikProps<any> | null) => {
+    if (form) {
+      form.resetForm({
+        values: resetPwdInitialValues,
+        errors: {},
+        touched: {},
+        isValidating: false,
+        isSubmitting: false,
+      });
     }
   };
+  
 
   const [addNewItem, setAddNewItem] = useState(true);
   const [buttonName, setButtonName] = useState("Add New Item");
@@ -87,8 +90,15 @@ const UserProfileEdit = () => {
   const navigate = useNavigate();
 
   const navigateToHome = () =>{
-    navigate("/profile/store");
-    window.location.reload();
+    const role = sessionStorage.getItem("role");
+    if(role === 'seller'){
+      navigate("/store");
+      window.location.reload();
+    }else{
+      navigate("/addressManagement");
+      window.location.reload();
+    }
+    
 
 
   }
@@ -159,6 +169,23 @@ const UserProfileEdit = () => {
  
 
       const products = await updateUser(email, userDataForm);
+    } catch (error) {}
+  };
+  const updateUserPasswordSubmit = async (values: any) => {
+    console.log("Password Values", values);
+
+    try {
+      const email = sessionStorage.getItem("email");
+      const passwordDataForm = new FormData();
+
+      passwordDataForm.append("currentPassword", values.currentPassword);
+      passwordDataForm.append("newPassword", values.newPassword);
+
+
+      console.log("userDataForm:", passwordDataForm);
+ 
+
+      const products = await changePassword(email, passwordDataForm);
     } catch (error) {}
   };
 
@@ -315,17 +342,18 @@ const UserProfileEdit = () => {
                     className="btn-close"
                     data-bs-dismiss="modal"
                     aria-label="Close"
-                    onClick={modalReset}
-                  ></button>
+                    onClick={() => modalReset(formRef.current)}>
+
+                  </button>
                 </div>
                 <div className="modal-body">
                   <div className="new-item-form">
                     <Formik
                       innerRef={formRef}
                       enableReinitialize={true}
-                      initialValues={regFormInitialValues}
+                      initialValues={resetPwdInitialValues}
                       validationSchema={resetPwdValidationSchema}
-                      onSubmit={updateUserProfileFormSubmit}
+                      onSubmit={updateUserPasswordSubmit}
                     >
                       {({
                         values,
@@ -386,15 +414,15 @@ const UserProfileEdit = () => {
                               <button
                               type="button"
                                 className="btn btn-secondary"
-                                onClick={modalReset}
-                                // onClick={(e) => {modalReset(e)}}
-                              >
+                                data-bs-dismiss="modal"
+                                onClick={() => modalReset(formRef.current)}                              >
                                 Cancel
                               </button>
                               <button
                                 className="btn btn-success"
                                 type="submit"
                                 disabled={loading}
+
                               >
                                 {" "}
                                 {loading ? (

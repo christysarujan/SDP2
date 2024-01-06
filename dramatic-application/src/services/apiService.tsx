@@ -68,6 +68,24 @@ const pwdResetCode = async (resetPwd: any) => {
     toast.error(error.response.data);
   }
 };
+const changePassword = async (email:any, userData:object) => {
+  try {
+    const response = await axiosInstance.post(
+      `${baseurl}/auth-service/users/${email}/change-password`,
+      userData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    toast.success(response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error(error.response.data);
+    toast.error(error.response.data);
+  }
+};
 
 const findUserByEmail = async (email: any) => {
   try {
@@ -250,6 +268,17 @@ const getStoreImage = async (email: any) => {
     }
   };
 
+  const getPendingStoreApprovals = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${storeBaseurl}/seller-store-management-service/stores/all/pending`
+      );
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
   /* Product Management */
   const addProduct = async (productData: object) => {
     try {
@@ -270,11 +299,77 @@ const getStoreImage = async (email: any) => {
     }
   };
 
+  const getProductsBySellerEmail = async (email: any) => {
+    try {
+      const response = await axiosInstance.get(
+        `${productBaseurl}/products/all/${email}`
+      );
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
+  const getProductImages = async (name: any) => {
+    try {
+      const response = await axiosInstance.get(
+        `${productBaseurl}/products/images/${name}`
+      ,{ responseType: 'blob' });
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
+  const deleteProduct = async (id: any,) => {
+    try {
+      const response = await axiosInstance.delete(
+        `${productBaseurl}/products/${id}`
+      );
+      toast.success('Product deleted successfully');
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+    }
+  };
+
+  const getProductsByProductId = async (id: string) => {
+    try {
+      const response = await axiosInstance.get(
+        `${productBaseurl}/products/get/${id}`
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+    }
+  };
+
+  const editProduct = async (productData: object, id:string) => {
+    try {
+      const response = await axios.put(
+        `${productBaseurl}/products/updateProduct/${id}`,
+        productData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
+
 export {
   userRegistration,
   userLogin,
   getResetCode,
   pwdResetCode,
+  changePassword,
   findUserByEmail,
   sellerStoreRegistration,
   findStoreByEmail,
@@ -286,7 +381,13 @@ export {
   sellerStoreEdit,
   getSellerPaymentInfoByEmail,
   paymentDataSubmit,
+  getPendingStoreApprovals,
   addProduct,
   paymentDataEdit,
-  updateUser
+  updateUser,
+  getProductsBySellerEmail,
+  getProductImages,
+  deleteProduct,
+  getProductsByProductId,
+  editProduct
 };

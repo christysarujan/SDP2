@@ -33,6 +33,7 @@ const UserProfile = () => {
   const [profileImg, setProfileImg] = useState("");
   const [userNav, setUserNav] = useState(false);
   const [sellerNav, setSellerNav] = useState(false);
+  const [adminNav, setAdminNav] = useState(false);
   const [profileEdit, setProfileEdit] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [profileData, setProfileData] = useState<ProfileData | null>({
@@ -62,6 +63,8 @@ const UserProfile = () => {
       setSellerNav(true);
     } else if (role === "user") {
       setUserNav(true);
+    } else if (role === "admin") {
+      setAdminNav(true);
     }
   }, []);
 
@@ -72,7 +75,7 @@ const UserProfile = () => {
   const navigate = useNavigate();
 
   const editUserProfile = async () => {
-    navigate("/profile/userProfileEdit");
+    navigate("/userProfileEdit");
     setProfileEdit(true);
   };
 
@@ -166,7 +169,6 @@ const UserProfile = () => {
         <div className="profile-details">
           <p>User Name: {profileData?.username}</p>
           <p>Email: {profileData?.email}</p>
-          <p>Mobile No: 0775588760</p>
         </div>
         <button
           className="btn btn-outline-success"
@@ -209,6 +211,15 @@ const UserProfile = () => {
                     <NavLink to="addressManagement" className="nav-item">
                       <li>Billing and Shipping Address</li>{" "}
                     </NavLink>
+                  </ul>
+                </div>
+              )}
+              {adminNav && (
+                <div className="nav-bar">
+                  <ul>
+                  <NavLink to="storeRequests" className="nav-item">
+                        <li>Store Requests</li>{" "}
+                      </NavLink>
                   </ul>
                 </div>
               )}
