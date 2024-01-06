@@ -68,6 +68,24 @@ const pwdResetCode = async (resetPwd: any) => {
     toast.error(error.response.data);
   }
 };
+const changePassword = async (email:any, userData:object) => {
+  try {
+    const response = await axiosInstance.post(
+      `${baseurl}/auth-service/users/${email}/change-password`,
+      userData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    toast.success(response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error(error.response.data);
+    toast.error(error.response.data);
+  }
+};
 
 const findUserByEmail = async (email: any) => {
   try {
@@ -103,6 +121,25 @@ const getProfileImage = async (email: any) => {
         }
       );
       toast.success("Address Added Successfully.");
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+  const updateUser = async (email:any, userData:object) => {
+    try {
+      console.log(`${baseurl}/auth-service/auth/${email}/update`)
+      const response = await axiosInstance.put(
+        `${baseurl}/auth-service/auth/${email}/update`,
+        userData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Details Updated Successfully.");
       return response.data;
     } catch (error: any) {
       console.error(error.response.data);
@@ -231,6 +268,17 @@ const getStoreImage = async (email: any) => {
     }
   };
 
+  const getPendingStoreApprovals = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${storeBaseurl}/seller-store-management-service/stores/all/pending`
+      );
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
   /* Product Management */
   const addProduct = async (productData: object) => {
     try {
@@ -321,6 +369,7 @@ export {
   userLogin,
   getResetCode,
   pwdResetCode,
+  changePassword,
   findUserByEmail,
   sellerStoreRegistration,
   findStoreByEmail,
@@ -332,8 +381,10 @@ export {
   sellerStoreEdit,
   getSellerPaymentInfoByEmail,
   paymentDataSubmit,
+  getPendingStoreApprovals,
   addProduct,
   paymentDataEdit,
+  updateUser,
   getProductsBySellerEmail,
   getProductImages,
   deleteProduct,

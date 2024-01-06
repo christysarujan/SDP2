@@ -46,9 +46,11 @@ const NavBar = () => {
         if (decodedToken && decodedToken.verificationStatus === 'VERIFIED') {
           // Navigate to the profile page
           if(role === 'seller'){
-            navigate("/profile/store")
+            navigate("/store")
           } else if (role === 'user'){
-            navigate("/profile/addressManagement")
+            navigate("/addressManagement")
+          } else if (role === 'admin'){
+            navigate("/storeRequests")
           }
         } else {
           // Navigate to the email verification pageverifyEmail
