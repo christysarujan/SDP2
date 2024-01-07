@@ -17,6 +17,7 @@ import SellerPaymentDetails from './components/SellerPaymentDetails/SellerPaymen
 import UserAddressManagement from './components/UserAddressManagement/UserAddressManagament';
 import SellerProductEdit from './components/SellerProductList/SellerProductEdit/SellerProductEdit';
 import StoreRequests from './components/admin/storeRequests';
+import Inventory from './components/Inventory/Inventory';
 
 const router = createBrowserRouter([
   {
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
           {
             path:'storeRequests',
             element: <StoreRequests />,
+          },
+          {
+            path:'inventory',
+            element: <Inventory />,
           }
         ]
       },

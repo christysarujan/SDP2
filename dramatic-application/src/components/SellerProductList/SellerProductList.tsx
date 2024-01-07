@@ -119,6 +119,15 @@ const SellerProductList = () => {
               <td>${product.price}</td>
               <td>
                 <i
+                  className="bi bi-boxes actions-tab"
+                  data-tooltip-id="my-tooltip"
+                  data-tooltip-content="Inventory"
+                  data-tooltip-place="top"
+                  // data-bs-toggle="modal"
+                  // data-bs-target="#exampleModal"
+                  // onClick={() => viewProduct(product.productId)}
+                ></i>
+                <i
                   className="bi bi-eye-fill actions-tab"
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content="View More"

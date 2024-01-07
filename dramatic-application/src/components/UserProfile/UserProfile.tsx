@@ -193,13 +193,18 @@ const UserProfile = () => {
                       <li>My Store</li>{" "}
                     </NavLink>
                     {storeData && storeData.storeStatus === "VERIFIED" && (
-                      <NavLink to="productList" className="nav-item">
+                      <NavLink to="product" className="nav-item">
                         <li>Product List</li>{" "}
                       </NavLink>
                     )}
                     {storeData && storeData.storeStatus === "VERIFIED" && (
                       <NavLink to="paymentInfo" className="nav-item">
                         <li>Payment Information</li>{" "}
+                      </NavLink>
+                    )}
+                    {storeData && storeData.storeStatus === "VERIFIED" && (
+                      <NavLink to="inventory" className="nav-item">
+                        <li>Inventory</li>
                       </NavLink>
                     )}
                   </ul>
