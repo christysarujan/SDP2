@@ -168,6 +168,20 @@ const deleteUserAddress = async (id: any) => {
     console.error(error.response.data);
   }
 };
+const sellerAccountStateChange = async (id: any, action: string) => {
+  try {
+    const response = await axiosInstance.put(
+      `${baseurl}/auth-service/users/seller/${id}/${action}`,
+      
+    );
+    toast.success('Account Status Changed Successfully');
+    console.log(response)
+    return response.status;
+  } catch (error: any) {
+    console.error(error.response.data);
+    toast.error(error.response.data);
+  }
+};
 
 /* Store Management */
 
@@ -460,4 +474,5 @@ export {
   getActiveStoreList,
   getRejectedStoreList,
   getAllSellers,
+  sellerAccountStateChange,
 }
