@@ -50,7 +50,7 @@ const NavBar = () => {
           } else if (role === 'user'){
             navigate("/addressManagement")
           } else if (role === 'admin'){
-            navigate("/storeRequests")
+            navigate("/storeInfo")
           }
         } else {
           // Navigate to the email verification pageverifyEmail

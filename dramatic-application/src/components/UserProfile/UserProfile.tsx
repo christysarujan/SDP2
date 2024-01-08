@@ -217,8 +217,11 @@ const UserProfile = () => {
               {adminNav && (
                 <div className="nav-bar">
                   <ul>
-                  <NavLink to="storeRequests" className="nav-item">
-                        <li>Store Requests</li>{" "}
+                  <NavLink to="storeInfo" className="nav-item">
+                        <li>Store Management</li>{" "}
+                      </NavLink>
+                  <NavLink to="sellerManagement" className="nav-item">
+                        <li>Seller Management</li>{" "}
                       </NavLink>
                   </ul>
                 </div>

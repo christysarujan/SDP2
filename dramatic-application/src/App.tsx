@@ -17,6 +17,7 @@ import SellerPaymentDetails from './components/SellerPaymentDetails/SellerPaymen
 import UserAddressManagement from './components/UserAddressManagement/UserAddressManagament';
 import SellerProductEdit from './components/SellerProductList/SellerProductEdit/SellerProductEdit';
 import StoreRequests from './components/admin/storeRequests';
+import SellerManagement from './components/admin/sellerManagement';
 
 const router = createBrowserRouter([
   {
@@ -66,8 +67,12 @@ const router = createBrowserRouter([
             element: <UserProfileEdit />,
           },
           {
-            path:'storeRequests',
+            path:'storeInfo',
             element: <StoreRequests />,
+          },
+          {
+            path:'sellerManagement',
+            element: <SellerManagement />,
           }
         ]
       },
