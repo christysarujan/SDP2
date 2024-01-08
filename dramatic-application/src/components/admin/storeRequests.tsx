@@ -7,6 +7,7 @@ import {
   getRejectedStoreList,
   getActiveStoreList,
 } from "../../services/apiService";
+import { Modal, Button } from "react-bootstrap";
 
 interface UserData {
   sub: string;
@@ -51,6 +52,13 @@ const StoreRequests = () => {
   const [selectedStore, setSelectedStore] = useState<StoreInfo | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
+  const handleClose = () => {
+    setModalOpen(false);
+  };
+  const handleShow = () => {
+    setModalOpen(true);
+  };
+
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -87,10 +95,7 @@ const StoreRequests = () => {
       setPendingStoreList(response);
     } catch (error) {}
   };
-  const openModal = (store: StoreInfo) => {
-    setSelectedStore(store);
-    // setModalOpen(true);
-  };
+
   const viewActiveStores = () => {
     setActiveStores(true);
     setPendingStores(false);
@@ -106,6 +111,10 @@ const StoreRequests = () => {
     setPendingStores(false);
     setRejectedStores(true);
   };
+  const openModal = (store: StoreInfo) => {
+    setSelectedStore(store);
+    handleShow();
+  };
 
   const rejectRequest = async (email: any) => {
     // setModalOpen(false)
@@ -114,6 +123,10 @@ const StoreRequests = () => {
       console.log(response);
 
       if (response === 200) {
+        handleClose();
+        getAllPendingStoreList();
+        getAllActiveStoreList();
+        getAllRejectedStoreList();
       }
     } catch (error) {
       console.error("Error:", error);
@@ -126,6 +139,10 @@ const StoreRequests = () => {
       console.log(response);
 
       if (response === 200) {
+        handleClose();
+        getAllPendingStoreList();
+        getAllActiveStoreList();
+        getAllRejectedStoreList();
       }
     } catch (error) {
       console.error("Error:", error);
@@ -180,8 +197,6 @@ const StoreRequests = () => {
                           <div className="info-button-section">
                             <button
                               className="btn btn-primary view-info-btn"
-                              data-bs-toggle="modal"
-                              data-bs-target="#storeDetailsModal"
                               onClick={() => openModal(store)}
                             >
                               View Info
@@ -224,8 +239,6 @@ const StoreRequests = () => {
                           <div className="info-button-section">
                             <button
                               className="btn btn-primary view-info-btn"
-                              data-bs-toggle="modal"
-                              data-bs-target="#storeDetailsModal"
                               onClick={() => openModal(store)}
                             >
                               View Info
@@ -269,8 +282,6 @@ const StoreRequests = () => {
                             <div className="info-button-section">
                               <button
                                 className="btn btn-primary view-info-btn"
-                                data-bs-toggle="modal"
-                                data-bs-target="#storeDetailsModal"
                                 onClick={() => openModal(store)}
                               >
                                 View Info
@@ -293,9 +304,10 @@ const StoreRequests = () => {
           <></>
         )}
 
-        <div
+        {/* <div
           ref={modalRef}
-          className="modal fade"
+          className={`modal fade ${modalOpen ? 'show':""}`}
+          style={{display: modalOpen ? 'block': 'none'}}
           id="storeDetailsModal"
           data-bs-backdrop="static"
           aria-labelledby="exampleModalLabel"
@@ -370,7 +382,66 @@ const StoreRequests = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+
+        <Modal
+          show={modalOpen}
+          onHide={handleClose}
+          backdrop="static"
+          keyboard={false}
+          size="sm"
+          centered
+        >
+          <Modal.Header closeButton>Store Creation Request</Modal.Header>
+          <Modal.Body>
+            <p>
+              <b>Store Name:</b> {selectedStore?.name}
+            </p>
+            <p>
+              <b>Category:</b> {selectedStore?.category}
+            </p>
+            <p>
+              <b>Seller Email:</b> {selectedStore?.sellerEmail}
+            </p>
+            <p>
+              <b>Contact Number:</b> {selectedStore?.contactNo}
+            </p>
+            <p>
+              <b>Address:</b> {selectedStore?.address}
+            </p>
+            <p>
+              <b>Country:</b> {selectedStore?.country}
+            </p>
+            <p>
+              <b>Requested Date:</b>{" "}
+              {selectedStore?.createDate &&
+                new Date(selectedStore?.createDate).toISOString().split("T")[0]}
+            </p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              className="form-submit-btn"
+              variant="secondary"
+              onClick={handleClose}
+            >
+              Close
+            </Button>
+            <Button
+              className="form-submit-btn"
+              variant="danger"
+              onClick={() => rejectRequest(selectedStore?.sellerEmail)}
+            >
+              Reject
+            </Button>
+            <Button
+              className="form-submit-btn"
+              variant="success"
+              onClick={() => acceptRequest(selectedStore?.sellerEmail)}
+            >
+              Approve
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </div>
   );
