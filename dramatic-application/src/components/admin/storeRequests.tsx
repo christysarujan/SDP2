@@ -346,20 +346,26 @@ const StoreRequests = () => {
             >
               Close
             </Button>
-            <Button
-              className="form-submit-btn"
-              variant="danger"
-              onClick={() => rejectRequest(selectedStore?.sellerEmail)}
-            >
-              Reject
-            </Button>
-            <Button
-              className="form-submit-btn"
-              variant="success"
-              onClick={() => acceptRequest(selectedStore?.sellerEmail)}
-            >
-              Approve
-            </Button>
+            {selectedStore?.storeStatus === "PENDING" ? (
+              <>
+                <Button
+                  className="form-submit-btn"
+                  variant="danger"
+                  onClick={() => rejectRequest(selectedStore?.sellerEmail)}
+                >
+                  Reject
+                </Button>
+                <Button
+                  className="form-submit-btn"
+                  variant="success"
+                  onClick={() => acceptRequest(selectedStore?.sellerEmail)}
+                >
+                  Approve
+                </Button>
+              </>
+            ) : (
+              <></>
+            )}
           </Modal.Footer>
         </Modal>
       </div>
