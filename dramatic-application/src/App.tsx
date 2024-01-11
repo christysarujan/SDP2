@@ -72,7 +72,7 @@ const router = createBrowserRouter([
           },
           {
             path:'inventory',
-            element: <Inventory />,
+            element: <Inventory productId=""  onClose={() => console.log("Close function")}/>,
           }
         ]
       },

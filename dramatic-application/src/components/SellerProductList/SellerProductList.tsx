@@ -15,6 +15,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import SellerProductEdit from "./SellerProductEdit/SellerProductEdit";
 import SellerProductSingleView from "./SellerProductSingleView/SellerProductSingleView";
+import { Modal, Button } from "react-bootstrap";
+import Inventory from "../Inventory/Inventory";
 
 interface UserData {
   sub: string;
@@ -79,8 +81,11 @@ const SellerProductList = () => {
 
   const [modalShow, setModalShow] = useState(false)
   const [products, setProducts] = useState<Product[]>([]);
-
   const [resolvedElements, setResolvedElements] = useState<JSX.Element[]>([]);
+
+  const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const handleClose = () => setShowInventoryModal(false);
+  const handleShow = () => setShowInventoryModal(true);
 
   const fetchProductImages = async (productName: string): Promise<string | null> => {
     try {
@@ -106,7 +111,7 @@ const SellerProductList = () => {
 
           return (
             <tr key={product.productId}>
-              <td>{product.productId}</td>
+              {/* <td>{product.productId}</td> */}
               <td>
                 {imageUrl ? (
                   <div className="profile-img" style={{ backgroundImage: `url(${imageUrl})` }}></div>
@@ -123,9 +128,8 @@ const SellerProductList = () => {
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content="Inventory"
                   data-tooltip-place="top"
-                  // data-bs-toggle="modal"
-                  // data-bs-target="#exampleModal"
-                  // onClick={() => viewProduct(product.productId)}
+                  onClick={() => viewInventory(product.productId)}
+
                 ></i>
                 <i
                   className="bi bi-eye-fill actions-tab"
@@ -301,6 +305,12 @@ const SellerProductList = () => {
     console.log(productId);
 
   };
+  const viewInventory = (productId: string) => {
+    setSelectedProductId(productId);
+    console.log(productId);
+    handleShow();
+
+  };
   const modalView = () => {
     setModalShow((prev) => !prev)
   }
@@ -321,7 +331,7 @@ const SellerProductList = () => {
                 <table className="table table-striped item-table">
                   <thead className="thead-light">
                     <tr>
-                      <th scope="col">#</th>
+                      {/* <th scope="col">#</th> */}
                       <th scope="col">Image</th>
                       <th scope="col">Name</th>
                       <th scope="col">Category</th>
@@ -520,6 +530,17 @@ const SellerProductList = () => {
           </div>
         </div>
       </div>
+
+      <Modal show={showInventoryModal} onHide={handleClose} backdrop="static" keyboard={false} size="lg"
+        centered
+      >
+        <Modal.Header closeButton>
+          Inventory Management
+        </Modal.Header>
+        <Modal.Body>
+          <Inventory productId={selectedProductId} onClose={handleClose} />
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

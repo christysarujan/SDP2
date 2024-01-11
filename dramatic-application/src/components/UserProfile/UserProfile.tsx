@@ -202,11 +202,11 @@ const UserProfile = () => {
                         <li>Payment Information</li>{" "}
                       </NavLink>
                     )}
-                    {storeData && storeData.storeStatus === "VERIFIED" && (
+                   {/*  {storeData && storeData.storeStatus === "VERIFIED" && (
                       <NavLink to="inventory" className="nav-item">
                         <li>Inventory</li>
                       </NavLink>
-                    )}
+                    )} */}
                   </ul>
                 </div>
               )}

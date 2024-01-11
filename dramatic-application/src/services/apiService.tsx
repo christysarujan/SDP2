@@ -346,12 +346,31 @@ const getStoreImage = async (email: any) => {
 
   const editProduct = async (productData: object, id:string) => {
     try {
-      const response = await axios.put(
+      const response = await axiosInstance.put(
         `${productBaseurl}/products/updateProduct/${id}`,
         productData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+  // http://localhost:8083/api/v1/product-service/products/6583e18590973a287d5f6ac7/update-color-variant
+  const updateColorQuantity = async (data: object, id:string) => {
+    try {
+      const response = await axiosInstance.put(
+        `${productBaseurl}/products/${id}/update-color-variant`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
         }
       );
@@ -389,5 +408,6 @@ export {
   getProductImages,
   deleteProduct,
   getProductsByProductId,
-  editProduct
+  editProduct,
+  updateColorQuantity
 };

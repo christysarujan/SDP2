@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import './Inventory.scss'
-import { getProductsByProductId } from '../../services/apiService';
+import { getProductsByProductId, updateColorQuantity } from '../../services/apiService';
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
+import Modal from 'react-bootstrap/Modal';
+import { Button } from 'react-bootstrap';
 
 interface SizeQuantity {
     size: string;
@@ -24,11 +26,15 @@ interface ProductData {
     variations: Variation[];
 }
 
-const Inventory = () => {
+const Inventory = ({ productId, onClose }: { productId: string | null; onClose: () => void }) => {
 
     const [count, setCount] = useState<{ [key: string]: number }>({});
     const [productData, setProductData] = useState<ProductData | null>(null);
-    const [formValues, setFormValues] = useState<{ [key: string]: number }>({});
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     useEffect(() => {
         getProductData();
@@ -50,16 +56,20 @@ const Inventory = () => {
     };
 
     const getProductData = async () => {
-        const productData = await getProductsByProductId('6594f52a93e09b2a1d7b986f');
-        setProductData(productData);
-        // Initialize count with the initial stock values
-        const initialCount: { [key: string]: number } = {};
-        productData?.variations.forEach((variation: Variation) => {
-            variation.sizeQuantities.forEach((sizeQty: SizeQuantity) => {
-                initialCount[`${variation.color}_${sizeQty.size}`] = sizeQty.qty;
+        if (productId) {
+            const productData = await getProductsByProductId(productId);
+            setProductData(productData);
+            console.log('p-data', productData);
+
+            const initialCount: { [key: string]: number } = {};
+            productData?.variations.forEach((variation: Variation) => {
+                variation.sizeQuantities.forEach((sizeQty: SizeQuantity) => {
+                    initialCount[`${variation.color}_${sizeQty.size}`] = sizeQty.qty;
+                });
             });
-        });
-        setCount(initialCount);
+            setCount(initialCount);
+        }
+        // const productData = await getProductsByProductId('6594f52a93e09b2a1d7b986f');      
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, color: string, size: string) => {
@@ -71,7 +81,7 @@ const Inventory = () => {
         }));
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Transform count state into the desired format for submission
         const submitData: { color: string; sizeQuantityDTOS: { size: string; qty: number }[] }[] = Object.keys(count).map((key) => {
             const [color, size] = key.split('_');
@@ -88,19 +98,26 @@ const Inventory = () => {
 
         // Combine submitData for the same color into a single object
         const groupedSubmitData = submitData.reduce((acc, item) => {
-            const existingItem = acc.find((el) => el.color === item.color);
+            const existingIndex = acc.findIndex((el) => el.color === item.color);
 
-            if (existingItem) {
-                existingItem.sizeQuantityDTOS.push(...item.sizeQuantityDTOS);
+            if (existingIndex !== -1) {
+                // Combine sizeQuantityDTOS for the same color
+                acc[existingIndex].sizeQuantityDTOS.push(...item.sizeQuantityDTOS);
             } else {
-                acc.push(item);
+                // Add a new entry for a unique color
+                acc.push({ color: item.color, sizeQuantityDTOS: item.sizeQuantityDTOS });
             }
 
             return acc;
         }, [] as { color: string; sizeQuantityDTOS: { size: string; qty: number }[] }[]);
 
+
         // Use groupedSubmitData for further processing or submission
         console.log('Submit Data:', groupedSubmitData);
+        if (productData) {
+            const updateColorQty = await updateColorQuantity(groupedSubmitData, productData?.productId)
+            getProductData();
+        }
     };
 
     const validationSchema = Yup.object().shape({
@@ -111,19 +128,19 @@ const Inventory = () => {
 
     return (
         <div className='inventory-main'>
-            <div className="header">
+            {/*   <div className="header">
                 <p>Product List</p>
                 <hr />
-            </div>
+            </div> */}
             <div className="product-content">
                 <div className="product-details">
                     <div className="product-img"></div>
-                    <h5 className='p-name'>New Frock 2K24</h5>
-                    <p className='p-id'>Product ID : 12345</p>
-                    <h5 className='p-price'>LKR 2500</h5>
+                    <h5 className='p-name'>{productData?.name}</h5>
+                    <p className='p-id'>Product ID : {productData?.productId}</p>
+                    <h5 className='p-price'>LKR {productData?.price}</h5>
                 </div>
                 {productData && (
-                    <div  className="product-quantity">
+                    <div className="product-quantity">
                         <Formik
                             initialValues={{ count }}
                             validationSchema={validationSchema}
@@ -157,7 +174,7 @@ const Inventory = () => {
                                         ))}
                                     </div>
                                     <div className="btn-section">
-                                        <button className="btn btn-secondary" onClick={() => setFormValues({})}>
+                                        <button type='button' className="btn btn-secondary" onClick={() => onClose()}>
                                             Cancel
                                         </button>
                                         <button type="submit" className="btn btn-primary">
