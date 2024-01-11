@@ -1,3 +1,9 @@
+.success-color {
+  color: #0e940e;
+}
+.danger-color {
+  color: #f78324;
+}
 .user-address-details {
   width: 100%;
   min-height: calc(100vh - 100px);
@@ -6,18 +12,16 @@
   background-color: white;
   border-radius: 10px;
 
-  .sub-headings{
+  .sub-headings {
     margin-bottom: 10px;
 
-    .col{
+    .col {
       font-size: 12px;
       text-align: center;
       padding: 10px 0px;
       border-radius: 10px 10px 0px 0px;
       cursor: pointer;
-
     }
-
   }
 
   .addNewProdBtn {
@@ -154,12 +158,12 @@
 
       .file-input-label {
         /*   display: inline-block;
-            position: relative;
-            overflow: hidden;
-            padding: 8px;
-            cursor: pointer; */
+              position: relative;
+              overflow: hidden;
+              padding: 8px;
+              cursor: pointer; */
         /* display: flex;
-            flex-direction: row; */
+              flex-direction: row; */
         // flex: 200px;
       }
       .file-label {
@@ -220,18 +224,17 @@
   p {
     font-size: 12px;
   }
-  
 }
 .modal-footer {
   display: flex;
   align-items: center;
   justify-content: center !important ;
 
-  .button-section{
+  .button-section {
     display: flex !important;
     justify-content: space-between !important;
 
-    .footer-button{
+    .footer-button {
       font-size: 12px;
       margin: 0 1%;
     }
@@ -239,24 +242,20 @@
 }
 
 .active-button {
-  background-color:#d4d4d4
+  background-color: #d4d4d4;
 }
-.store-data-table{
+.store-data-table {
   font-size: 12px;
 
-  .info-button-section{
+  .info-button-section {
     display: flex;
     justify-content: center;
   }
 
-  .view-info-btn{
+  .view-info-btn {
     font-size: 12px;
   }
 }
 .table.store-data-table tbody td {
   vertical-align: middle;
-}
-.form-submit-btn{
-  font-size: 12px;
-  padding: 5px 10px;
 }
