@@ -1,0 +1,92 @@
+.inventory-main {
+  .product-content {
+    display: flex;
+    flex-direction: row;
+
+    .product-details {
+      flex: 50%;
+      padding: 10px;
+      min-height: 80vh;
+
+      .product-img {
+        width: 100%;
+        height: 70%;
+        background-color: antiquewhite;
+        border-radius: 10px;
+      }
+      .p-name {
+        margin: 10px 0 0 0;
+      }
+      .p-id {
+        margin: 0;
+        font-size: 14px;
+      }
+      .p-price {
+        margin: 10px 0 0 0;
+      }
+    }
+    .product-quantity {
+      flex: 50%;
+      padding-top: 10px;
+      .variation-details {
+        background-color: rgb(215, 215, 215);
+        min-height: 70vh;
+
+        p {
+          font-size: 14px;
+          margin: 0;
+          padding: 0;
+        }
+        .single-data {
+            padding-left: 10px;
+
+          p {
+            font-size: 12px;
+            margin: 0;
+            padding: 4px 0 0 0;
+          }
+
+          .size {
+            flex: 30%;
+          }
+          .in-stock {
+            flex: 40%;
+          }
+          .input-data {
+            flex: 30%;
+            padding-left: 15px;
+            display: flex;
+
+            .btn-change-value {
+              background-color: transparent;
+              color: blue;
+              font-weight: bold;
+              border: none;
+              width: 20px;
+              font-size: 14px;
+            }
+            input {
+              width: 50px;
+              height: 20px;
+              font-size: 12px;
+            }
+          }
+        }
+      }
+
+      .btn-section {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 10px;
+        .btn {
+          font-size: 14px;
+          width: 80px;
+          padding: 2px;
+          margin: 0;
+        }
+      }
+    }
+  }
+}

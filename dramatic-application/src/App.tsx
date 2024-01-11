@@ -17,6 +17,7 @@ import SellerPaymentDetails from './components/SellerPaymentDetails/SellerPaymen
 import UserAddressManagement from './components/UserAddressManagement/UserAddressManagament';
 import SellerProductEdit from './components/SellerProductList/SellerProductEdit/SellerProductEdit';
 import StoreRequests from './components/admin/storeRequests';
+import Inventory from './components/Inventory/Inventory';
 import SellerManagement from './components/admin/sellerManagement';
 
 const router = createBrowserRouter([
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
           {
             path:'storeInfo',
             element: <StoreRequests />,
+          },
+          {
+            path:'inventory',
+            element: <Inventory productId=""  onClose={() => console.log("Close function")}/>,
           },
           {
             path:'sellerManagement',
