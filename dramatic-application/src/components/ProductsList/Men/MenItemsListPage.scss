@@ -1,0 +1,74 @@
+.men-items-list-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .items-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+
+    .item {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+
+      img {
+        width: 100%;
+        height: 200px; // Set a fixed height for all images
+        object-fit: cover; // Ensure images cover the specified height
+        display: block;
+      }
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      .item-details {
+        padding: 10px;
+
+        h2 {
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+
+        p {
+          font-size: 16px;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    button {
+      margin: 0 5px;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: transparent;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
+
+      &.active {
+        background-color: #FFC0CB;
+        color: white;
+        border-color: #FFC0CB;
+      }
+    }
+  }
+}

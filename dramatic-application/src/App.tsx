@@ -19,6 +19,12 @@ import SellerProductEdit from './components/SellerProductList/SellerProductEdit/
 import StoreRequests from './components/admin/storeRequests';
 import Inventory from './components/Inventory/Inventory';
 import SellerManagement from './components/admin/sellerManagement';
+import MenItemsListPage from './components/ProductsList/Men/MenItemsListPage';
+import WomenItemsListPage from './components/ProductsList/Women/WomenItemsListPage';
+import KidsItemsListPage from './components/ProductsList/Kid/KidsItemsListPage';
+import ProductPageRoute from './components/ProductsList/ViewProduct/productPageRoute';
+import ViewCartPage from './components/Cart/ViewCart';
+import { CartProvider } from './components/Cart/CartContext'; // Import CartProvider from CartContext
 
 const router = createBrowserRouter([
   {
@@ -38,29 +44,49 @@ const router = createBrowserRouter([
         element: <VerifyEmail />,
       },
       {
+        path: '/viewCart',
+        element: <ViewCartPage />,
+      },
+      {
+        path: '/viewproduct/:productId',
+        element: <ProductPageRoute />
+      },
+      {
+        path: '/mensItems',
+        element: <MenItemsListPage />,
+      },
+      {
+        path: '/womenItems',
+        element: <WomenItemsListPage />,
+      },
+      {
+        path: '/kidsItems',
+        element: <KidsItemsListPage />,
+      },
+      {
         path: '/',
         element: <UserProfile />,
         children: [
           {
-            path: 'store', // Use a relative path here
+            path: 'store',
             element: <Store />
           },
           {
-            path: 'product', // Use a relative path here
+            path: 'product',
             element: <SellerProductList />,
             children: [
               {
-                path: 'productEdit', // Use a relative path here
+                path: 'productEdit',
                 element: <SellerProductEdit productId="" onClose={() => console.log("Close function")}/>
               }
             ]
           },
           {
-            path: 'paymentInfo', // Use a relative path here
+            path: 'paymentInfo',
             element: <SellerPaymentDetails />
           },
           {
-            path: 'addressManagement', // Use a relative path here
+            path: 'addressManagement',
             element: <UserAddressManagement />
           },
           {
@@ -81,16 +107,16 @@ const router = createBrowserRouter([
           }
         ]
       },
-
     ]
   }
 ]);
 
-
 function App() {
   return (
     <div className="app-main">
-      <RouterProvider router={router} />
+      <CartProvider> {/* Wrap the RouterProvider with CartProvider */}
+        <RouterProvider router={router} />
+      </CartProvider>
     </div>
   );
 }

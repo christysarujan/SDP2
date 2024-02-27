@@ -1,0 +1,111 @@
+.product-container {
+  margin: 0 auto;
+  justify-content: flex-start;
+
+  .product-page {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+
+    .image-container {
+      flex: 0 0 auto;
+      height: 300px;
+      justify-content: flex-start;
+
+      img {
+        max-width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .product-details {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+
+      h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      p {
+        margin-bottom: 10px;
+        color: #666;
+      }
+
+      .colors {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+
+        .color {
+          width: 60px;
+          height: 60px;
+          margin-right: 10px;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: transform 0.3s ease;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+
+          &.selected {
+            border: 2px solid #333;
+          }
+        }
+      }
+
+      .sizes {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+
+        .size {
+          padding: 10px;
+          margin-right: 10px;
+          margin-bottom: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: #f0f0f0;
+          }
+
+          &.selected {
+            background-color: #4caf50;
+            color: white;
+          }
+        }
+      }
+
+      input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        color: #333;
+        background-color: #fff;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          border-color: #4caf50;
+          outline: none;
+        }
+      }
+
+      button {
+        &:first-child {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
