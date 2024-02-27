@@ -2,6 +2,9 @@ import React from 'react'
 import './NavBar.scss'
 // import {logo} from '../../assests/images/logo.png'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { useCart } from '../Cart/CartContext';
 
 interface DecodedToken {
   sub: string;
@@ -15,6 +18,7 @@ interface DecodedToken {
 }
 
 const NavBar = () => {
+  const { cartCount } = useCart();
   const navigate = useNavigate();
   const handleLogout = () => {
 /*     sessionStorage.removeItem('decodedToken');
@@ -63,25 +67,32 @@ const NavBar = () => {
     };
    
   
-
   return (
     <div className="nav-bar-main">
       <div className="nav-item">
         <ul>
-          <li>Men</li>
-          <li>Women</li>
-          <li>Kid</li>
+        <li><Link to="/mensItems">Men</Link></li>
+        <li><Link to="/womenItems">Women</Link></li>
+        <li><Link to="/kidsItems">Kids</Link></li>
         </ul>
       </div>
       <div className="nav-logo">
-        {/* <img src="../../assests/images/logo.png" alt="" /> */}
+      <Link to="/"> {/* Add Link to the home page */}
         <div className="logo"></div>
+      </Link>
       </div>
       <div className="nav-icons">
         <div className="icons">
+
+          <NavLink to="/viewCart">
+            <FontAwesomeIcon icon={faShoppingCart} className="bi bi-cart" style={{ color: 'black' }} />
+            <span className="cart-count">{cartCount}</span>
+          </NavLink>
+
           <i className="bi bi-search"></i>
           <i className="bi bi-person" onClick={checkVerificationStatus}></i>
           <i className="bi bi-bell"></i>
+          
           {/* <NavLink to={"/auth"}><button className='btn btn-outline-secondary'>Login</button></NavLink> */}
           <div>
             {decodedToken ? (

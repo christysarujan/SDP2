@@ -415,10 +415,11 @@ const SellerProductList = () => {
                                 <span className="button">Choose Image</span>
                                 <input
                                   type="file"
-                                  accept="image/*" // Allow only image files
+                                  accept="image/*"
                                   id="fileInput"
                                   className="file-input"
                                   onChange={handleFileChange}
+                                  multiple // Allow multiple files to be selected
                                 />
                               </label>
                               <div className="fileName">

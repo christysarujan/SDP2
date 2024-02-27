@@ -1,11 +1,14 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { axiosInstance } from "./Interceptor";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import CartData from '../components/Cart/cartData'
+import CartQuantityData from "../components/Cart/cartQuantityData";
 
 const baseurl = "http://localhost:8080/api/v1";
 const storeBaseurl = "http://localhost:8082/api/v1";
 const productBaseurl = "http://localhost:8083/api/v1/product-service";
+const cartBaseurl = "http://localhost:8089/api/v1/shopping-cart-service";
 
 const userRegistration = async (userData: object) => {
   try {
@@ -92,9 +95,11 @@ const findUserByEmail = async (email: any) => {
     const response = await axiosInstance.get(
       `${baseurl}/auth-service/users/${email}`
     );
+    console.log("I am inside find User" , response.data)
     return response.data;
   } catch (error: any) {
-    // console.error(error.response.data);
+    
+    //console.error(error.response.data);
   }
 };
 
@@ -109,6 +114,22 @@ const getProfileImage = async (email: any) => {
     // console.error(error.response.data);
   }
 };
+
+
+// Get Product Image
+const getProductImage = async (imagename: any) => {
+  try {
+    const response = await axiosInstance.get(
+      `${productBaseurl}/products/images/${imagename}`,
+      { responseType: "blob" }
+    );
+    return response.data;
+  } catch (error: any) {
+    // console.error(error.response.data);
+  }
+};
+
+
 
 const addUserAddress = async (email: any, addressData: object) => {
   try {
@@ -389,6 +410,18 @@ const getProductsBySellerEmail = async (email: any) => {
   }
 };
 
+const getProductsByCategory = async (category: any) => {
+  try {
+    const response = await axiosInstance.get(
+      `${productBaseurl}/products/${category}`
+    );
+    console.log("Products By Catogory..",response.data)
+    return response.data;
+  } catch (error: any) {
+    // console.error(error.response.data);
+  }
+};
+
 const getProductImages = async (name: any) => {
   try {
     const response = await axiosInstance.get(
@@ -462,6 +495,83 @@ const getProductsByProductId = async (id: string) => {
     }
   };
 
+  // Cart Management
+
+  const addToCart = async (cartData: CartData): Promise<any> => {
+    try {
+      const response = await axiosInstance.post(
+        `${cartBaseurl}/cart/add`,
+        cartData,
+        {
+          headers: {
+            'Content-Type': 'application/json', // Change content type to JSON
+          },
+        }
+      );
+      toast.success('Product added to cart successfully');
+      return response.data;
+    } catch (error: unknown) { // Specify type annotation for 'error'
+      if (axios.isAxiosError(error)) { // Check if error is an AxiosError
+        const axiosError = error as AxiosError; // Cast error to AxiosError
+        console.error('Error adding to cart:', axiosError.response?.data);
+        toast.error('Failed to add product to cart');
+        throw axiosError; // Rethrow error to handle it in the component
+      } else {
+        // Handle other types of errors
+        console.error('Error adding to cart:', error);
+        toast.error('Failed to add product to cart');
+        throw error; // Rethrow error to handle it in the component
+      }
+    }
+  };
+  
+  const updateCartQuantity = async (id:string , cartQuantityData: CartQuantityData) => {
+    try {
+      const response = await axiosInstance.put(
+        `${cartBaseurl}/cart/update-quantity/${id}`,
+        
+        cartQuantityData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      toast.success(response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
+  
+
+  const getCartsByUserId = async (userId: any) => {
+    try {
+      const response = await axiosInstance.get(
+        `${cartBaseurl}/cart/get/${userId}`
+      );
+      console.log("Get Carts By User..",response.data)
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
+  const deleteCartByUserIdAndCartId = async (userId: any , cartId : any) => {
+    try {
+      const response = await axiosInstance.delete(
+        `${cartBaseurl}/cart/remove/${userId}/${cartId}`
+      );
+      toast.success("Cart deleted successfully");
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+    }
+  };
+
+
 export {
   userRegistration,
   userLogin,
@@ -495,4 +605,10 @@ export {
   getRejectedStoreList,
   getAllSellers,
   sellerAccountStateChange,
+  addToCart,
+  getProductsByCategory,
+  getProductImage,
+  updateCartQuantity,
+  getCartsByUserId,
+  deleteCartByUserIdAndCartId,
 }
