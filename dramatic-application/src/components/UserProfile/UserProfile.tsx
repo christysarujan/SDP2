@@ -228,6 +228,10 @@ const UserProfile = () => {
                   <NavLink to="sellerManagement" className="nav-item">
                         <li>Seller Management</li>{" "}
                       </NavLink>
+
+                    <NavLink to="productManagement" className="nav-item">
+                        <li>Product Management</li>{" "}
+                  </NavLink>
                   </ul>
                 </div>
               )}

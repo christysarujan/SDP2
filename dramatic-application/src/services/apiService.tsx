@@ -495,6 +495,51 @@ const getProductsByProductId = async (id: string) => {
     }
   };
 
+
+  const getAllProducts = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${productBaseurl}/products`);
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+  
+
+  const productAccountStateChange = async (id: any, action: string) => {
+    try {
+      const response = await axiosInstance.put(
+        `${baseurl}/auth-service/users/seller/${id}/${action}`,
+        
+      );
+      toast.success('Account Status Changed Successfully');
+      console.log(response)
+      return response.status;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
+  const unpublishProduct = async (id: string, reason: string) => {
+    try {
+      const response = await axiosInstance.put(
+        `${productBaseurl}/products/${id}/un-publish`,
+        { reason },  // Sending reason as a JSON object
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      toast.success(response.data);
+      return response.data;
+     
+    } catch (error) {
+      throw error;
+    }
+  };
   // Cart Management
 
   const addToCart = async (cartData: CartData): Promise<any> => {
@@ -611,4 +656,7 @@ export {
   updateCartQuantity,
   getCartsByUserId,
   deleteCartByUserIdAndCartId,
+  productAccountStateChange,
+  getAllProducts,
+  unpublishProduct,
 }
