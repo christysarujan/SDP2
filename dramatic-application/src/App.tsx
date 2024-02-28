@@ -1,17 +1,13 @@
 import React from 'react';
 import './App.scss';
-import NavBar from './components/NavBar/NavBar';
 import LandingPage from './components/LandingPage/LandingPage';
 import AuthForm from './components/AuthForm/AuthForm';
 import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from "react-router-dom";
 import Layout from './components/Layout/Layout';
-import Footer from './components/Footer/Footer';
 import VerifyEmail from './components/VerifyEmail/VerifyEmail';
 import UserProfile from './components/UserProfile/UserProfile';
 import UserProfileEdit from './components/UserProfile/UserProfileEdit/UserProfileEdit';
-import MyStore from './components/Store/MyStore/MyStore';
 import Store from './components/Store/Store';
-import ProductList from './components/Store/ProductList/ProductList';
 import SellerProductList from './components/SellerProductList/SellerProductList';
 import SellerPaymentDetails from './components/SellerPaymentDetails/SellerPaymentDetails';
 import UserAddressManagement from './components/UserAddressManagement/UserAddressManagament';
@@ -25,6 +21,7 @@ import KidsItemsListPage from './components/ProductsList/Kid/KidsItemsListPage';
 import ProductPageRoute from './components/ProductsList/ViewProduct/productPageRoute';
 import ViewCartPage from './components/Cart/ViewCart';
 import { CartProvider } from './components/Cart/CartContext'; // Import CartProvider from CartContext
+import ProductManagement from './components/admin/productManagement';
 
 const router = createBrowserRouter([
   {
@@ -104,6 +101,10 @@ const router = createBrowserRouter([
           {
             path:'sellerManagement',
             element: <SellerManagement />,
+          },
+          {
+            path:'productManagement',
+            element: <ProductManagement/>,
           }
         ]
       },
@@ -114,7 +115,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div className="app-main">
-      <CartProvider> {/* Wrap the RouterProvider with CartProvider */}
+      <CartProvider> 
         <RouterProvider router={router} />
       </CartProvider>
     </div>
