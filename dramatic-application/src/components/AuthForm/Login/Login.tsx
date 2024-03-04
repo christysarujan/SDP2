@@ -1,40 +1,70 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { loginInitialValues, loginValidationSchema } from '../../../utils/Validation'
-import { userLogin } from '../../../services/apiService'
+import { getCartsByUserId, userLogin } from '../../../services/apiService'
 import { useNavigate } from 'react-router-dom'
 import "../AuthForm.scss";
 import "./Login.scss";
-import { toast } from 'react-toastify';
+import { toast } from 'react-toastify'; 
 import { jwtDecode } from "jwt-decode";
+import { useCart } from '../../Cart/CartContext'
+
+interface UserData {
+    sub: string;
+    role: string;
+    verificationStatus: string;
+    iss: string;
+    exp: number;
+    iat: number;
+    email: string;
+    username: string;
+  }
 
 const Login = () => {
 
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const { setCartCount } = useCart();
 
     const loginSubmit = async (values: any) => {
         setLoading(true);
         try {
             const login = await userLogin(values);
-
+    
             if (login && login.accessToken) {
                 const accessToken = login.accessToken;
                 const tokenDecode: any = jwtDecode(accessToken);
                 const email = tokenDecode.email;
                 const role = tokenDecode.role;
-
-
+    
                 console.log('Access Token :', accessToken);
                 console.log('tokenDecode :', tokenDecode);
                 sessionStorage.setItem('decodedToken', JSON.stringify(tokenDecode));
                 sessionStorage.setItem('email', email);
                 sessionStorage.setItem('role', role);
                 sessionStorage.setItem('userData', JSON.stringify(login));
-
+    
+                const tokenData = sessionStorage.getItem("decodedToken");
+    
                 navigate("/")
                 setLoading(false);
                 toast.success('Successfully Login');
+    
+                if (tokenData) {
+                    const parsedUserData: UserData = JSON.parse(tokenData);
+                    // Fetch cart count from the API after successful login
+                    try {
+                        const cartCountResponse = await getCartsByUserId(parsedUserData?.username || '');
+                        const updatedCartCount = cartCountResponse.length;
+                        console.log("Updated Card Count...", updatedCartCount);
+    
+                        // Update cart count in CartContext
+                        setCartCount(updatedCartCount);
+                    } catch (cartError) {
+                        console.error('Error fetching cart count:', cartError);
+                        // Handle cart count error here
+                    }
+                }
             } else {
                 setLoading(false);
                 toast.error('Login failed. Please try again.');
@@ -45,6 +75,7 @@ const Login = () => {
             toast.error('An error occurred during login. Please try again.');
         }
     }
+    
 
 
     return (

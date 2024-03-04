@@ -41,8 +41,8 @@
         margin-bottom: 20px;
 
         .color {
-          width: 60px;
-          height: 60px;
+          width: 40px;
+          height: 40px;
           margin-right: 10px;
           border: none;
           border-radius: 50%;
@@ -104,6 +104,170 @@
       button {
         &:first-child {
           margin-right: 10px;
+        }
+      }
+    }
+
+    .tab-container {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+
+      .react-tabs {
+        .react-tabs__tab-list {
+          border-bottom: 1px solid #ccc;
+          margin-bottom: 20px;
+          padding-left: 0;
+          list-style: none;
+          display: flex;
+
+          .react-tabs__tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #333;
+            border: none;
+            background-color: transparent;
+            transition: color 0.3s ease;
+
+            &:hover {
+              color: #4caf50;
+            }
+
+            &.react-tabs__tab--selected {
+              color: #4caf50;
+              font-weight: bold;
+            }
+          }
+        }
+
+        .react-tabs__tab-panel {
+          display: none;
+
+          &.react-tabs__tab-panel--selected {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+
+  .wishlist-icon {
+    position: relative;
+    margin-left: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #291e1e;
+    cursor: pointer;
+    opacity: 1;
+    z-index: 10;
+    transition: transform 0.3s ease;
+
+    &:before {
+      content: "Add to Wishlist";
+      position: absolute;
+      top: -30px;
+      left: 100%;
+      margin-left: 10px;
+      background-color: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+    }
+
+    &:hover:before {
+      opacity: 1;
+    }
+
+    &:hover {
+      transform: scale(1.2);
+      color: rgb(226, 21, 21);
+    }
+  }
+
+  .review-section {
+    margin-top: 100px;
+    margin-bottom: 20px;
+
+    h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .review-form {
+      margin-bottom: 20px;
+
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+      }
+
+      .rating-stars {
+        margin-bottom: 10px;
+
+        svg {
+          font-size: 24px;
+          color: #ffd700;
+          cursor: pointer;
+          transition: transform 0.3s ease;
+
+          &:hover {
+            transform: scale(1.2);
+          }
+
+          &.star-filled {
+            color: #ffdd00;
+          }
+        }
+      }
+
+      input[type="file"] {
+        margin-bottom: 10px;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #388e3c;
+        }
+      }
+    }
+
+    .reviews-list {
+      .review {
+        margin-bottom: 20px;
+
+        p {
+          margin-bottom: 10px;
+          color: #666;
+        }
+
+        .rating-stars {
+          svg {
+            font-size: 18px;
+            color: #ffd700;
+
+            &.star-filled {
+              color: #ffdd00;
+            }
+          }
         }
       }
     }

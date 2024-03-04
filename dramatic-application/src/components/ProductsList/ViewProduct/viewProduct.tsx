@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './ProductPage.scss';
-import { getProductsByProductId, getProductImage, findStoreByEmail, addToCart, getCartsByUserId } from '../../../services/apiService';
-import ReactImageMagnify from 'react-image-magnify'; // Import React Image Magnify
+import { getProductsByProductId, getProductImage, findStoreByEmail, addToCart, getCartsByUserId, addToWishList, addToReviewFeedback, getFeedBackById } from '../../../services/apiService';
+import ReactImageMagnify from 'react-image-magnify';
 import { useCart } from '../../Cart/CartContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import Rating from 'react-rating-stars-component';
+import 'react-tabs/style/react-tabs.scss';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 interface Product {
   name: string;
@@ -14,8 +19,8 @@ interface Product {
   sizes: string[];
   variations?: Variation[];
   sellerEmail: string;
-  discount: number; // New property for discount
-  newPrice: string; // New property for discounted price
+  discount: number;
+  newPrice: string;
 }
 
 interface ProductPageProps {
@@ -43,38 +48,66 @@ interface UserData {
   username: string;
 }
 
-function ProductPage(props: ProductPageProps) {
+interface Feedback {
+  id?: string;
+  userId: string;
+  productId: string;
+  comment: string;
+  rating: number;
+  uploadImageList?: File[];
+}
+
+const ProductPage: React.FC<ProductPageProps> = (props) => {
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
-  const [storeDetails, setStoreDetails] = useState<any | null>(null); // Adjust the type as per your actual implementation
+  const [storeDetails, setStoreDetails] = useState<any | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [magnifierPos, setMagnifierPos] = useState({ x: 0, y: 0 });
   const { setCartCount } = useCart();
+  const [bump, setBump] = useState(false);
+  const [rating, setRating] = useState<number>(0);
+  const [reviewText, setReviewText] = useState<string>('');
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [reviews, setReviews] = useState<Feedback[]>([]);
+  const [refreshFlag, setRefreshFlag] = useState<boolean>(false); // Add a dummy state variable
 
   useEffect(() => {
-    // Retrieve user data from session storage
     const tokenData = sessionStorage.getItem("decodedToken");
     if (tokenData) {
       const parsedUserData: UserData = JSON.parse(tokenData);
-      console.log("user Data...", parsedUserData);
       setUserData(parsedUserData);
     }
 
-    // Fetch product data
     fetchProductData(props.productId)
       .then(data => {
         setProduct(data);
-        // Fetch Store Details
         if (data) {
           fetchStoreDetails(data.sellerEmail);
+          fetchReviews(props.productId); // Fetch reviews for the product using productId
         }
       })
       .catch(error => {
         console.error('Error fetching product:', error);
       });
   }, [props.productId]);
+
+  useEffect(() => {
+    // Fetch reviews data
+    fetchReviews(props.productId);
+  }, [props.productId, refreshFlag]); // Include refreshFlag in dependencies
+
+
+
+  const fetchReviews = async (productId: string) => {
+    try {
+      const feedback = await getFeedBackById(productId);
+      setReviews(feedback);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
+
 
   const getProductPhoto = async (imageUrl: string): Promise<string> => {
     try {
@@ -114,7 +147,6 @@ function ProductPage(props: ProductPageProps) {
     try {
       const storeData = await findStoreByEmail(sellerEmail);
       setStoreDetails(storeData);
-      console.log("Store Data is ", storeData)
     } catch (error) {
       console.error("Error fetching store details:", error);
     }
@@ -132,18 +164,16 @@ function ProductPage(props: ProductPageProps) {
     setQuantity(parseInt(event.target.value));
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = event.target.files;
+    if (fileList) {
+      const filesArray: File[] = Array.from(fileList);
+      setSelectedFiles(filesArray);
+    }
+  };
+
   const addToCartClicked = async () => {
     if (product && selectedColor && selectedSize && userData) {
-      console.log("Adding to cart:", {
-        productId: props.productId,
-        productPrice: product.price,
-        username: userData.username,
-        selectedColor: selectedColor,
-        selectedSize: selectedSize,
-        quantity: quantity
-      });
-
-      // Call addToCart API function
       await addToCart({
         productId: props.productId,
         productPrice: product.price,
@@ -152,20 +182,59 @@ function ProductPage(props: ProductPageProps) {
         size: selectedSize,
         quantity: quantity
       })
-      .then(async () => {
-        // Fetch cart items by user ID
-        const cartItems = await getCartsByUserId(userData.username);
-        // Calculate the total cart count
-        const cartCount = cartItems.reduce((total: any, item: { quantity: any; }) => total + item.quantity, 0);
-      
+        .then(async () => {
+          const cartItems = await getCartsByUserId(userData.username);
+          const cartCount = cartItems.length;
+          console.log("Cart Count is...", cartCount)
+          setCartCount(cartCount);
+        })
+        .catch(error => {
+          console.error('Error adding to cart:', error);
+        });
+    }
+  };
 
-         // Update the cart count in the context
-         setCartCount(cartCount);
+  const addToWishListClicked = async () => {
+    setBump(true);
+    if (product && selectedColor && selectedSize && userData) {
+      await addToWishList({
+        productId: props.productId,
+        productPrice: product.price,
+        userId: userData.username,
+        color: selectedColor,
+        size: selectedSize,
+        quantity: quantity
       })
-      .catch(error => {
-        console.error('Error adding to cart:', error);
-        // Handle error, maybe show an error message to the user
-      });
+        .then(async () => {
+          // Handle wish list addition success
+        })
+        .catch(error => {
+          console.error('Error adding to wish list:', error);
+        });
+    }
+  };
+
+  const handleReviewSubmit = async () => {
+    try {
+      if (!userData || !product) {
+        console.error('User data or product data not available');
+        return;
+      }
+      const feedback: Feedback = {
+        userId: userData.username,
+        productId: props.productId,
+        comment: reviewText,
+        rating: rating,
+        uploadImageList: selectedFiles,
+      };
+      const response = await addToReviewFeedback(feedback, selectedFiles);
+      console.log('Review submitted:', feedback.comment, 'Rating:', feedback.rating);
+      setReviewText('');
+      setRating(0);
+      setRefreshFlag(prevFlag => !prevFlag); // Toggle refreshFlag
+      return response;
+    } catch (error) {
+      console.error('Error adding review:', error);
     }
   };
 
@@ -177,34 +246,35 @@ function ProductPage(props: ProductPageProps) {
     <div className="product-container container">
       <div className="product-page row">
         <div className="image-container col-md-5">
-          <ReactImageMagnify {...{
-            smallImage: {
+          <ReactImageMagnify
+            smallImage={{
               alt: product.name,
               src: product.image,
-              width: 400, // Specify the width of the small image
-              height: 400, // Specify the height of the small image
-            },
-            largeImage: {
+              width: 400,
+              height: 400,
+            }}
+            largeImage={{
               src: product.image,
-              width: 1200, // Width of the large image
-              height: 1800, // Height of the large image
-            },
-            enlargedImageContainerDimensions: {
-              width: '200%', // Adjust the width of the enlarged image container
-              height: '200%', // Adjust the height of the enlarged image container
-            },
-            lensStyle: {
+              width: 1200,
+              height: 1800,
+            }}
+            enlargedImageContainerDimensions={{
+              width: '200%',
+              height: '200%',
+            }}
+            lensStyle={{
               position: 'absolute',
-              width: '100px', // Adjust width and height to make it square
-              height: '100px', // Adjust width and height to make it square
+              width: '100px',
+              height: '100px',
               border: '2px solid #333',
-              pointerEvents: 'none', // Ensure the magnifier doesn't interfere with mouse events on the image
-            },
-            isHintEnabled: true,
-          }} />
-          <div className="magnifier" style={{ left: `${magnifierPos.x}%`, top: `${magnifierPos.y}%` }} />
+              pointerEvents: 'none',
+              zIndex: 1,
+            }}
+            isHintEnabled={true}
+          />
+          <div className="magnifier" style={{ zIndex: 1 }} />
         </div>
-        <div className="product-details col-md-5">
+        <div className="product-details col-md-4">
           <h1>{product.name}</h1>
           <p>{product.description}</p>
           <p>
@@ -219,9 +289,7 @@ function ProductPage(props: ProductPageProps) {
               )
             }
           </p>
-          <p>Brand: {product.brand}</p>
           <p>Availability: {product.availability ? 'In stock' : 'Out of stock'}</p>
-          {/* Add your remaining code here */}
           <div className="colors">
             {product.variations?.map((variation, index) => (
               <button
@@ -250,14 +318,15 @@ function ProductPage(props: ProductPageProps) {
                   </div>
                 ))}
           </div>
-        <div>
+          <div>
             <label htmlFor="quantity" style={{ marginRight: '40px' }}>Quantity:</label>
             <input type="number" id="quantity" min="1" value={quantity} onChange={handleQuantityChange} style={{ width: '100px' }} />
-        </div>
-
+            <div className="wishlist-icon" style={{ display: 'inline' }} onClick={addToWishListClicked}>
+              <FontAwesomeIcon icon={faHeart} className={bump ? 'bump' : ''} data-tip="Add to Wishlist" />
+            </div>
+          </div>
           <button className='btn btn-primary' style={{ width: '400px' }} onClick={addToCartClicked}>Add to Cart</button>
           <button className='btn btn-danger mt-2' style={{ width: '400px' }}>Buy Now</button>
-
         </div>
         <div className="store-details col-md-2">
           {storeDetails && (
@@ -269,6 +338,65 @@ function ProductPage(props: ProductPageProps) {
               <p><strong>Country:</strong> {storeDetails.country}</p>
             </>
           )}
+        </div>
+        <div className="review-section col-md-12">
+          <Tabs>
+            <TabList>
+              <Tab>Reviews</Tab>
+              <Tab>Specifications</Tab>
+            </TabList>
+
+            <TabPanel>
+              <div className="review-form">
+                <textarea
+                  value={reviewText}
+                  onChange={(e) => setReviewText(e.target.value)}
+                  placeholder="Write your review here..."
+                ></textarea>
+                <div className="rating-stars">
+                  <Rating
+                    count={5}
+                    onChange={(rating: React.SetStateAction<number>) => setRating(rating)}
+                    size={24}
+                    activeColor="red"
+                    isHalf={false}
+                    value={rating}
+                  />
+                </div>
+                <input type="file" multiple onChange={handleFileChange} />
+                <button onClick={handleReviewSubmit}>Submit Review</button>
+              </div>
+              {reviews && (
+                <div className="reviews-list" style={{ marginTop: '80px' }}>
+                  <hr /> {/* Add a horizontal line */}
+                  {reviews.map((review, index) => (
+                    <div className="review" key={index}>
+
+                      <p><strong>User:</strong> {review.userId}</p>
+                      <p><strong>Comment:</strong> {review.comment}</p>
+                      <p><strong>Rating:</strong> {review.rating}</p>
+
+                      <div className="rating-stars">
+                        <Rating
+                          count={5}
+                          value={review.rating}
+                          size={24}
+                          activeColor="red"
+                          isHalf={false}
+                          edit={false} // Set edit to false to make stars not clickable
+                        />
+                      </div>
+                      <hr /> {/* Add a horizontal line to separate each feedback */}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+            </TabPanel>
+            <TabPanel>
+              <p>Specifications content goes here</p>
+            </TabPanel>
+          </Tabs>
         </div>
       </div>
     </div>
