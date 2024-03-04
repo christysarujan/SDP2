@@ -1,0 +1,122 @@
+.view-cart-container {
+    h2 {
+      margin-bottom: 20px;
+    }
+  
+    .cart-items {
+      width: 100%;
+      border-collapse: collapse;
+  
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        position: relative;
+      }
+  
+      th {
+        background-color: #f2f2f2;
+      }
+  
+      tbody {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+  
+      tr.cart-item {
+        &:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+  
+        td {
+          img {
+            width: 100px;
+            height: 100px;
+            display: block;
+            margin: auto;
+            object-fit: cover;
+            transition: transform 0.3s ease; /* Add transition for smooth zoom effect */
+  
+            &:hover {
+              transform: scale(1.2); /* Scale up the image on hover */
+              z-index: 1; /* Ensure the image appears on top of other elements */
+            }
+          }
+  
+          .item-details {
+            p {
+              margin: 0;
+            }
+          }
+  
+          .color-square {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+  
+          .quantity-input {
+            width: 100px; // Increase the width of the input field as needed
+            margin: 0 auto; // Center the input field
+            text-align: center; // Center align the text inside the input field
+          }
+  
+          button {
+            display: block;
+            margin: 0 auto; // Center the button
+            text-align: center; // Center align the text inside the button
+          }
+        }
+      }
+    }
+  
+    .delete-confirmation-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  
+      .confirmation-box {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+  
+        p {
+          margin-bottom: 10px;
+        }
+  
+        div {
+          display: flex;
+          justify-content: flex-end;
+  
+          button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+  
+            &:first-child {
+              background-color: red;
+              color: white;
+            }
+  
+            &:last-child {
+              background-color: #ccc;
+            }
+          }
+        }
+      }
+    }
+  }
+  

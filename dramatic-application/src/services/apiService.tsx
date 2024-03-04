@@ -4,11 +4,15 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import CartData from '../components/Cart/cartData'
 import CartQuantityData from "../components/Cart/cartQuantityData";
+import Feedback from "../components/FeedBack/FeedBack";
 
 const baseurl = "http://localhost:8080/api/v1";
 const storeBaseurl = "http://localhost:8082/api/v1";
 const productBaseurl = "http://localhost:8083/api/v1/product-service";
 const cartBaseurl = "http://localhost:8089/api/v1/shopping-cart-service";
+const wishListBaseurl = "http://localhost:8088/api/v1/shopping-wishlist-service";
+const feedbackBaseurl = "http://localhost:8095/api/v1/feedback-service";
+
 
 const userRegistration = async (userData: object) => {
   try {
@@ -617,6 +621,113 @@ const getProductsByProductId = async (id: string) => {
   };
 
 
+  //// WishList Management
+
+  const addToWishList = async (cartData: CartData): Promise<any> => {
+    try {
+      const response = await axiosInstance.post(
+        `${wishListBaseurl}/wishlist/add`,
+        cartData,
+        {
+          headers: {
+            'Content-Type': 'application/json', // Change content type to JSON
+          },
+        }
+      );
+      toast.success('Product added to Wish List Successfully');
+      return response.data;
+    } catch (error: unknown) { // Specify type annotation for 'error'
+      const axiosError = error as AxiosError | undefined;
+      if (axiosError?.response?.data) {
+        const responseData = axiosError.response.data;
+        if (typeof responseData === 'string') {
+          toast.error(responseData);
+        } else {
+          toast.error(JSON.stringify(responseData));
+        }
+      } else {
+        // Handle other types of errors
+        console.error(error);
+      }
+    }
+  };
+
+  const getWishListByUserId = async (userId: any) => {
+    try {
+      const response = await axiosInstance.get(
+        `${wishListBaseurl}/wishlist/get/${userId}`
+      );
+      console.log("Get wishlist By User..",response.data)
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
+  const deleteWishByWishId = async (wishId : any) => {
+    try {
+      const response = await axiosInstance.delete(
+        `${wishListBaseurl}/wishlist/remove/wishlistId/${wishId}`
+      );
+      toast.success("Wish deleted successfully");
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+    }
+  };
+  
+  // Review Management
+
+  const addToReviewFeedback = async (feedback: Feedback, files: File[]): Promise<any> => {
+    try {
+      const formData = new FormData();
+      formData.append('userId', feedback.userId);
+      formData.append('productId', feedback.productId);
+      formData.append('comment', feedback.comment);
+      formData.append('rating', feedback.rating.toString());
+  
+      // Append each selected file to the FormData object
+      files.forEach((file) => {
+        formData.append('uploadImages', file);
+      });
+  
+      const response = await axiosInstance.post(`${feedbackBaseurl}/feedback/addFeedback`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Change content type to multipart form data
+        },
+      });
+  
+      toast.success('Review added Successfully');
+      return response.data;
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError | undefined;
+      if (axiosError?.response?.data) {
+        const responseData = axiosError.response.data;
+        if (typeof responseData === 'string') {
+          toast.error(responseData);
+        } else {
+          toast.error(JSON.stringify(responseData));
+        }
+      } else {
+        // Handle other types of errors
+        console.error(error);
+      }
+    }
+  };
+
+  const getFeedBackById = async (id: string) => {
+    try {
+      const response = await axiosInstance.get(
+        `${feedbackBaseurl}/feedback/getFeedback/${id}`
+      );
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+    }
+  };
+
+
+
 export {
   userRegistration,
   userLogin,
@@ -659,4 +770,9 @@ export {
   productAccountStateChange,
   getAllProducts,
   unpublishProduct,
+  addToWishList,
+  getWishListByUserId,
+  deleteWishByWishId,
+  addToReviewFeedback,
+  getFeedBackById,
 }

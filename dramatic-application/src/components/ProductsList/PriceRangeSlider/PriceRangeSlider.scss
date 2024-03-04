@@ -1,0 +1,41 @@
+// PriceRangeSlider.scss
+.price-range-slider {
+  margin-top: 20px;
+
+  input[type='range'] {
+      width: 100%;
+      margin-bottom: 10px;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 10px;
+      border-radius: 5px;
+      background: #d3d3d3;
+      outline: none;
+      &::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: #FFC0CB;
+          cursor: pointer;
+      }
+      &::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: #FFC0CB;
+          cursor: pointer;
+      }
+  }
+
+  .range-values {
+      display: flex;
+      justify-content: space-between;
+
+      span {
+          font-weight: bold;
+          color: #FFC0CB; // Adjust color as needed
+      }
+  }
+}

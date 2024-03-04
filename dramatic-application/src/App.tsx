@@ -22,6 +22,7 @@ import ProductPageRoute from './components/ProductsList/ViewProduct/productPageR
 import ViewCartPage from './components/Cart/ViewCart';
 import { CartProvider } from './components/Cart/CartContext'; // Import CartProvider from CartContext
 import ProductManagement from './components/admin/productManagement';
+import ViewWishPage from './components/WishList/WishList';
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,12 @@ const router = createBrowserRouter([
         path: '/kidsItems',
         element: <KidsItemsListPage />,
       },
+
+      {
+        path: '/viewWish',
+        element: <ViewWishPage />,
+      },
+      
       {
         path: '/',
         element: <UserProfile />,
