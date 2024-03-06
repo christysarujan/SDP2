@@ -223,7 +223,7 @@ const SellerProductList = () => {
         productDataForm.append("sellerEmail", email);
       }
       productDataForm.append("name", values.name);
-      productDataForm.append("category", values.category);
+      productDataForm.append("category", values.category.toLowerCase());
       productDataForm.append("material", values.material);
       productDataForm.append("price", values.price);
       productDataForm.append("variation", JSON.stringify(values.variation));
