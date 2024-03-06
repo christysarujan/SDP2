@@ -5,6 +5,7 @@ import { getProductsByCategory, getProductImage } from '../../../services/apiSer
 import PriceRangeSlider from '../PriceRangeSlider/PriceRangeSlider'; // Import the PriceRangeSlider component
 
 interface Item {
+  finalPrice: any;
   discount: number;
   productId: string;
   id: number;
@@ -51,6 +52,7 @@ function KidsItemsListPage() {
         id: index,
         title: item.name,
         price: renderPrice(item.price, item.discount, item.newPrice), // Using renderPrice function for price display
+        finalPrice: item.discount === 0 ? item.price : item.newPrice,
         image: await getProductPhoto(await getProductImage(item.productImages[0].productImageUrl)),
         sellerEmail: item.sellerEmail,
         material: item.material,
@@ -121,24 +123,18 @@ function KidsItemsListPage() {
     filteredItems = filteredItems.filter(item => item.material === filters.material);
   }
 
-  ///
-  filteredItems = filteredItems.filter(item => {
-    let price: number;
-
-    // Check if discount is applied
-    if (typeof item.price === 'number' && item.discount === 0) {
-        // If no discount, use original price for filtering
-        price = item.price;
-    } else {
-        // If discount applied, use new price for filtering
-        price = item.newPrice as number; // Assuming newPrice is always a number when discount is applied
-    }
-
-    // Check if the price falls within the specified range
-    return price >= filters.priceRange.min && price <= filters.priceRange.max;
-});
-
-
+  //
+    filteredItems = filteredItems.filter(item => {
+  
+    console.log("Final Price:", item.finalPrice);
+  
+    // Check if the final price falls within the specified range
+    const isInPriceRange = item.finalPrice >= filters.priceRange.min && item.finalPrice <= filters.priceRange.max;
+  
+    console.log("Is in Price Range:", isInPriceRange);
+  
+    return isInPriceRange;
+  });
 
 
 

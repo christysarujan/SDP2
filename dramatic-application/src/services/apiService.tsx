@@ -727,6 +727,20 @@ const getProductsByProductId = async (id: string) => {
   };
 
 
+  // Get Feedback Image
+const getFeedBackImage = async (imagename: any) => {
+  try {
+    const response = await axiosInstance.get(
+      `${feedbackBaseurl}/feedback/images/${imagename}`,
+      { responseType: "blob" }
+    );
+    return response.data;
+  } catch (error: any) {
+    // console.error(error.response.data);
+  }
+};
+
+
 
 export {
   userRegistration,
@@ -775,4 +789,5 @@ export {
   deleteWishByWishId,
   addToReviewFeedback,
   getFeedBackById,
+  getFeedBackImage,
 }

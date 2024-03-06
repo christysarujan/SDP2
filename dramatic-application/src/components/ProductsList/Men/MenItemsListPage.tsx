@@ -5,6 +5,7 @@ import { getProductsByCategory, getProductImage } from '../../../services/apiSer
 import PriceRangeSlider from '../PriceRangeSlider/PriceRangeSlider'; // Import the PriceRangeSlider component
 
 interface Item {
+  finalPrice: any;
   discount: number;
   newPrice: any;
   productId: string;
@@ -56,6 +57,7 @@ function MenItemsListPage() {
             <strong style={{ color: 'red' }}>{item.newPrice} Rs.</strong>
           </>
         ),
+        finalPrice: item.discount === 0 ? item.price : item.newPrice,
         image: await getProductPhoto(await getProductImage(item.productImages[0].productImageUrl)),
         sellerEmail: item.sellerEmail,
         material: item.material,
@@ -63,6 +65,8 @@ function MenItemsListPage() {
         size: item.variations.map((variation: any) => variation.sizeQuantities.map((sizeQty: any) => sizeQty.size)).flat(),
         newPrice: item.newPrice // Include newPrice in the item object
       })));
+
+      console.log("Men Items xxxx......" ,data)
   
       setItems(menItems);
   
@@ -113,30 +117,22 @@ function MenItemsListPage() {
     filteredItems = filteredItems.filter(item => item.material === filters.material);
   }
 
-  //saved logic
 
-  filteredItems = filteredItems.filter(item => {
-    let price: number;
+// Filter function to include items based on price range
+filteredItems = filteredItems.filter(item => {
+  
+  console.log("Final Price:", item.finalPrice);
 
-    // Check if discount is applied
-    if (typeof item.price === 'number' && item.discount === 0) {
-        // If no discount, use original price for filtering
-        price = item.price;
-    } else if (typeof item.newPrice === 'number' && item.discount > 0) {
-        price = item.newPrice;
-    } else {
-        // If neither condition is met, skip this item
-        return true;
-    }
-     
-    // Check if the price falls within the specified range
-    return price >= filters.priceRange.min && price <= filters.priceRange.max;
+  // Check if the final price falls within the specified range
+  const isInPriceRange = item.finalPrice >= filters.priceRange.min && item.finalPrice <= filters.priceRange.max;
+
+  console.log("Is in Price Range:", isInPriceRange);
+
+  return isInPriceRange;
 });
 
 
-
-
-  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
