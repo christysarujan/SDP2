@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './SellerProductSingleView.scss'
 import { getProductImages, getProductsByProductId } from '../../../services/apiService';
-
+ 
 interface ProductData {
     productId: string;
     sellerEmail: string;
@@ -11,6 +11,7 @@ interface ProductData {
     category: string;
     productImages: { productImageUrl: string }[];
     variations: { color: string; sizeQuantities: { size: string; qty: number }[] }[];
+    productDescription: string;
 }
 
 const SellerProductSingleView = ({ productId }: { productId: any; }) => {
@@ -81,7 +82,7 @@ const SellerProductSingleView = ({ productId }: { productId: any; }) => {
                             </div>
                             <div className="product-body">
                                 <h6>LKR {productData.price}</h6>
-                                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat sapiente magni tenetur harum laborum, earum nisi molestias nostrum amet facere ex consequatur doloribus, ducimus veniam ullam numquam est quidem voluptate?</p>
+                                <p>{productData.productDescription}</p>
                             </div>
                             <div className="product-tbl">
                                 <table className="table table-bordered table-striped">

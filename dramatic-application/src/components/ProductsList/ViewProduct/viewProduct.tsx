@@ -10,6 +10,7 @@ import 'react-tabs/style/react-tabs.scss';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 interface Product {
+  productDescription: string;
   name: string;
   images: string[]; // Modify to store all images
   description: string;
@@ -335,8 +336,9 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
         </div>
         <div className="product-details col-md-4">
           {/* Product details */}
+
           <h1>{product.name}</h1>
-          <p>{product.description}</p>
+
           <p>
             Price: {
               product.discount === 0 ? (
@@ -408,7 +410,7 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
           <Tabs>
             <TabList>
               <Tab>Reviews</Tab>
-              <Tab>Specifications</Tab>
+              <Tab>Description</Tab>
             </TabList>
 
             <TabPanel>
@@ -473,7 +475,7 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
               )}
             </TabPanel>
             <TabPanel>
-              <p>Specifications content goes here</p>
+              <p>{product.productDescription}</p>
             </TabPanel>
           </Tabs>
         </div>

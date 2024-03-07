@@ -155,6 +155,9 @@ export const addNewItemFormInitialValues = {
   name: "",
   category: "",
   material: "",
+  productDescription:"",
+  productCategory:"",
+  style:"",
   price: 0,
   variation: [{ color: "", sizeQuantityDTOS: [{ qty: "", size: "" }] }]
 };

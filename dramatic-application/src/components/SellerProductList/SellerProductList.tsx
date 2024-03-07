@@ -40,6 +40,9 @@ interface Variation {
 }
 
 interface Product {
+  style: string;
+  productDescription: string;
+  productCategory: string,
   productId: string;
   sellerEmail: string;
   name: string;
@@ -62,6 +65,7 @@ const SellerProductList = () => {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFilesNew] = useState<File[]>([]);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [addNewItem, setAddNewItem] = useState(true);
   const [editProductStatus, setEditProductStatus] = useState(false);
@@ -121,7 +125,10 @@ const SellerProductList = () => {
               </td>
               <td>{product.name}</td>
               <td>{product.category}</td>
+              <td>{product.productCategory}</td>
+              <td>{product.style}</td>
               <td>${product.price}</td>
+
               <td>
                 <i
                   className="bi bi-boxes actions-tab"
@@ -225,8 +232,13 @@ const SellerProductList = () => {
       productDataForm.append("name", values.name);
       productDataForm.append("category", values.category.toLowerCase());
       productDataForm.append("material", values.material);
+      productDataForm.append("productDescription", values.productDescription);
       productDataForm.append("price", values.price);
       productDataForm.append("variation", JSON.stringify(values.variation));
+      productDataForm.append("productCategory", values.productCategory);
+      productDataForm.append("style", values.style);
+
+      /*
 
       if (selectedFile) {
         productDataForm.append(
@@ -236,6 +248,15 @@ const SellerProductList = () => {
         );
       }
 
+
+      */
+
+      // Append each selected file to the FormData object
+      selectedFiles.forEach((file) => {
+        productDataForm.append('productImages', file);
+      });
+
+      console.log("Product Description Chamara..", values.productDescription)
       const products = await addProduct(productDataForm);
 
       if (products) {
@@ -277,6 +298,7 @@ const SellerProductList = () => {
     getSellerProducts();
   };
 
+  /*
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     setSelectedFile(file || null);
@@ -290,6 +312,16 @@ const SellerProductList = () => {
       reader.readAsDataURL(file);
     }
 
+  };
+
+  */
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = event.target.files;
+    if (fileList) {
+      const filesArray: File[] = Array.from(fileList);
+      setSelectedFilesNew(filesArray);
+    }
   };
 
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
@@ -335,6 +367,8 @@ const SellerProductList = () => {
                       <th scope="col">Image</th>
                       <th scope="col">Name</th>
                       <th scope="col">Category</th>
+                      <th scope="col">Product Category</th>
+                      <th scope="col">Style</th>
                       <th scope="col">Price</th>
                       <th scope="col">Action</th>
                       {/* Add other columns as needed */}
@@ -392,6 +426,32 @@ const SellerProductList = () => {
                             className="error"
                           />
                         </div>
+
+                        <div className="field-container">
+                          <div className="field-input">
+                            <label>Product Description :</label>
+                            <Field type="text" id="productDescription" name="productDescription" />
+                          </div>
+
+                        </div>
+
+                        <div className="field-container">
+                          <div className="field-input">
+                            <label>Product Category :</label>
+                            <Field type="text" id="productCategory" name="productCategory" />
+                          </div>
+
+                        </div>
+
+                        <div className="field-container">
+                          <div className="field-input">
+                            <label>Style :</label>
+                            <Field type="text" id="style" name="style" />
+                          </div>
+
+                        </div>
+
+
                         <div className="field-container">
                           <div className="field-input">
                             <label>Price :</label>

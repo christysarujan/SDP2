@@ -88,6 +88,9 @@ const SellerProductEdit = ({ productId, onClose }: { productId: string | null; o
       productDataForm.append("name", values.name);
       productDataForm.append("category", values.category);
       productDataForm.append("material", values.material);
+      productDataForm.append("productCategory", values.productCategory);
+      productDataForm.append("style", values.style);
+      productDataForm.append("productDescription", values.productDescription);
       productDataForm.append("price", values.price);
       productDataForm.append("variation", JSON.stringify(values.variation));
 
@@ -129,7 +132,7 @@ const SellerProductEdit = ({ productId, onClose }: { productId: string | null; o
   return (
     <div className="update-product-main">
       <p className="update-product">Update Product : {productId}</p>
-      <p>Pname{productData?.name}</p>
+      <p>Pname : {productData?.name}</p>
       <hr />
 
       <div className="new-item-form">
@@ -163,6 +166,33 @@ const SellerProductEdit = ({ productId, onClose }: { productId: string | null; o
                 </div>
                 <ErrorMessage name="material" component="div" className="error" />
               </div>
+
+
+              <div className="field-container">
+                <div className="field-input">
+                  <label>Product Description :</label>
+                  <Field type="text" id="productDescription" name="productDescription" />
+                </div>
+
+              </div>
+
+              <div className="field-container">
+                <div className="field-input">
+                  <label>Product Category :</label>
+                  <Field type="text" id="productCategory" name="productCategory" />
+                </div>
+
+              </div>
+
+              <div className="field-container">
+                <div className="field-input">
+                  <label>Style :</label>
+                  <Field type="text" id="style" name="style" />
+                </div>
+
+              </div>
+
+
               <div className="field-container">
                 <div className="field-input">
                   <label>Price :</label>
