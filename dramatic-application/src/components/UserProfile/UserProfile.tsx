@@ -233,16 +233,16 @@ const UserProfile = () => {
               {adminNav && (
                 <div className="nav-bar">
                   <ul>
-                  <NavLink to="storeInfo" className="nav-item">
-                        <li>Store Management</li>{" "}
-                      </NavLink>
-                  <NavLink to="sellerManagement" className="nav-item">
-                        <li>Seller Management</li>{" "}
-                      </NavLink>
+                    <NavLink to="storeInfo" className="nav-item">
+                      <li>Store Management</li>{" "}
+                    </NavLink>
+                    <NavLink to="sellerManagement" className="nav-item">
+                      <li>Seller Management</li>{" "}
+                    </NavLink>
 
                     <NavLink to="productManagement" className="nav-item">
-                        <li>Product Management</li>{" "}
-                  </NavLink>
+                      <li>Product Management</li>{" "}
+                    </NavLink>
                   </ul>
                 </div>
               )}

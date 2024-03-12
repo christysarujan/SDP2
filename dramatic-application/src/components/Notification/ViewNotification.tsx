@@ -100,7 +100,6 @@ const ViewNotifications = () => {
         ) : (
           <p>No notifications available.</p>
         )}
-
         {selectedNotification && (
           <Modal
             show={!!selectedNotification}

@@ -1,0 +1,28 @@
+.place-order-container {
+    margin: 0 auto;
+    justify-content: flex-start;
+    width: auto;
+    height: auto;
+    background: rgb(193, 190, 190);
+ 
+    .place-order-page {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: row;
+ 
+        .place-order-details {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+ 
+            h1 {
+                display: flex;
+                font-size: 18px !important;
+                margin-bottom: 10px;
+                color: #333;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    }
+}

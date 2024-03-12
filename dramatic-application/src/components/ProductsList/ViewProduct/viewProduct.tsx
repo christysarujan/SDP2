@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ProductPage.scss';
-import { getProductsByProductId, getProductImage, findStoreByEmail, addToCart, getCartsByUserId, addToWishList, addToReviewFeedback, getFeedBackById, getFeedBackImage } from '../../../services/apiService';
+import { getProductsByProductId, getProductImage, findStoreByEmail, addToCart, getCartsByUserId, addToWishList, addToReviewFeedback, getFeedBackById, getFeedBackImage, calculateCost, getCartById, getcostById } from '../../../services/apiService';
 import ReactImageMagnify from 'react-image-magnify';
 import { useCart } from '../../Cart/CartContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,6 +8,8 @@ import { faHeart, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-
 import Rating from 'react-rating-stars-component';
 import 'react-tabs/style/react-tabs.scss';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
 
 interface Product {
   productDescription: string;
@@ -74,6 +76,8 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
   const [reviews, setReviews] = useState<Feedback[]>([]);
   const [refreshFlag, setRefreshFlag] = useState<boolean>(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0); // Add state for current image index
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const tokenData = sessionStorage.getItem("decodedToken");
@@ -215,27 +219,100 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
     }
   };
 
+
+
   const addToCartClicked = async () => {
+
+    if (!selectedColor) {
+     // alert('Please select a size.');
+      toast.error('Please select a color.');
+      return;
+    }
+  
+    if (!selectedSize) {
+      //alert('Please select a size.');
+      toast.error('Please select a size.');
+      return;
+    }
+
     if (product && selectedColor && selectedSize && userData) {
-      await addToCart({
-        productId: props.productId,
-        productPrice: product.price,
-        userId: userData.username,
-        color: selectedColor,
-        size: selectedSize,
-        quantity: quantity
-      })
-        .then(async () => {
-          const cartItems = await getCartsByUserId(userData.username);
+      const userId = sessionStorage.getItem("userId");
+      if (userId !== null) {
+        try {
+          const cartresponse = await addToCart({
+            productId: props.productId,
+            productPrice: product.price,
+            userId: userId,
+            color: selectedColor,
+            size: selectedSize,
+            quantity: quantity
+          });
+
+          console.log('Response from backend Id:', cartresponse); // Log the response here
+          const cartItems = await getCartsByUserId(userId);
           const cartCount = cartItems.length;
           console.log("Cart Count is...", cartCount)
           setCartCount(cartCount);
-        })
-        .catch(error => {
+
+          const calresponse = await calculateCost({
+
+            productId: props.productId,
+            cartId: cartresponse.id
+
+          })
+
+          var cartwithcost = await getCartById(cartresponse.id);
+
+          const startTime = new Date().getTime(); // Get current time in milliseconds
+
+          while (cartwithcost.costId === null) {
+
+            console.log("Iterating and Checking Cost Id Update.....");
+
+            cartwithcost = await getCartById(cartresponse.id);
+
+            if (cartwithcost.costId !== null) {
+              break;
+            }
+
+            const currentTime = new Date().getTime(); // Get current time in milliseconds
+            const elapsedTime = currentTime - startTime; // Calculate elapsed time
+
+            // Break the loop if 1 minute (60000 milliseconds) has passed
+            if (elapsedTime >= 60000) {
+
+              console.log("=== Time limit exceeded. Exiting loop ===");
+              console.log("=== Cost Id not updated in Cart DB ===");
+              console.log("=== Please Check Kafka Server ===");
+              console.log("=== Try To Restart Kafka Server ===");
+              break;
+            }
+
+            // Add a delay before next iteration to avoid excessive API calls
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Adjust delay as needed
+          }
+
+          if (cartwithcost.costId !== null) {
+
+            const costDetails = await getcostById(cartwithcost.costId);
+
+            //console.log("Costing Cart..", cartwithcost);
+
+            console.log("Costing Details..", costDetails);
+
+          }
+
+        } catch (error) {
           console.error('Error adding to cart:', error);
-        });
+        }
+      } else {
+        console.error('User ID not found in session storage');
+      }
     }
   };
+
+
+  
 
   const addToWishListClicked = async () => {
     setBump(true);
@@ -280,6 +357,14 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
       console.error('Error adding review:', error);
     }
   };
+
+  const buynowclick = async () => {
+
+    console.log("Product ID..", props.productId)
+
+    navigate(`/orderproduct/${props.productId}`);
+
+  }
 
   if (!product) {
     return <div>Loading...</div>;
@@ -388,7 +473,9 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
             </div>
           </div>
           <button className='btn btn-primary' style={{ width: '400px' }} onClick={addToCartClicked}>Add to Cart</button>
-          <button className='btn btn-danger mt-2' style={{ width: '400px' }}>Buy Now</button>
+          <button className='btn btn-danger mt-2' style={{ width: '400px' }} onClick={buynowclick}> Buy Now
+
+          </button>
           {/* Color, size, quantity selectors */}
           {/* Add to cart button */}
           {/* Add to wishlist button */}
@@ -486,3 +573,5 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
 }
 
 export default ProductPage;
+
+
