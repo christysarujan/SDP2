@@ -8,9 +8,11 @@ import {
 } from "../../utils/Validation";
 import {
   addProduct,
+  applyDiscount,
   deleteProduct,
   getProductImages,
   getProductsBySellerEmail,
+  updateDiscount,
 } from "../../services/apiService";
 import { useNavigate } from "react-router-dom";
 import SellerProductEdit from "./SellerProductEdit/SellerProductEdit";
@@ -49,6 +51,7 @@ interface Product {
   material: string;
   price: number;
   category: string;
+  discount: number;
   productImages: Array<{ productImageUrl: string }>;
   variations: Array<{
     color: string;
@@ -71,6 +74,11 @@ const SellerProductList = () => {
   const [editProductStatus, setEditProductStatus] = useState(false);
   const [buttonName, setButtonName] = useState("Add New Item");
   const [productImg, setProductImg] = useState("");
+  const [prodDiscount, setProdDiscount] = useState<number | null>(null);
+  const [showAddDiscountModal, setShowAddDiscountModal] = useState(false);
+  const [showUpdateDiscountModal, setShowUpdateDiscountModal] = useState(false);
+
+
 
   const [variation, setVariations] = useState<Variation[]>([
     {
@@ -145,7 +153,7 @@ const SellerProductList = () => {
                   data-tooltip-place="top"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
-                  onClick={() => viewProduct(product.productId)}
+                  onClick={() => viewProduct(product.productId, product.discount)}
                 ></i>
                 <i
                   className="bi bi-pencil-square actions-tab"
@@ -331,10 +339,12 @@ const SellerProductList = () => {
     setEditProductStatus((prev) => !prev);
   };
 
-  const viewProduct = (productId: string) => {
+  const viewProduct = (productId: string, discount: number) => {
     setSelectedProductId(productId);
     modalView();
+    setProdDiscount(discount);
     console.log(productId);
+    console.log('Heloooooo', prodDiscount)
 
   };
   const viewInventory = (productId: string) => {
@@ -346,6 +356,51 @@ const SellerProductList = () => {
   const modalView = () => {
     setModalShow((prev) => !prev)
   }
+
+  
+  const handleAddDiscount = () => {
+    setShowAddDiscountModal(true);
+  };
+
+  const handleUpdateDiscount = () => {
+    setShowUpdateDiscountModal(true);
+  };
+
+  const handleAddDiscountAPI = async () => {
+    // Retrieve the new discount value from the input box
+    const addDiscountInput = document.getElementById('addDiscountInput') as HTMLInputElement;
+    if (addDiscountInput) {
+      const newDiscount = addDiscountInput.value;
+      await applyDiscount(selectedProductId, newDiscount);
+      console.log("New Discount..",newDiscount)
+
+
+    }
+
+  }
+
+    const handleUpdateDiscountAPI = async () => {
+      // Retrieve the new discount value from the input box
+      const updateDiscountInput = document.getElementById('updateDiscountInput') as HTMLInputElement;
+      if (updateDiscountInput) {
+        const newDiscount = updateDiscountInput.value;
+        await updateDiscount(selectedProductId, newDiscount);
+         //setProdDiscount(newDiscount);
+        console.log("New Discount..",newDiscount)
+  
+      }
+
+    }
+
+    const handleupdateCloseModal = () => {
+      setShowUpdateDiscountModal(false);
+      window.location.reload();
+    };
+
+    const handleaddCloseModal = () => {
+      setShowAddDiscountModal(false);
+      window.location.reload();
+    };
 
   return (
     <div className="seller-product-list">
@@ -585,12 +640,85 @@ const SellerProductList = () => {
               {modalShow && <SellerProductSingleView productId={selectedProductId} />}
             </div>
             <div className="modal-footer">
+              {/* <p>{prodDiscount}</p> */}
               <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => modalView()}>Close</button>
-              <button type="button" className="btn btn-primary">Save changes</button>
+              {/* <button type="button" className="btn btn-primary">Save Changes</button> */}
+              {prodDiscount === 0 ? (
+                <button type="button" className="btn btn-primary" onClick={ handleAddDiscount}>Add Discount </button>
+              ) : (
+                <button type="button" className="btn btn-secondary" onClick = {handleUpdateDiscount}>Update Discount </button>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      
+
+{/* Add Discount Modal */}
+<Modal
+  show={showAddDiscountModal}
+  onHide={() => setShowAddDiscountModal(false)}
+>
+  <Modal.Header closeButton>
+    <Modal.Title>Add Discount</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+  <p style={{ fontSize: '16px' }}>Current Discount: {prodDiscount !== null ? prodDiscount * 100 : 0} % </p>
+    <div className="form-group">
+      <label htmlFor="addDiscountInput">New Discount:</label>
+      <input
+        type="text"
+        className="form-control"
+        id="addDiscountInput"
+        placeholder="Enter discount"
+        // Add onChange handler if you need to handle input changes
+        // onChange={handleAddDiscountInputChange}
+      />
+    </div>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => handleaddCloseModal()}>
+      Close
+    </Button>
+    <Button variant="primary" onClick={handleAddDiscountAPI}>
+      Add
+    </Button>
+  </Modal.Footer>
+</Modal>
+
+{/* Update Discount Modal */}
+<Modal
+  show={showUpdateDiscountModal}
+  onHide={() => setShowUpdateDiscountModal(false)}
+>
+  <Modal.Header closeButton>
+    <Modal.Title>Update Discount</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+  <p style={{ fontSize: '16px' }}> Current Discount: {prodDiscount !== null ? prodDiscount * 100 : 0} % </p>
+    <div className="form-group">
+      <label htmlFor="updateDiscountInput">New Discount:</label>
+      <input
+        type="text"
+        className="form-control"
+        id="updateDiscountInput"
+        placeholder="Enter new discount"
+        // Add onChange handler if you need to handle input changes
+        // onChange={handleUpdateDiscountInputChange}
+      />
+    </div>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => handleupdateCloseModal()}>
+      Close
+    </Button>
+    <Button variant="primary" onClick={handleUpdateDiscountAPI}>
+      Update
+    </Button>
+  </Modal.Footer>
+</Modal>
+
 
       <Modal show={showInventoryModal} onHide={handleClose} backdrop="static" keyboard={false} size="lg"
         centered

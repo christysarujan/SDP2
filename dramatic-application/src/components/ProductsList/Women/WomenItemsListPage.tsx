@@ -1,5 +1,3 @@
-// WomenItemsListPage.tsx
-
 import React, { useState, useEffect } from 'react';
 import './WomenItemsListPage.scss'; // Import SCSS file
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +17,9 @@ interface Item {
   size: string;
   newPrice: number;
   discount: number;
+  color: string; // Add color property to Item interface
+  productCategory: string; // Add productCategory property to Item interface
+  style: string; // Add style property to Item interface
 }
 
 function WomenItemsListPage() {
@@ -30,11 +31,17 @@ function WomenItemsListPage() {
     category: '',
     size: '',
     material: '',
+    color: '', // Add color filter to state
+    productCategory: '', // Add productCategory filter to state
+    style: '', // Add style filter to state
     priceRange: { min: 0, max: 10000 }
   });
   const [uniqueCategories, setUniqueCategories] = useState<string[]>([]);
   const [uniqueSizes, setUniqueSizes] = useState<string[]>([]);
   const [uniqueMaterials, setUniqueMaterials] = useState<string[]>([]);
+  const [uniqueColors, setUniqueColors] = useState<string[]>([]);
+  const [uniqueProductCategories, setUniqueProductCategories] = useState<string[]>([]); // Add uniqueProductCategories state
+  const [uniqueStyles, setUniqueStyles] = useState<string[]>([]); // Add uniqueStyles state
   const itemsPerPage = 12;
 
   useEffect(() => {
@@ -65,19 +72,29 @@ function WomenItemsListPage() {
         material: item.material,
         category: item.category,
         size: item.variations.map((variation: any) => variation.sizeQuantities.map((sizeQty: any) => sizeQty.size)).flat(),
-        newPrice: item.newPrice, // Include newPrice in the item object
-        discount: item.discount // Include discount in the item object
+        newPrice: item.newPrice,
+        discount: item.discount,
+        color: item.variations.map((variation: any) => variation.color).join(', '),
+        productCategory: item.productCategory, // Include productCategory in the item object
+        style: item.style // Include style in the item object
       })));
 
       setItems(womenItems);
 
       const categories = womenItems.map(item => item.category);
-      const sizes = womenItems.map(item => item.size).flat(); // Flattening the sizes array
+      const sizes = womenItems.flatMap(item => item.size);
       const materials = womenItems.map(item => item.material);
+      const colors = womenItems.flatMap(item => item.color.split(', '));
+      const productCategories = womenItems.map(item => item.productCategory); // Extract product categories
+      const styles = womenItems.map(item => item.style); // Extract styles
 
       setUniqueCategories(Array.from(new Set(categories)));
       setUniqueSizes(Array.from(new Set(sizes)));
       setUniqueMaterials(Array.from(new Set(materials)));
+      setUniqueColors(Array.from(new Set(colors)));
+      setUniqueProductCategories(Array.from(new Set(productCategories.filter(category => category))));
+      setUniqueStyles(Array.from(new Set(styles.filter(style => style))));
+ 
     } catch (error) {
       console.error('Error fetching women items:', error);
     }
@@ -118,21 +135,22 @@ function WomenItemsListPage() {
     filteredItems = filteredItems.filter(item => item.material === filters.material);
   }
 
-//saved logic
+  if (filters.color) {
+    filteredItems = filteredItems.filter(item => item.color.toLowerCase().includes(filters.color.toLowerCase()));
+  }
 
-// Filter function to include items based on price range
-filteredItems = filteredItems.filter(item => {
-  
-  console.log("Final Price:", item.finalPrice);
+  if (filters.productCategory) { // Apply filter for productCategory
+    filteredItems = filteredItems.filter(item => item.productCategory === filters.productCategory);
+  }
 
-  // Check if the final price falls within the specified range
-  const isInPriceRange = item.finalPrice >= filters.priceRange.min && item.finalPrice <= filters.priceRange.max;
+  if (filters.style) { // Apply filter for style
+    filteredItems = filteredItems.filter(item => item.style === filters.style);
+  }
 
-  console.log("Is in Price Range:", isInPriceRange);
-
-  return isInPriceRange;
-});
-
+  // Filter function to include items based on price range
+  filteredItems = filteredItems.filter(item => {
+    return item.finalPrice >= filters.priceRange.min && item.finalPrice <= filters.priceRange.max;
+  });
 
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
@@ -161,6 +179,27 @@ filteredItems = filteredItems.filter(item => {
           <option value="">All</option>
           {uniqueMaterials.map((material, index) => (
             <option key={index} value={material}>{material}</option>
+          ))}
+        </select>
+        <label htmlFor="color">Color:</label>
+        <select id="color" onChange={e => handleFilterChange(e.target.value, 'color')} value={filters.color}>
+          <option value="">All</option>
+          {uniqueColors.map((color, index) => (
+            <option key={index} value={color.toLowerCase()}>{color}</option>
+          ))}
+        </select>
+        <label htmlFor="productCategory">Product Category:</label> {/* Add productCategory filter */}
+        <select id="productCategory" onChange={e => handleFilterChange(e.target.value, 'productCategory')} value={filters.productCategory}>
+          <option value="">All</option>
+          {uniqueProductCategories.map((category, index) => (
+            <option key={index} value={category}>{category}</option>
+          ))}
+        </select>
+        <label htmlFor="style">Style:</label> {/* Add style filter */}
+        <select id="style" onChange={e => handleFilterChange(e.target.value, 'style')} value={filters.style}>
+          <option value="">All</option>
+          {uniqueStyles.map((style, index) => (
+            <option key={index} value={style}>{style}</option>
           ))}
         </select>
         <PriceRangeSlider

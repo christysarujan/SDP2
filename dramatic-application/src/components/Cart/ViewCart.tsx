@@ -57,8 +57,9 @@ function ViewCartPage() {
 
   const fetchCartItems = async () => {
     try {
-      if (userData) {
-        const userId = userData.username;
+      const userId = sessionStorage.getItem("userId");
+      if (userData && userId) {
+      
         const data = await getCartsByUserId(userId);
         const itemsWithDetails = await Promise.all(data.map(async (item: CartItem) => {
           const productDetails = await getProductsByProductId(item.productId);
@@ -108,9 +109,10 @@ function ViewCartPage() {
   };
 
   const handleDeleteCartItem = async (itemId: string) => {
+    const userId = sessionStorage.getItem("userId");
     try {
       // Delete the item from the cart
-      await deleteCartByUserIdAndCartId(userData?.username || '', itemId);
+      await deleteCartByUserIdAndCartId(userId || '', itemId);
   
       // Update the cart items state by filtering out the deleted item
       const updatedCartItems = cartItems.filter((cartItem: any) => cartItem.id !== itemId);
@@ -119,7 +121,7 @@ function ViewCartPage() {
       setConfirmDeleteItemId(null);
   
       // Fetch cart items again to ensure the latest data is displayed
-      const updatedCartItemsData = await getCartsByUserId(userData?.username || '');
+      const updatedCartItemsData = await getCartsByUserId(userId || '');
      // const updatedCartCount = updatedCartItemsData.reduce((total: any, item: any) => total + item.quantity, 0);
      // sessionStorage.setItem('cartCount', updatedCartCount.toString());
      const updatedCartCount = updatedCartItemsData.length;

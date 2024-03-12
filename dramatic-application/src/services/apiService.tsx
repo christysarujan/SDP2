@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import CartData from '../components/Cart/cartData'
 import CartQuantityData from "../components/Cart/cartQuantityData";
 import Feedback from "../components/FeedBack/FeedBack";
+import CostData from "../components/Cart/costData";
 
 const baseurl = "http://localhost:8080/api/v1";
 const storeBaseurl = "http://localhost:8082/api/v1";
@@ -12,7 +13,8 @@ const productBaseurl = "http://localhost:8083/api/v1/product-service";
 const cartBaseurl = "http://localhost:8089/api/v1/shopping-cart-service";
 const wishListBaseurl = "http://localhost:8088/api/v1/shopping-wishlist-service";
 const feedbackBaseurl = "http://localhost:8095/api/v1/feedback-service";
-
+const notificationBaseurl = "http://localhost:8087/api/v1/notification-service";
+const costBaseUrl = "http://localhost:8086/api/v1/costing-service"
 
 const userRegistration = async (userData: object) => {
   try {
@@ -99,7 +101,7 @@ const findUserByEmail = async (email: any) => {
     const response = await axiosInstance.get(
       `${baseurl}/auth-service/users/${email}`
     );
-    console.log("I am inside find User" , response.data)
+  //  console.log("I am inside find User" , response.data)
     return response.data;
   } catch (error: any) {
     
@@ -544,6 +546,35 @@ const getProductsByProductId = async (id: string) => {
       throw error;
     }
   };
+
+  const applyDiscount = async (id: any, discount: any) => {
+    try {
+      const response = await axiosInstance.post(
+        `${productBaseurl}/products/discount/${id}/${discount}`,
+      
+      );
+      toast.success("Discont Added Successfully");
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
+  const updateDiscount = async (id: any, discount: any) => {
+    try {
+      const response = await axiosInstance.put(
+        `${productBaseurl}/products/updateDiscount/${id}/${discount}`,
+      
+      );
+      toast.success("Discont Updated Successfully");
+      return response.data;
+    } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+    }
+  };
+
   // Cart Management
 
   const addToCart = async (cartData: CartData): Promise<any> => {
@@ -602,6 +633,18 @@ const getProductsByProductId = async (id: string) => {
         `${cartBaseurl}/cart/get/${userId}`
       );
       console.log("Get Carts By User..",response.data)
+      return response.data;
+    } catch (error: any) {
+      // console.error(error.response.data);
+    }
+  };
+
+  const getCartById = async (cartId: any) => {
+    try {
+      const response = await axiosInstance.get(
+        `${cartBaseurl}/cart/${cartId}`
+      );
+      console.log("Get Carts By Id..",response.data)
       return response.data;
     } catch (error: any) {
       // console.error(error.response.data);
@@ -740,6 +783,65 @@ const getFeedBackImage = async (imagename: any) => {
   }
 };
 
+/* Notification Management */
+ 
+const getAllNotificationsBySellerEmail = async (sellerEmail: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `${notificationBaseurl}/notifications/all/${sellerEmail}`
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error(error.response?.data);
+    throw error;
+  }
+};
+
+
+/*Cost Management*/
+
+const calculateCost = async (costData: CostData): Promise<any> => {
+  try {
+    const response = await axiosInstance.post(
+      `${costBaseUrl}/costs/calculation`,
+      costData,
+      {
+        headers: {
+          'Content-Type': 'application/json', // Change content type to JSON
+        },
+      }
+    );
+   // toast.success('Calculated Cost successfully');
+    return response.data;
+  } catch (error: unknown) { // Specify type annotation for 'error'
+    if (axios.isAxiosError(error)) { // Check if error is an AxiosError
+      const axiosError = error as AxiosError; // Cast error to AxiosError
+      console.error('Error adding to cart:', axiosError.response?.data);
+      toast.error('Calculated Cost Failed');
+      throw axiosError; // Rethrow error to handle it in the component
+    } else {
+      // Handle other types of errors
+      console.error('Error Calculatoing cost:', error);
+      toast.error('Failed to calculate Cost');
+      throw error; // Rethrow error to handle it in the component
+    }
+  }
+};
+
+
+const getcostById = async (costId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `${costBaseUrl}/costs/${costId}`
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error(error.response?.data);
+    throw error;
+  }
+};
+
+
 
 
 export {
@@ -790,4 +892,10 @@ export {
   addToReviewFeedback,
   getFeedBackById,
   getFeedBackImage,
+  applyDiscount,
+  updateDiscount,
+  getAllNotificationsBySellerEmail,
+  calculateCost,
+  getCartById,
+  getcostById,
 }

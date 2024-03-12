@@ -10,6 +10,7 @@ import Store from "../Store/Store";
 import { Outlet, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import UserProfileEdit from "./UserProfileEdit/UserProfileEdit";
+import { useLocation } from "react-router-dom";
 
 interface UserData {
   sub: string;
@@ -73,6 +74,7 @@ const UserProfile = () => {
   }, [userData]);
 
   const navigate = useNavigate();
+  const mylocation = useLocation();
 
   const editUserProfile = async () => {
     navigate("/userProfileEdit");
@@ -192,6 +194,11 @@ const UserProfile = () => {
                     <NavLink to="store" className="nav-item">
                       <li>My Store</li>{" "}
                     </NavLink>
+                    {/* {mylocation.pathname !== "/store" && (
+                      <NavLink to="notifications" className="nav-item">
+                        <li>Notification</li>
+                      </NavLink>
+                    )} */}
                     {storeData && storeData.storeStatus === "VERIFIED" && (
                       <NavLink to="product" className="nav-item">
                         <li>Product List</li>{" "}
@@ -202,7 +209,8 @@ const UserProfile = () => {
                         <li>Payment Information</li>{" "}
                       </NavLink>
                     )}
-                   {/*  {storeData && storeData.storeStatus === "VERIFIED" && (
+
+                    {/*  {storeData && storeData.storeStatus === "VERIFIED" && (
                       <NavLink to="inventory" className="nav-item">
                         <li>Inventory</li>
                       </NavLink>
@@ -222,16 +230,16 @@ const UserProfile = () => {
               {adminNav && (
                 <div className="nav-bar">
                   <ul>
-                  <NavLink to="storeInfo" className="nav-item">
-                        <li>Store Management</li>{" "}
-                      </NavLink>
-                  <NavLink to="sellerManagement" className="nav-item">
-                        <li>Seller Management</li>{" "}
-                      </NavLink>
+                    <NavLink to="storeInfo" className="nav-item">
+                      <li>Store Management</li>{" "}
+                    </NavLink>
+                    <NavLink to="sellerManagement" className="nav-item">
+                      <li>Seller Management</li>{" "}
+                    </NavLink>
 
                     <NavLink to="productManagement" className="nav-item">
-                        <li>Product Management</li>{" "}
-                  </NavLink>
+                      <li>Product Management</li>{" "}
+                    </NavLink>
                   </ul>
                 </div>
               )}

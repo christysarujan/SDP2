@@ -23,6 +23,9 @@ import ViewCartPage from './components/Cart/ViewCart';
 import { CartProvider } from './components/Cart/CartContext'; // Import CartProvider from CartContext
 import ProductManagement from './components/admin/productManagement';
 import ViewWishPage from './components/WishList/WishList';
+import ViewNotifications from './components/Notification/ViewNotification';
+import OrderPageRoute from './components/OrderProduct/orderPageRoute';
+// Import ViewNotifications component
 
 const router = createBrowserRouter([
   {
@@ -50,6 +53,10 @@ const router = createBrowserRouter([
         element: <ProductPageRoute />
       },
       {
+        path: '/orderproduct/:productId',
+        element: <OrderPageRoute />
+      },
+      {
         path: '/mensItems',
         element: <MenItemsListPage />,
       },
@@ -61,12 +68,14 @@ const router = createBrowserRouter([
         path: '/kidsItems',
         element: <KidsItemsListPage />,
       },
-
       {
         path: '/viewWish',
         element: <ViewWishPage />,
       },
-      
+      // {
+      //   path: '/notification',
+      //   element: <ViewNotifications />,
+      // },
       {
         path: '/',
         element: <UserProfile />,
@@ -112,7 +121,7 @@ const router = createBrowserRouter([
           {
             path:'productManagement',
             element: <ProductManagement/>,
-          }
+          },
         ]
       },
     ]

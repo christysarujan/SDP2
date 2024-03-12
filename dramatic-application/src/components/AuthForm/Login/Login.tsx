@@ -1,7 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { loginInitialValues, loginValidationSchema } from '../../../utils/Validation'
-import { getCartsByUserId, userLogin } from '../../../services/apiService'
+import { findUserByEmail, getCartsByUserId, userLogin } from '../../../services/apiService'
 import { useNavigate } from 'react-router-dom'
 import "../AuthForm.scss";
 import "./Login.scss";
@@ -52,9 +52,16 @@ const Login = () => {
     
                 if (tokenData) {
                     const parsedUserData: UserData = JSON.parse(tokenData);
+
+                    const fullUserData = await findUserByEmail(email);
+
+                    
+                    sessionStorage.setItem('userId', fullUserData.id);
                     // Fetch cart count from the API after successful login
+
+                    console.log("User Id : " , sessionStorage.getItem("userId"))
                     try {
-                        const cartCountResponse = await getCartsByUserId(parsedUserData?.username || '');
+                        const cartCountResponse = await getCartsByUserId(fullUserData.id || '');
                         const updatedCartCount = cartCountResponse.length;
                         console.log("Updated Card Count...", updatedCartCount);
     
