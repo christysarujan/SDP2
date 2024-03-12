@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import './ViewNotification.scss';
-import { getAllNotificationsBySellerEmail } from '../../services/apiService';
+import './ViewNotification.scss'; 
+import { getAllNotificationsBySellerEmail,updateNotificationStatus  } from '../../services/apiService';
 import { Modal, Button } from 'react-bootstrap';
- 
- 
+
+
 interface Notification {
   id: string;
   message: string;
   creationTime: string;
   notificationStatus: string;
+
 }
- 
+
 const ViewNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
- 
+  const [decodedToken, setDecodedToken] = useState<any>({});
+
   useEffect(() => {
     const fetchNotifications = async () => {
       const decodedToken = JSON.parse(sessionStorage.getItem('decodedToken') || '{}');
@@ -23,21 +25,42 @@ const ViewNotifications = () => {
           const notifications = await getAllNotificationsBySellerEmail(decodedToken.email);
           setNotifications(notifications);
         } catch (error) {
-         
+          
         }
       }
     };
- 
+
     fetchNotifications();
   }, []);
   const openNotificationModal = (notification: Notification) => {
     setSelectedNotification(notification);
   };
- 
+
   const handleCloseNotificationModal = () => {
     setSelectedNotification(null);
   };
- 
+
+  
+  const updateNotificationStatusAndView = async (notification: Notification) => {
+    try {
+      // Update the notification status
+      await updateNotificationStatus(notification.id);
+  
+      // Get the updated notifications after the status change
+      const updatedNotifications = await getAllNotificationsBySellerEmail(decodedToken.email);
+      
+      // Update the state with the new notifications
+      setNotifications(updatedNotifications);
+  
+      // Close the modal
+      handleCloseNotificationModal();
+    } catch (error) {
+      // Handle errors
+      console.error(error);
+    }
+  };
+
+
   return (
     <div className="product-details">
       <div className="container">
@@ -62,10 +85,13 @@ const ViewNotifications = () => {
                   <td className="col-md-1 text-center">
                     <button
                       className="btn btn-primary view-info-btn"
-                      onClick={() => openNotificationModal(notification)}
+                      onClick={() => openNotificationModal(notification)
+                      }
+                    
                     >
                       View Info
                     </button>
+                  
                   </td>
                 </tr>
               ))}
@@ -74,7 +100,6 @@ const ViewNotifications = () => {
         ) : (
           <p>No notifications available.</p>
         )}
- 
         {selectedNotification && (
           <Modal
             show={!!selectedNotification}
@@ -94,7 +119,10 @@ const ViewNotifications = () => {
               <Button
                 className="form-submit-btn"
                 variant="secondary"
-                onClick={handleCloseNotificationModal}
+                onClick={() =>{
+                  updateNotificationStatusAndView(selectedNotification);
+                  handleCloseNotificationModal();
+                }}
               >
                 Close
               </Button>
@@ -105,5 +133,5 @@ const ViewNotifications = () => {
     </div>
   );
 };
- 
+
 export default ViewNotifications;

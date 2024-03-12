@@ -74,7 +74,7 @@ const UserProfile = () => {
   }, [userData]);
 
   const navigate = useNavigate();
-  const mylocation = useLocation();
+  const location = useLocation();
 
   const editUserProfile = async () => {
     navigate("/userProfileEdit");
@@ -191,14 +191,18 @@ const UserProfile = () => {
               {sellerNav && (
                 <div className="nav-bar">
                   <ul>
+                  {location.pathname !== "/notifications" && (
                     <NavLink to="store" className="nav-item">
                       <li>My Store</li>{" "}
                     </NavLink>
-                    {/* {mylocation.pathname !== "/store" && (
+                  )}
+
+                    {location.pathname !== "/store" && (
                       <NavLink to="notifications" className="nav-item">
                         <li>Notification</li>
                       </NavLink>
-                    )} */}
+                    )}
+
                     {storeData && storeData.storeStatus === "VERIFIED" && (
                       <NavLink to="product" className="nav-item">
                         <li>Product List</li>{" "}
@@ -209,12 +213,11 @@ const UserProfile = () => {
                         <li>Payment Information</li>{" "}
                       </NavLink>
                     )}
-
-                    {/*  {storeData && storeData.storeStatus === "VERIFIED" && (
+                    {storeData && storeData.storeStatus === "VERIFIED" && (
                       <NavLink to="inventory" className="nav-item">
                         <li>Inventory</li>
                       </NavLink>
-                    )} */}
+                    )}
                   </ul>
                 </div>
               )}

@@ -783,20 +783,6 @@ const getFeedBackImage = async (imagename: any) => {
   }
 };
 
-/* Notification Management */
- 
-const getAllNotificationsBySellerEmail = async (sellerEmail: string) => {
-  try {
-    const response = await axiosInstance.get(
-      `${notificationBaseurl}/notifications/all/${sellerEmail}`
-    );
-    return response.data;
-  } catch (error: any) {
-    console.error(error.response?.data);
-    throw error;
-  }
-};
-
 
 /*Cost Management*/
 
@@ -843,6 +829,31 @@ const getcostById = async (costId: string) => {
 
 
 
+const getAllNotificationsBySellerEmail = async (sellerEmail: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `${notificationBaseurl}/notifications/all/${sellerEmail}`
+      );
+      console.log("LLL",response.data)
+    return response.data;
+  } catch (error: any) {
+    console.error(error.response?.data);
+    throw error;
+  }
+};
+
+const updateNotificationStatus = async (notificationId: string) => {
+  try {
+      const response = await axios.put(
+          `${notificationBaseurl}/notifications/update-notification-status/${notificationId}`
+      );
+      toast.success(response.data);
+      return response.data;
+  } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+  }
+};
 
 export {
   userRegistration,
@@ -892,9 +903,10 @@ export {
   addToReviewFeedback,
   getFeedBackById,
   getFeedBackImage,
+  getAllNotificationsBySellerEmail,
+  updateNotificationStatus,
   applyDiscount,
   updateDiscount,
-  getAllNotificationsBySellerEmail,
   calculateCost,
   getCartById,
   getcostById,

@@ -4,6 +4,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faHeart } from '@fortawesome/free-solid-svg-icons'; // Import the heart icon
 import { useCart } from '../Cart/CartContext';
+import { getAllNotificationsBySellerEmail } from '../../services/apiService';
 
 interface DecodedToken {
   sub: string;
@@ -51,6 +52,24 @@ const NavBar = () => {
     }
   };
 
+   
+  //sellerNotifications
+
+  const handleNotificationClick = async () => {
+    const decodedToken = JSON.parse(sessionStorage.getItem('decodedToken') || '{}');
+    if (decodedToken && decodedToken.role === 'seller') {
+      try {
+        // Fetch and handle notifications
+        const notifications = await getAllNotificationsBySellerEmail(decodedToken.email);
+        console.log('Notifications:', notifications);
+        // Implement how you want to display notifications (e.g., in a modal or a separate page)
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    }
+  };
+
+
   return (
     <div className="nav-bar-main">
       <div className="nav-item">
@@ -82,7 +101,11 @@ const NavBar = () => {
 
           <i className="bi bi-search"></i>
           <i className="bi bi-person" onClick={checkVerificationStatus}></i>
-          <i className="bi bi-bell"></i>
+
+          <NavLink to="/notifications">
+          <i className="bi bi-bell" onClick={handleNotificationClick}></i>
+          </NavLink>
+
           <div>
             {decodedToken ? (
               <button className='btn btn-outline-secondary' onClick={handleLogout}>

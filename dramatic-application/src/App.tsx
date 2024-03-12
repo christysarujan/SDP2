@@ -72,10 +72,10 @@ const router = createBrowserRouter([
         path: '/viewWish',
         element: <ViewWishPage />,
       },
-      // {
-      //   path: '/notification',
-      //   element: <ViewNotifications />,
-      // },
+      {
+        path: '/notifications',
+        element: <ViewNotifications />,
+      },
       {
         path: '/',
         element: <UserProfile />,
@@ -123,7 +123,9 @@ const router = createBrowserRouter([
             element: <ProductManagement/>,
           },
         ]
+
       },
+      
     ]
   }
 ]);
