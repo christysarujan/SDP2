@@ -12,7 +12,7 @@ const productBaseurl = "http://localhost:8083/api/v1/product-service";
 const cartBaseurl = "http://localhost:8089/api/v1/shopping-cart-service";
 const wishListBaseurl = "http://localhost:8088/api/v1/shopping-wishlist-service";
 const feedbackBaseurl = "http://localhost:8095/api/v1/feedback-service";
-
+const notificationBaseurl = "http://localhost:8087/api/v1/notification-service";
 
 const userRegistration = async (userData: object) => {
   try {
@@ -740,7 +740,33 @@ const getFeedBackImage = async (imagename: any) => {
   }
 };
 
+/* Notification Management */
 
+const getAllNotificationsBySellerEmail = async (sellerEmail: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `${notificationBaseurl}/notifications/all/${sellerEmail}`
+      );
+      console.log("LLL",response.data)
+    return response.data;
+  } catch (error: any) {
+    console.error(error.response?.data);
+    throw error;
+  }
+};
+
+const updateNotificationStatus = async (notificationId: string) => {
+  try {
+      const response = await axios.put(
+          `${notificationBaseurl}/notifications/update-notification-status/${notificationId}`
+      );
+      toast.success(response.data);
+      return response.data;
+  } catch (error: any) {
+      console.error(error.response.data);
+      toast.error(error.response.data);
+  }
+};
 
 export {
   userRegistration,
@@ -790,4 +816,6 @@ export {
   addToReviewFeedback,
   getFeedBackById,
   getFeedBackImage,
+  getAllNotificationsBySellerEmail,
+  updateNotificationStatus
 }

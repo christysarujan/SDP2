@@ -10,6 +10,7 @@ import Store from "../Store/Store";
 import { Outlet, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
 import UserProfileEdit from "./UserProfileEdit/UserProfileEdit";
+import { useLocation } from "react-router-dom";
 
 interface UserData {
   sub: string;
@@ -73,6 +74,7 @@ const UserProfile = () => {
   }, [userData]);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const editUserProfile = async () => {
     navigate("/userProfileEdit");
@@ -189,9 +191,18 @@ const UserProfile = () => {
               {sellerNav && (
                 <div className="nav-bar">
                   <ul>
+                  {location.pathname !== "/notifications" && (
                     <NavLink to="store" className="nav-item">
                       <li>My Store</li>{" "}
                     </NavLink>
+                  )}
+
+                    {location.pathname !== "/store" && (
+                      <NavLink to="notifications" className="nav-item">
+                        <li>Notification</li>
+                      </NavLink>
+                    )}
+
                     {storeData && storeData.storeStatus === "VERIFIED" && (
                       <NavLink to="product" className="nav-item">
                         <li>Product List</li>{" "}
@@ -202,11 +213,11 @@ const UserProfile = () => {
                         <li>Payment Information</li>{" "}
                       </NavLink>
                     )}
-                   {/*  {storeData && storeData.storeStatus === "VERIFIED" && (
+                    {storeData && storeData.storeStatus === "VERIFIED" && (
                       <NavLink to="inventory" className="nav-item">
                         <li>Inventory</li>
                       </NavLink>
-                    )} */}
+                    )}
                   </ul>
                 </div>
               )}
