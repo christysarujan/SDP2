@@ -17,6 +17,9 @@ interface Item {
   category: string;
   size: string;
   newPrice?: number; // New field for discounted price
+  color: string; // Color property
+  productCategory: string; // Product category property
+  style: string; // Style property
 }
 
 function KidsItemsListPage() {
@@ -28,11 +31,17 @@ function KidsItemsListPage() {
     category: '',
     size: '',
     material: '',
-    priceRange: { min: 0, max: 10000 }
+    color: '', // Color filter
+    priceRange: { min: 0, max: 10000 },
+    productCategory: '', // Product category filter
+    style: '', // Style filter
   });
   const [uniqueCategories, setUniqueCategories] = useState<string[]>([]);
   const [uniqueSizes, setUniqueSizes] = useState<string[]>([]);
   const [uniqueMaterials, setUniqueMaterials] = useState<string[]>([]);
+  const [uniqueColors, setUniqueColors] = useState<string[]>([]);
+  const [uniqueProductCategories, setUniqueProductCategories] = useState<string[]>([]);
+  const [uniqueStyles, setUniqueStyles] = useState<string[]>([]);
   const itemsPerPage = 12;
 
   useEffect(() => {
@@ -58,18 +67,27 @@ function KidsItemsListPage() {
         material: item.material,
         category: item.category,
         size: item.variations.map((variation: any) => variation.sizeQuantities.map((sizeQty: any) => sizeQty.size)).flat(),
-        newPrice: item.newPrice // Include newPrice in the item object
+        newPrice: item.newPrice, // Include newPrice in the item object
+        color: item.variations.map((variation: any) => variation.color).join(', '), // Combine colors
+        productCategory: item.productCategory, // Include productCategory in the item object
+        style: item.style, // Include style in the item object
       })));
 
       setItems(kidsItems);
 
       const categories = kidsItems.map(item => item.category);
-      const sizes = kidsItems.map(item => item.size).flat();
+      const sizes = kidsItems.flatMap(item => item.size);
       const materials = kidsItems.map(item => item.material);
+      const colors = kidsItems.flatMap(item => item.color.split(', '));
+      const productCategories = kidsItems.map(item => item.productCategory);
+      const styles = kidsItems.map(item => item.style);
 
       setUniqueCategories(Array.from(new Set(categories)));
       setUniqueSizes(Array.from(new Set(sizes)));
       setUniqueMaterials(Array.from(new Set(materials)));
+      setUniqueColors(Array.from(new Set(colors)));
+      setUniqueProductCategories(Array.from(new Set(productCategories.filter(category => category))));
+      setUniqueStyles(Array.from(new Set(styles.filter(style => style))));
     } catch (error) {
       console.error('Error fetching kids items:', error);
     }
@@ -123,20 +141,22 @@ function KidsItemsListPage() {
     filteredItems = filteredItems.filter(item => item.material === filters.material);
   }
 
-  //
-    filteredItems = filteredItems.filter(item => {
-  
-    console.log("Final Price:", item.finalPrice);
-  
-    // Check if the final price falls within the specified range
+  if (filters.color) {
+    filteredItems = filteredItems.filter(item => item.color.toLowerCase().includes(filters.color.toLowerCase()));
+  }
+
+  if (filters.productCategory) {
+    filteredItems = filteredItems.filter(item => item.productCategory === filters.productCategory);
+  }
+
+  if (filters.style) {
+    filteredItems = filteredItems.filter(item => item.style === filters.style);
+  }
+
+  filteredItems = filteredItems.filter(item => {
     const isInPriceRange = item.finalPrice >= filters.priceRange.min && item.finalPrice <= filters.priceRange.max;
-  
-    console.log("Is in Price Range:", isInPriceRange);
-  
     return isInPriceRange;
   });
-
-
 
   const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
@@ -165,6 +185,27 @@ function KidsItemsListPage() {
           <option value="">All</option>
           {uniqueMaterials.map((material, index) => (
             <option key={index} value={material}>{material}</option>
+          ))}
+        </select>
+        <label htmlFor="color">Color:</label>
+        <select id="color" onChange={e => handleFilterChange(e.target.value, 'color')} value={filters.color}>
+          <option value="">All</option>
+          {uniqueColors.map((color, index) => (
+            <option key={index} value={color}>{color}</option>
+          ))}
+        </select>
+        <label htmlFor="productCategory">Product Category:</label>
+        <select id="productCategory" onChange={e => handleFilterChange(e.target.value, 'productCategory')} value={filters.productCategory}>
+          <option value="">All</option>
+          {uniqueProductCategories.map((category, index) => (
+            <option key={index} value={category}>{category}</option>
+          ))}
+        </select>
+        <label htmlFor="style">Style:</label>
+        <select id="style" onChange={e => handleFilterChange(e.target.value, 'style')} value={filters.style}>
+          <option value="">All</option>
+          {uniqueStyles.map((style, index) => (
+            <option key={index} value={style}>{style}</option>
           ))}
         </select>
         <PriceRangeSlider

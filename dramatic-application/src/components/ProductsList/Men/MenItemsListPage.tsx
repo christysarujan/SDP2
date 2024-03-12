@@ -1,3 +1,5 @@
+// MenItemsListPage.tsx
+
 import React, { useState, useEffect } from 'react';
 import './MenItemsListPage.scss'; // Import SCSS file
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +18,10 @@ interface Item {
   sellerEmail: string;
   material: string;
   category: string;
-  size: string;
+  sizeQuantities: { size: string; qty: number }[];
+  color: string;
+  productCategory: string;
+  style: string;
 }
 
 function MenItemsListPage() {
@@ -28,11 +33,17 @@ function MenItemsListPage() {
     category: '',
     size: '',
     material: '',
+    color: '',
+    style: '',
+    productCategory: '',
     priceRange: { min: 0, max: 10000 }
   });
   const [uniqueCategories, setUniqueCategories] = useState<string[]>([]);
   const [uniqueSizes, setUniqueSizes] = useState<string[]>([]);
   const [uniqueMaterials, setUniqueMaterials] = useState<string[]>([]);
+  const [uniqueColors, setUniqueColors] = useState<string[]>([]);
+  const [uniqueStyles, setUniqueStyles] = useState<string[]>([]);
+  const [uniqueProductCategories, setUniqueProductCategories] = useState<string[]>([]);
   const itemsPerPage = 12;
 
   useEffect(() => {
@@ -47,40 +58,58 @@ function MenItemsListPage() {
   const fetchMenItems = async () => {
     try {
       const data = await getProductsByCategory('men');
-      const menItems = await Promise.all(data.map(async (item: any, index: number) => ({
-        productId: item.productId,
-        id: index,
-        title: item.name,
-        price: item.discount === 0 ? `${item.price} Rs.` : (
-          <>
-            <span style={{ textDecoration: 'line-through' }}>{item.price} Rs.</span>{' '}
-            <strong style={{ color: 'red' }}>{item.newPrice} Rs.</strong>
-          </>
-        ),
-        finalPrice: item.discount === 0 ? item.price : item.newPrice,
-        image: await getProductPhoto(await getProductImage(item.productImages[0].productImageUrl)),
-        sellerEmail: item.sellerEmail,
-        material: item.material,
-        category: item.category,
-        size: item.variations.map((variation: any) => variation.sizeQuantities.map((sizeQty: any) => sizeQty.size)).flat(),
-        newPrice: item.newPrice // Include newPrice in the item object
-      })));
-
-      console.log("Men Items xxxx......" ,data)
+      const menItems = await Promise.all(data.map(async (item: any, index: number) => {
+        const variations = item.variations.map((variation: any) => ({
+          color: variation.color,
+          sizeQuantities: variation.sizeQuantities
+        }));
+        return {
+          productId: item.productId,
+          id: index,
+          title: item.name,
+          price: item.discount === 0 ? `${item.price} Rs.` : (
+            <>
+              <span style={{ textDecoration: 'line-through' }}>{item.price} Rs.</span>{' '}
+              <strong style={{ color: 'red' }}>{item.newPrice} Rs.</strong>
+            </>
+          ),
+          finalPrice: item.discount === 0 ? item.price : item.newPrice,
+          image: await getProductPhoto(await getProductImage(item.productImages[0].productImageUrl)),
+          sellerEmail: item.sellerEmail,
+          material: item.material,
+          category: item.category,
+          sizeQuantities: variations.flatMap((variation: any) => variation.sizeQuantities),
+          color: variations.map((variation: any) => variation.color).join(', '),
+          productCategory: item.productCategory,
+          style: item.style
+        };
+      }));
   
       setItems(menItems);
   
       const categories = menItems.map(item => item.category);
-      const sizes = menItems.map(item => item.size).flat();
+      const sizes = menItems.flatMap(item => item.sizeQuantities.map((sq: { size: any; }) => sq.size));
       const materials = menItems.map(item => item.material);
+      const colors = menItems.flatMap(item => item.color.split(', '));
+      const styles = menItems.map(item => item.style);
+      const productCategories = menItems.map(item => item.productCategory);
+  
+      console.log('Styles:', styles);
+      console.log('Product Categories:', productCategories);
   
       setUniqueCategories(Array.from(new Set(categories)));
       setUniqueSizes(Array.from(new Set(sizes)));
       setUniqueMaterials(Array.from(new Set(materials)));
+      setUniqueColors(Array.from(new Set(colors)));
+      setUniqueStyles(Array.from(new Set(styles.filter(style => style !== null && style !== ''))));
+      setUniqueProductCategories(Array.from(new Set(productCategories.filter(category => category !== null && category !== ''))));
+
     } catch (error) {
       console.error('Error fetching men items:', error);
     }
   };
+  
+  
 
   const getProductPhoto = async (imageData: BlobPart) => {
     try {
@@ -94,10 +123,17 @@ function MenItemsListPage() {
   };
 
   const handleFilterChange = (value: any, filterType: string) => {
-    setFilters(prevFilters => ({
-      ...prevFilters,
-      [filterType]: value
-    }));
+    if (filterType === 'color') {
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        [filterType]: value.toLowerCase()
+      }));
+    } else {
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        [filterType]: value
+      }));
+    }
   };
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -110,35 +146,35 @@ function MenItemsListPage() {
   }
 
   if (filters.size) {
-    filteredItems = filteredItems.filter(item => item.size.includes(filters.size));
+    filteredItems = filteredItems.filter(item => item.sizeQuantities.some(sq => sq.size === filters.size));
   }
 
   if (filters.material) {
     filteredItems = filteredItems.filter(item => item.material === filters.material);
   }
 
+  if (filters.color) {
+    filteredItems = filteredItems.filter(item => item.color.toLowerCase().includes(filters.color));
+  }
 
-// Filter function to include items based on price range
-filteredItems = filteredItems.filter(item => {
-  
-  console.log("Final Price:", item.finalPrice);
+  if (filters.style) {
+    filteredItems = filteredItems.filter(item => item.style === filters.style);
+  }
 
-  // Check if the final price falls within the specified range
-  const isInPriceRange = item.finalPrice >= filters.priceRange.min && item.finalPrice <= filters.priceRange.max;
+  if (filters.productCategory) {
+    filteredItems = filteredItems.filter(item => item.productCategory === filters.productCategory);
+  }
 
-  console.log("Is in Price Range:", isInPriceRange);
+  filteredItems = filteredItems.filter(item => {
+    return item.finalPrice >= filters.priceRange.min && item.finalPrice <= filters.priceRange.max;
+  });
 
-  return isInPriceRange;
-});
-
-
-const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
     <div className="men-items-list-page">
-     
       <div className="filters">
         <h2>Filters</h2>
         <label htmlFor="category">Category:</label>
@@ -160,6 +196,27 @@ const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
           <option value="">All</option>
           {uniqueMaterials.map((material, index) => (
             <option key={index} value={material}>{material}</option>
+          ))}
+        </select>
+        <label htmlFor="color">Color:</label>
+        <select id="color" onChange={e => handleFilterChange(e.target.value, 'color')} value={filters.color}>
+          <option value="">All</option>
+          {uniqueColors.map((color, index) => (
+            <option key={index} value={color.toLowerCase()}>{color}</option>
+          ))}
+        </select>
+        <label htmlFor="style">Style:</label>
+        <select id="style" onChange={e => handleFilterChange(e.target.value, 'style')} value={filters.style}>
+          <option value="">All</option>
+          {uniqueStyles.map((style, index) => (
+            <option key={index} value={style}>{style}</option>
+          ))}
+        </select>
+        <label htmlFor="productCategory">Product Category:</label>
+        <select id="productCategory" onChange={e => handleFilterChange(e.target.value, 'productCategory')} value={filters.productCategory}>
+          <option value="">All</option>
+          {uniqueProductCategories.map((productCategory, index) => (
+            <option key={index} value={productCategory}>{productCategory}</option>
           ))}
         </select>
         <PriceRangeSlider
