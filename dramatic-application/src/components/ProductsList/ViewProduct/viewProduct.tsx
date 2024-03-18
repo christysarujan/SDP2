@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ProductPage.scss';
-import { getProductsByProductId, getProductImage, findStoreByEmail, addToCart, getCartsByUserId, addToWishList, addToReviewFeedback, getFeedBackById, getFeedBackImage, calculateCost, getCartById, getcostById } from '../../../services/apiService';
+import { getProductsByProductId, getProductImage, findStoreByEmail, addToCart, getCartsByUserId, addToWishList, addToReviewFeedback, getFeedBackById, getFeedBackImage, calculateCost, getCartById, getcostById, addOrder, calculateCostByOrderIdandProductId, getOrderById } from '../../../services/apiService';
 import ReactImageMagnify from 'react-image-magnify';
 import { useCart } from '../../Cart/CartContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -242,7 +242,7 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
           const cartresponse = await addToCart({
             productId: props.productId,
             productPrice: product.price,
-            userId: userId,
+            userId: userId, 
             color: selectedColor,
             size: selectedSize,
             quantity: quantity
@@ -278,13 +278,13 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
             const currentTime = new Date().getTime(); // Get current time in milliseconds
             const elapsedTime = currentTime - startTime; // Calculate elapsed time
 
-            // Break the loop if 1 minute (60000 milliseconds) has passed
-            if (elapsedTime >= 60000) {
+            // Break the loop if 10 seconds (10000 milliseconds) has passed
+            if (elapsedTime >= 10000) {
 
               console.log("=== Time limit exceeded. Exiting loop ===");
               console.log("=== Cost Id not updated in Cart DB ===");
               console.log("=== Please Check Kafka Server ===");
-              console.log("=== Try To Restart Kafka Server ===");
+              console.log("=== Try To Clean logs and Try to Restart Kafka Server  ===");
               break;
             }
 
@@ -358,11 +358,125 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
     }
   };
 
+
+  const orderDetails = {
+    productId: props.productId || null,
+    productName : product?.name || null,
+    productPrice: product?.newPrice || product?.price || null,
+    color: selectedColor || null,
+    size: selectedSize || null,
+    quantity: quantity || null,
+    images: product?.images.map(image => image) || [], // Storing image URLs
+  };
+  
+  
+
   const buynowclick = async () => {
+
+    console.log('Order Details:', orderDetails);
+
+    if (!selectedColor) {
+      // alert('Please select a size.');
+       toast.error('Please select a color.');
+       return;
+     }
+   
+     if (!selectedSize) {
+       //alert('Please select a size.');
+       toast.error('Please select a size.');
+       return;
+     }
 
     console.log("Product ID..", props.productId)
 
-    navigate(`/orderproduct/${props.productId}`);
+    ///////////////////////////////////
+    // Create an object containing all the properties
+    
+    try {
+      const receivedOrderObject = await addOrder({
+        productId: props.productId,
+        userId: sessionStorage.getItem("userId") || null,
+        color: selectedColor,
+        size: selectedSize,
+        quantity: quantity
+      });
+    
+      // Handle order addition success
+      console.log("Received Order Object:", receivedOrderObject);
+
+       await calculateCostByOrderIdandProductId({
+        productId: props.productId,
+        orderId : receivedOrderObject.id
+      });
+
+
+      var updatedOrderObject = await getOrderById(receivedOrderObject.id);
+
+      ///////////////////////////////////////////////////////////
+
+     // var cartwithcost = await getCartById(cartresponse.id);
+
+      const startTime = new Date().getTime(); // Get current time in milliseconds
+
+      while (updatedOrderObject.costId === null) {
+
+        console.log("Iterating and Checking Cost Id Update.....");
+
+        updatedOrderObject = await getOrderById(receivedOrderObject.id);
+
+        if (updatedOrderObject.costId !== null) {
+          break;
+        }
+
+        const currentTime = new Date().getTime(); // Get current time in milliseconds
+        const elapsedTime = currentTime - startTime; // Calculate elapsed time
+
+        // Break the loop if 10 seconds (10000 milliseconds) has passed
+        if (elapsedTime >= 10000) {
+
+          console.log("=== Time limit exceeded. Exiting loop ===");
+          console.log("=== Cost Id not updated in Cart DB ===");
+          console.log("=== Please Check Kafka Server ===");
+          console.log("=== Try To Clean logs and Try to Restart Kafka Server  ===");
+          break;
+        }
+
+        // Add a delay before next iteration to avoid excessive API calls
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Adjust delay as needed
+      }
+
+      if (updatedOrderObject.costId !== null) {
+
+        const costDetails = await getcostById(updatedOrderObject.costId);
+
+        //console.log("Costing Cart..", cartwithcost);
+
+        console.log("Costing Details..", costDetails);
+
+        console.log("Fianl Total..", costDetails.finalTotal);
+
+
+      }
+
+
+
+
+
+      ///////////////////////////////////////////////////////////
+
+
+    } catch (error) {
+      console.error('Error adding order:', error);
+    }
+    
+
+
+    
+
+    navigate(`/orderproduct/${props.productId}`, {
+      state: { orderDetails }
+    });
+
 
   }
 
@@ -431,9 +545,13 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
               ) : (
                 <>
                   <span style={{ textDecoration: 'line-through' }}>{product.price} Rs.</span>{' '}
-                  <strong style={{ color: 'red' }}>{product.newPrice} Rs.</strong>
+                  
+                  <span style={{ color: 'green' }}>({((product.discount * 100).toFixed(0))}% off)</span>{' '}
+
+                  <strong style={{ color: 'red' }}>{product.newPrice} Rs.</strong>{' '}
+
                 </>
-              )
+              ) 
             }
           </p>
           <p>Availability: {product.availability ? 'In stock' : 'Out of stock'}</p>

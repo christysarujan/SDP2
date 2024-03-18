@@ -6,6 +6,8 @@ import CartData from '../components/Cart/cartData'
 import CartQuantityData from "../components/Cart/cartQuantityData";
 import Feedback from "../components/FeedBack/FeedBack";
 import CostData from "../components/Cart/costData";
+import OrderData from "../components/OrderProduct/orderData";
+import CostCalc from "../components/OrderProduct/costCalc";
 
 const baseurl = "http://localhost:8080/api/v1";
 const storeBaseurl = "http://localhost:8082/api/v1";
@@ -14,7 +16,9 @@ const cartBaseurl = "http://localhost:8089/api/v1/shopping-cart-service";
 const wishListBaseurl = "http://localhost:8088/api/v1/shopping-wishlist-service";
 const feedbackBaseurl = "http://localhost:8095/api/v1/feedback-service";
 const notificationBaseurl = "http://localhost:8087/api/v1/notification-service";
-const costBaseUrl = "http://localhost:8086/api/v1/costing-service"
+const costBaseUrl = "http://localhost:8086/api/v1/costing-service";
+const orderBaseUrl = "http://localhost:8091/api/v1/order-management-service";
+
 
 const userRegistration = async (userData: object) => {
   try {
@@ -815,6 +819,36 @@ const calculateCost = async (costData: CostData): Promise<any> => {
 };
 
 
+const calculateCostByOrderIdandProductId = async (costCalc: CostCalc): Promise<any> => {
+  try {
+    const response = await axiosInstance.post(
+      `${costBaseUrl}/costs/calculation`,
+      costCalc,
+      {
+        headers: {
+          'Content-Type': 'application/json', // Change content type to JSON
+        },
+      }
+    );
+    toast.success('Calculated Cost successfully by order and product');
+    return response.data;
+  } catch (error: unknown) { // Specify type annotation for 'error'
+    if (axios.isAxiosError(error)) { // Check if error is an AxiosError
+      const axiosError = error as AxiosError; // Cast error to AxiosError
+      console.error('Error adding to cart:', axiosError.response?.data);
+      toast.error('Calculated Cost Failed');
+      throw axiosError; // Rethrow error to handle it in the component
+    } else {
+      // Handle other types of errors
+      console.error('Error Calculatoing cost:', error);
+      toast.error('Failed to calculate Cost');
+      throw error; // Rethrow error to handle it in the component
+    }
+  }
+};
+
+
+
 const getcostById = async (costId: string) => {
   try {
     const response = await axiosInstance.get(
@@ -854,6 +888,67 @@ const updateNotificationStatus = async (notificationId: string) => {
       toast.error(error.response.data);
   }
 };
+
+// Order Management
+
+const addOrder = async (orderData: OrderData): Promise<any> => {
+  try {
+    const response = await axiosInstance.post(
+      `${orderBaseUrl}/orders/add`,
+      orderData,
+      {
+        headers: {
+          'Content-Type': 'application/json', // Change content type to JSON
+        },
+      }
+    );
+    toast.success('Order Added successfully');
+    return response.data;
+  } catch (error: unknown) { // Specify type annotation for 'error'
+    if (axios.isAxiosError(error)) { // Check if error is an AxiosError
+      const axiosError = error as AxiosError; // Cast error to AxiosError
+      console.error('Error adding Order:', axiosError.response?.data);
+      toast.error('Failed to add Order');
+      throw axiosError; // Rethrow error to handle it in the component
+    } else {
+      // Handle other types of errors
+      console.error('Error adding to order:', error);
+      toast.error('Failed to add product to order');
+      throw error; // Rethrow error to handle it in the component
+    }
+  }
+};
+
+
+const getOrderById = async (id: string): Promise<any> => {
+  try {
+    const response = await axiosInstance.get(
+      `${orderBaseUrl}/orders/${id}`,
+      
+      {
+        headers: {
+          'Content-Type': 'application/json', // Change content type to JSON
+        },
+      }
+    );
+    toast.success('Order Got successfully');
+    return response.data;
+  } catch (error: unknown) { // Specify type annotation for 'error'
+    if (axios.isAxiosError(error)) { // Check if error is an AxiosError
+      const axiosError = error as AxiosError; // Cast error to AxiosError
+      console.error('Error getting Order:', axiosError.response?.data);
+      toast.error('Failed to add Order');
+      throw axiosError; // Rethrow error to handle it in the component
+    } else {
+      // Handle other types of errors
+      console.error('Error adding to order:', error);
+      toast.error('Failed to add product to order');
+      throw error; // Rethrow error to handle it in the component
+    }
+  }
+};
+
+
 
 export {
   userRegistration,
@@ -910,4 +1005,7 @@ export {
   calculateCost,
   getCartById,
   getcostById,
+  addOrder,
+  calculateCostByOrderIdandProductId,
+  getOrderById,
 }

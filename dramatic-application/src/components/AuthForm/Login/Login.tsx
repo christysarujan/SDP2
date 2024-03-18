@@ -55,6 +55,10 @@ const Login = () => {
 
                     const fullUserData = await findUserByEmail(email);
 
+                   // sessionStorage.setItem('fullUserData', fullUserData);
+                    // Store user details in sessionStorage
+                   sessionStorage.setItem("fullUserData", JSON.stringify(fullUserData));
+
                     
                     sessionStorage.setItem('userId', fullUserData.id);
                     // Fetch cart count from the API after successful login

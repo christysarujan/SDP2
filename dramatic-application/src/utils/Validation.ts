@@ -73,6 +73,10 @@ export const addNewItemValidationSchema = Yup.object({
   category: Yup.string().required("Category is required"),
   material: Yup.string().required("Material is required"),
   price: Yup.string().required("Price is required"),
+  productDescription : Yup.string().required("Product Description is required"),
+  productCategory : Yup.string().required("Product Category is required"),
+  style : Yup.string().required("Style is required"),
+  
 });
 export const addNewPaymentTypeValidationSchema = Yup.object({
   paymentType: Yup.string().required("Payment Type is required"),
@@ -86,15 +90,15 @@ export const addNewPaymentTypeValidationSchema = Yup.object({
 });
 export const addNewAddressValidationSchema = Yup.object({
   addressType: Yup.string().required("Address Type is required"),
-  addressLine_01: Yup.string().required("Address Line 1 is required"),
+  addressLine01: Yup.string().required("Address Line 1 is required"),
   city: Yup.string().required("City is required"),
-  zipCode: Yup.string().required("Zipcode is required"),
+  zipCode: Yup.string().required("Zipcode is required").max(5, "Zipcode must be at most 5 characters long"),
   province: Yup.string().required("Province Name is required"),
   country: Yup.string().required("Country Name is required"),
   countryCode: Yup.string().required("Country Code is required"),
   mobileNo: Yup.string().required("Telephone Number is required"),
 
-});
+})
 export const paymentTypeFilterValidationSchema = Yup.object({
   addressType: Yup.string().required("Please Select an Address Type"),
 });
@@ -175,14 +179,14 @@ export const addNewPaymentTypeInitialValues = {
 }
 export const addNewAddressInitialValues = {
   addressType: "",
-  addressLine_01: "No:92/C, Hanwella Road",
-  addressLine_02: "Pallegama",
-  city: "Kirindiwela",
-  zipCode: "11741",
-  province: "Western",
-  country: "Sri Lanka",
+  addressLine01: "",
+  addressLine02: "",
+  city: "",
+  zipCode: "",
+  province: "",
+  country: "",
   countryCode: "+94",
-  mobileNo: "0775588760",
+  mobileNo: "",
 
 }
 export const paymentTypeFilterInitialValues = {
