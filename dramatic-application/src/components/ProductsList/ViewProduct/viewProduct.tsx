@@ -75,7 +75,9 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [reviews, setReviews] = useState<Feedback[]>([]);
   const [refreshFlag, setRefreshFlag] = useState<boolean>(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0); // Add state for current image index
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0); 
+  const [finalTotal, setFinalTotal] = useState<number >(0);
+  // Add state for current image index
 
   const navigate = useNavigate();
 
@@ -358,6 +360,8 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
     }
   };
 
+  var newFinalTotal : any;
+
 
   const orderDetails = {
     productId: props.productId || null,
@@ -367,31 +371,27 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
     size: selectedSize || null,
     quantity: quantity || null,
     images: product?.images.map(image => image) || [], // Storing image URLs
+   
   };
   
   
-
+  
   const buynowclick = async () => {
 
     console.log('Order Details:', orderDetails);
-
+  
     if (!selectedColor) {
-      // alert('Please select a size.');
-       toast.error('Please select a color.');
-       return;
-     }
+      toast.error('Please select a color.');
+      return;
+    }
    
-     if (!selectedSize) {
-       //alert('Please select a size.');
-       toast.error('Please select a size.');
-       return;
-     }
-
-    console.log("Product ID..", props.productId)
-
-    ///////////////////////////////////
-    // Create an object containing all the properties
-    
+    if (!selectedSize) {
+      toast.error('Please select a size.');
+      return;
+    }
+  
+    console.log("Product ID..", props.productId);
+  
     try {
       const receivedOrderObject = await addOrder({
         productId: props.productId,
@@ -400,85 +400,64 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
         size: selectedSize,
         quantity: quantity
       });
-    
-      // Handle order addition success
+  
       console.log("Received Order Object:", receivedOrderObject);
 
-       await calculateCostByOrderIdandProductId({
+      var deliveryCharge = receivedOrderObject.deliveryChargeAmount;
+  
+      await calculateCostByOrderIdandProductId({
         productId: props.productId,
-        orderId : receivedOrderObject.id
+        orderId: receivedOrderObject.id
       });
-
-
-      var updatedOrderObject = await getOrderById(receivedOrderObject.id);
-
-      ///////////////////////////////////////////////////////////
-
-     // var cartwithcost = await getCartById(cartresponse.id);
-
+  
+      let updatedOrderObject = await getOrderById(receivedOrderObject.id);
+  
       const startTime = new Date().getTime(); // Get current time in milliseconds
-
+  
       while (updatedOrderObject.costId === null) {
-
         console.log("Iterating and Checking Cost Id Update.....");
-
+  
         updatedOrderObject = await getOrderById(receivedOrderObject.id);
-
+  
         if (updatedOrderObject.costId !== null) {
           break;
         }
-
+  
         const currentTime = new Date().getTime(); // Get current time in milliseconds
         const elapsedTime = currentTime - startTime; // Calculate elapsed time
-
-        // Break the loop if 10 seconds (10000 milliseconds) has passed
+  
         if (elapsedTime >= 10000) {
-
           console.log("=== Time limit exceeded. Exiting loop ===");
           console.log("=== Cost Id not updated in Cart DB ===");
           console.log("=== Please Check Kafka Server ===");
           console.log("=== Try To Clean logs and Try to Restart Kafka Server  ===");
           break;
         }
-
-        // Add a delay before next iteration to avoid excessive API calls
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Adjust delay as needed
+  
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay before next iteration
       }
-
+  
       if (updatedOrderObject.costId !== null) {
-
-        const costDetails = await getcostById(updatedOrderObject.costId);
-
-        //console.log("Costing Cart..", cartwithcost);
-
+        let costDetails = await getcostById(updatedOrderObject.costId);
         console.log("Costing Details..", costDetails);
-
-        console.log("Fianl Total..", costDetails.finalTotal);
-
-
+      
+        // Assign costDetails.finalTotal to newFinalTotal
+        newFinalTotal = costDetails.finalTotal;
+      
+      
       }
-
-
-
-
-
-      ///////////////////////////////////////////////////////////
-
-
+      
+  
+      navigate(`/orderproduct/${props.productId}`, {
+        state: { orderDetails , newFinalTotal , deliveryCharge }
+      });
+  
     } catch (error) {
       console.error('Error adding order:', error);
     }
-    
-
-
-    
-
-    navigate(`/orderproduct/${props.productId}`, {
-      state: { orderDetails }
-    });
-
-
   }
+  
+
 
   if (!product) {
     return <div>Loading...</div>;

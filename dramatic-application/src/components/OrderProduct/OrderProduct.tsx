@@ -10,6 +10,9 @@ interface OrderPageProps {
 const OrderPage: React.FC<OrderPageProps> = ({ productId }) => {
   const location = useLocation();
   const orderDetails = location.state && location.state.orderDetails;
+  const deliveryCharge = location.state && location.state.deliveryCharge;
+  const finalTotal = location.state && location.state.newFinalTotal;
+
 
   // Retrieve user details from sessionStorage
   const userDataString = sessionStorage.getItem("fullUserData");
@@ -29,79 +32,154 @@ const OrderPage: React.FC<OrderPageProps> = ({ productId }) => {
   };
 
   return (
-    <div className='place-order-container container'>
-      <div className="place-order-page row">
-        <div className="place-order-details col-md-5">
-          <h1>Order Summary</h1>
-        
-          {orderDetails && (
-            <div>
-              <h2>Product Details:</h2>
-              <ul>
-                <li>Product ID: {orderDetails.productId}</li> 
-                <li>Product Name: {orderDetails.productName}</li>
-                <li>Product Price: {orderDetails.productPrice}</li>
-                <li>Product color: {orderDetails.color}</li>
-                <li>Product size: {orderDetails.size}</li>
-                <li>Product quantity: {orderDetails.quantity}</li>
-                {/* Display product images */}
-                {orderDetails.images && (
+    <div className='place-order-container'>
+      <div className='place-order'>
+        <h1>Order Confirmation</h1>
+        <div className='image-details-content'>
+          <div className='image-container'>
+            {orderDetails.images && (
+              <li>
+                {/* Product Images: */}
+                <div className="product-images">
+                  {orderDetails.images.map((image: string | undefined, index: number) => (
+                    <img key={index} src={image} className="product-image" />
+                  ))}
+                </div>
+              </li>
+            )}
+          </div>
+          <div className='details-content'>
+            {orderDetails && (
+              <div>
+                {/* <h2>Product Details:</h2> */}
+                <ul className='list-item'>
+                  {/* <li> {orderDetails.productId}</li> */}
+                  <li>Product Name: {orderDetails.productName}</li>
+                  <li>Product Price: {orderDetails.productPrice}</li>
+                  <li>Product color: {orderDetails.color}</li>
+                  <li>Product size: {orderDetails.size}</li>
+                  <li>Product quantity: {orderDetails.quantity}</li>
+                  <li>Delivery Charge: {deliveryCharge}</li>
+                  <li>Final Total: {finalTotal}</li>
+
+                  {/* Display product images */}
+
+                  {/* Add more details as needed */}
+                </ul>
+              </div>
+            )}
+
+            {userData && (
+              <div>
+                {/* <h2>User Details</h2> */}
+                <ul>
+                  {/* <li>ID: {userData.id}</li> */}
+                  <li>First Name: {userData.firstName}</li>
+                  <li>Last Name: {userData.lastName}</li>
+                  <li>Email: {userData.email}</li>
+                  {/* <li>Gender: {userData.gender}</li> */}
+                  {/* <li>Date of Birth: {userData.dob}</li> */}
+                  {/* <li>Profile Status: {userData.profileStatus}</li> */}
+                  {/* <li>Verification Status: {userData.verificationStatus}</li> */}
+                  {/* Render addresses as dropdowns */}
                   <li>
-                    Product Images:
-                    <div className="product-images">
-                      {orderDetails.images.map((image: string | undefined, index: number) => (
-                        <img key={index} src={image} alt={`Product Image ${index}`} className="product-image" />
+                    <strong>Address Details:</strong><br />
+                    <select value={selectedAddress} onChange={handleAddressChange}>
+                      <option value="">Select an address</option>
+                      {userData.addresses.map((address: any) => (
+                        <option key={address.id} value={address.addressType + ' - ' + address.addressLine01 + ' ' + address.addressLine02 + ' ' + address.city + ' ' + address.zipCode + ' ' + address.province + ' ' + address.country}>
+                          {address.addressType} - {address.addressLine01},{address.addressLine02} ,{address.city}, {address.province}, {address.zipCode},{address.country}
+                        </option>
                       ))}
-                    </div>
+                    </select>
                   </li>
-                )}
-                {/* Add more details as needed */}
-              </ul>
-            </div>
-          )}
-          {/* Display user details */}
-          {userData && (
-            <div>
-              <h2>User Details</h2>
-              <ul>
-                {/* <li>ID: {userData.id}</li> */}
-                <li>First Name: {userData.firstName}</li>
-                <li>Last Name: {userData.lastName}</li>
-                <li>Email: {userData.email}</li>
-                {/* <li>Gender: {userData.gender}</li> */}
-                {/* <li>Date of Birth: {userData.dob}</li> */}
-                {/* <li>Profile Status: {userData.profileStatus}</li> */}
-                {/* <li>Verification Status: {userData.verificationStatus}</li> */}
-                {/* Render addresses as dropdowns */}
-                <li>
-                  <strong>Address Details:</strong><br />
-                  <select value={selectedAddress} onChange={handleAddressChange}>
-                    <option value="">Select an address</option>
-                    {userData.addresses.map((address: any) => (
-                      <option key={address.id} value={address.addressType + ' - ' + address.addressLine01 + ' ' + address.addressLine02 + ' ' + address.city + ' ' + address.zipCode + ' ' + address.province + ' ' + address.country}>
-                        {address.addressType} - {address.addressLine01},{address.addressLine02} ,{address.city}, {address.province}, {address.zipCode},{address.country}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-                <li>
-                  <strong>Mobile Number:</strong><br />
-                  <select value={selectedMobile} onChange={handleMobileChange}>
-                    <option value="">Select a mobile number</option>
-                    {userData.addresses.map((address: any) => (
-                      <option key={address.id} value={address.countryCode + ' ' + address.mobileNo}>
-                        {address.addressType} {address.countryCode} {address.mobileNo}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-                {/* Add more user details as needed */}
-              </ul>
-            </div>
-          )}
+                  <li>
+                    <strong>Mobile Number:</strong><br />
+                    <select value={selectedMobile} onChange={handleMobileChange}>
+                      <option value="">Select a mobile number</option>
+                      {userData.addresses.map((address: any) => (
+                        <option key={address.id} value={address.countryCode + ' ' + address.mobileNo}>
+                          {address.addressType} {address.countryCode} {address.mobileNo}
+                        </option>
+                      ))}
+                    </select>
+                  </li>
+                  {/* Add more user details as needed */}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
     </div>
+
+
+
+
+    // <div className='place-order-container container'>
+    //   <div className="place-order-page row">
+    //     <div className="place-order-details col-md-5">
+    //       <h1>Order Confirmation</h1>
+    //       {orderDetails && (
+    //         <div>
+    //           {/* <h2>Product Details:</h2> */}
+    //           <ul>
+    //             <li> {orderDetails.productId}</li> 
+    //             <li>Product Name: {orderDetails.productName}</li>
+    //             <li>Product Price: {orderDetails.productPrice}</li>
+    //             <li>Product color: {orderDetails.color}</li>
+    //             <li>Product size: {orderDetails.size}</li>
+    //             <li>Product quantity: {orderDetails.quantity}</li>
+    //             {/* Display product images */}
+
+    //             {/* Add more details as needed */}
+    //           </ul>
+    //         </div>
+    //       )}
+    //       {/* Display user details */}
+    //       {userData && (
+    //         <div>
+    //           <h2>User Details</h2>
+    //           <ul>
+    //             {/* <li>ID: {userData.id}</li> */}
+    //             <li>First Name: {userData.firstName}</li>
+    //             <li>Last Name: {userData.lastName}</li>
+    //             <li>Email: {userData.email}</li>
+    //             {/* <li>Gender: {userData.gender}</li> */}
+    //             {/* <li>Date of Birth: {userData.dob}</li> */}
+    //             {/* <li>Profile Status: {userData.profileStatus}</li> */}
+    //             {/* <li>Verification Status: {userData.verificationStatus}</li> */}
+    //             {/* Render addresses as dropdowns */}
+    //             <li>
+    //               <strong>Address Details:</strong><br />
+    //               <select value={selectedAddress} onChange={handleAddressChange}>
+    //                 <option value="">Select an address</option>
+    //                 {userData.addresses.map((address: any) => (
+    //                   <option key={address.id} value={address.addressType + ' - ' + address.addressLine01 + ' ' + address.addressLine02 + ' ' + address.city + ' ' + address.zipCode + ' ' + address.province + ' ' + address.country}>
+    //                     {address.addressType} - {address.addressLine01},{address.addressLine02} ,{address.city}, {address.province}, {address.zipCode},{address.country}
+    //                   </option>
+    //                 ))}
+    //               </select>
+    //             </li>
+    //             <li>
+    //               <strong>Mobile Number:</strong><br />
+    //               <select value={selectedMobile} onChange={handleMobileChange}>
+    //                 <option value="">Select a mobile number</option>
+    //                 {userData.addresses.map((address: any) => (
+    //                   <option key={address.id} value={address.countryCode + ' ' + address.mobileNo}>
+    //                     {address.addressType} {address.countryCode} {address.mobileNo}
+    //                   </option>
+    //                 ))}
+    //               </select>
+    //             </li>
+    //             {/* Add more user details as needed */}
+    //           </ul>
+    //         </div>
+    //       )}
+    //     </div>
+    //   </div>
+    // </div>
   );
 };
 
