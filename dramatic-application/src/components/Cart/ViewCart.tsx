@@ -71,11 +71,8 @@ function ViewCartPage() {
         
         setCartItems(itemsWithDetails);
 
-        //const updatedCartCount = data.reduce((total: any, item: any) => total + item.quantity, 0);
         const updatedCartCount = data.length;
-    
-
-      setCartCount(updatedCartCount);
+        setCartCount(updatedCartCount);
       }
     } catch (error) {
       console.error('Error fetching cart items:', error);
@@ -122,10 +119,8 @@ function ViewCartPage() {
   
       // Fetch cart items again to ensure the latest data is displayed
       const updatedCartItemsData = await getCartsByUserId(userId || '');
-     // const updatedCartCount = updatedCartItemsData.reduce((total: any, item: any) => total + item.quantity, 0);
-     // sessionStorage.setItem('cartCount', updatedCartCount.toString());
-     const updatedCartCount = updatedCartItemsData.length;
-     setCartCount(updatedCartCount);
+      const updatedCartCount = updatedCartItemsData.length;
+      setCartCount(updatedCartCount);
     } catch (error) {
       console.error('Error deleting item:', error);
     }
@@ -210,8 +205,8 @@ function ViewCartPage() {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={7}>Total</td>
-            <td>{calculateTotalPrice().toFixed(2)}</td>
+            <td colSpan={6}>Total</td>
+            <td colSpan={2}>{calculateTotalPrice().toFixed(2)}</td>
             <td colSpan={2}>
               <button onClick={handleBuyItems}>Buy All Items</button>
             </td>

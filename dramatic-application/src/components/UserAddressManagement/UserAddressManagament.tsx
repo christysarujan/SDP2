@@ -33,8 +33,8 @@ interface UserData {
 interface Address {
   id: string;
   addressType: string;
-  addressLine_01: string;
-  addressLine_02: string;
+  addressLine01: string;
+  addressLine02: string;
   city: string;
   zipCode: string;
   province: string;
@@ -198,7 +198,7 @@ const UserAddressManagement = () => {
                       <div className="row address-item">
                         <div className="col-md-10">
                           <p>
-                            {address.addressLine_01},{address.addressLine_02},
+                            {address.addressLine01},{address.addressLine02},
                             {address.city},{address.province},{address.zipCode},
                             {address.country},{address.mobileNo}
                           </p>
@@ -256,12 +256,12 @@ const UserAddressManagement = () => {
                         <label>Address Line 1 :</label>
                         <Field
                           type="text"
-                          id="addressLine_01"
-                          name="addressLine_01"
+                          id="addressLine01"
+                          name="addressLine01"
                         />
                       </div>
                       <ErrorMessage
-                        name="addressLine_01"
+                        name="addressLine01"
                         component="div"
                         className="error"
                       />
@@ -271,8 +271,8 @@ const UserAddressManagement = () => {
                         <label>Address Line 2 :</label>
                         <Field
                           type="text"
-                          id="addressLine_02"
-                          name="addressLine_02"
+                          id="addressLine02"
+                          name="addressLine02"
                         />
                       </div>
                       {/* <ErrorMessage
@@ -351,6 +351,24 @@ const UserAddressManagement = () => {
                         className="error"
                       />
                     </div>
+
+                    {addresses.map((address, index) => {
+                      const matchError =
+                        address.addressLine01 === values.addressLine01 &&
+                        address.addressLine02 === values.addressLine02 &&
+                        address.city === values.city //&&
+                      //  address.province === values.province &&
+                      //  address.zipCode === values.zipCode &&
+                      //  address.country === values.country &&
+                       // address.mobileNo === values.mobileNo;
+
+                      return matchError ? (
+                        <div key={index} className="error">
+                          This address already exists.
+                        </div>
+                      ) : null;
+                    })}
+
                     <div className="field-container">
                       <div className="buttons">
                         <button

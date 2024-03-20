@@ -357,7 +357,7 @@ const SellerProductList = () => {
     setModalShow((prev) => !prev)
   }
 
-  
+
   const handleAddDiscount = () => {
     setShowAddDiscountModal(true);
   };
@@ -372,35 +372,35 @@ const SellerProductList = () => {
     if (addDiscountInput) {
       const newDiscount = addDiscountInput.value;
       await applyDiscount(selectedProductId, newDiscount);
-      console.log("New Discount..",newDiscount)
+      console.log("New Discount..", newDiscount)
 
 
     }
 
   }
 
-    const handleUpdateDiscountAPI = async () => {
-      // Retrieve the new discount value from the input box
-      const updateDiscountInput = document.getElementById('updateDiscountInput') as HTMLInputElement;
-      if (updateDiscountInput) {
-        const newDiscount = updateDiscountInput.value;
-        await updateDiscount(selectedProductId, newDiscount);
-         //setProdDiscount(newDiscount);
-        console.log("New Discount..",newDiscount)
-  
-      }
+  const handleUpdateDiscountAPI = async () => {
+    // Retrieve the new discount value from the input box
+    const updateDiscountInput = document.getElementById('updateDiscountInput') as HTMLInputElement;
+    if (updateDiscountInput) {
+      const newDiscount = updateDiscountInput.value;
+      await updateDiscount(selectedProductId, newDiscount);
+      //setProdDiscount(newDiscount);
+      console.log("New Discount..", newDiscount)
 
     }
 
-    const handleupdateCloseModal = () => {
-      setShowUpdateDiscountModal(false);
-      window.location.reload();
-    };
+  }
 
-    const handleaddCloseModal = () => {
-      setShowAddDiscountModal(false);
-      window.location.reload();
-    };
+  const handleupdateCloseModal = () => {
+    setShowUpdateDiscountModal(false);
+    window.location.reload();
+  };
+
+  const handleaddCloseModal = () => {
+    setShowAddDiscountModal(false);
+    window.location.reload();
+  };
 
   return (
     <div className="seller-product-list">
@@ -445,7 +445,7 @@ const SellerProductList = () => {
                       <Form>
                         <div className="field-container">
                           <div className="field-input">
-                            <label>Product Name :</label>
+                            <label>Product Name <span className="required">*</span> :</label>
                             <Field
                               type="text"
                               id="name"
@@ -461,7 +461,7 @@ const SellerProductList = () => {
                         </div>
                         <div className="field-container">
                           <div className="field-input">
-                            <label>Category :</label>
+                            <label>Category <span className="required">*</span> :</label>
                             <Field type="text" id="category" name="category" />
                           </div>
                           <ErrorMessage
@@ -472,7 +472,7 @@ const SellerProductList = () => {
                         </div>
                         <div className="field-container">
                           <div className="field-input">
-                            <label>Material :</label>
+                            <label>Material <span className="required">*</span> :</label>
                             <Field type="text" id="material" name="material" />
                           </div>
                           <ErrorMessage
@@ -484,32 +484,48 @@ const SellerProductList = () => {
 
                         <div className="field-container">
                           <div className="field-input">
-                            <label>Product Description :</label>
+                            <label>Product Description <span className="required">*</span> :</label>
                             <Field type="text" id="productDescription" name="productDescription" />
                           </div>
+                          <ErrorMessage
+                            name="productDescription"
+                            component="div"
+                            className="error"
+                          />
 
                         </div>
 
                         <div className="field-container">
                           <div className="field-input">
-                            <label>Product Category :</label>
+                            <label>Product Category <span className="required">*</span> :</label>
                             <Field type="text" id="productCategory" name="productCategory" />
                           </div>
+                          <ErrorMessage
+                            name="productCategory"
+                            component="div"
+                            className="error"
+                          />
 
                         </div>
 
                         <div className="field-container">
                           <div className="field-input">
-                            <label>Style :</label>
+                            <label>Style <span className="required">*</span> :</label>
                             <Field type="text" id="style" name="style" />
                           </div>
 
+                          <ErrorMessage
+                            name="style"
+                            component="div"
+                            className="error"
+                          />
+
                         </div>
 
 
                         <div className="field-container">
                           <div className="field-input">
-                            <label>Price :</label>
+                            <label>Price <span className="required">*</span> :</label>
                             <Field type="number" id="price" name="price" />
                           </div>
                           <ErrorMessage
@@ -521,7 +537,7 @@ const SellerProductList = () => {
 
                         <div className="field-container">
                           <div className="file-input-container">
-                            <label className="file-label">Images :</label>
+                            <label className="file-label">Images <span className="required">*</span> :</label>
                             <div className="name">
                               <label
                                 htmlFor="fileInput"
@@ -529,6 +545,7 @@ const SellerProductList = () => {
                               >
                                 <span className="button">Choose Image</span>
                                 <input
+                                  
                                   type="file"
                                   accept="image/*"
                                   id="fileInput"
@@ -538,6 +555,7 @@ const SellerProductList = () => {
                                 />
                               </label>
                               <div className="fileName">
+                               
                                 {selectedFile && (
                                   <div>
                                     <span className="file-name">
@@ -548,6 +566,8 @@ const SellerProductList = () => {
                               </div>
                             </div>
                           </div>
+
+
                         </div>
                         <hr />
                         <div className="variation-header">
@@ -644,80 +664,80 @@ const SellerProductList = () => {
               <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => modalView()}>Close</button>
               {/* <button type="button" className="btn btn-primary">Save Changes</button> */}
               {prodDiscount === 0 ? (
-                <button type="button" className="btn btn-primary" onClick={ handleAddDiscount}>Add Discount </button>
+                <button type="button" className="btn btn-primary" onClick={handleAddDiscount}>Add Discount </button>
               ) : (
-                <button type="button" className="btn btn-secondary" onClick = {handleUpdateDiscount}>Update Discount </button>
+                <button type="button" className="btn btn-secondary" onClick={handleUpdateDiscount}>Update Discount </button>
               )}
             </div>
           </div>
         </div>
       </div>
 
-      
 
-{/* Add Discount Modal */}
-<Modal
-  show={showAddDiscountModal}
-  onHide={() => setShowAddDiscountModal(false)}
->
-  <Modal.Header closeButton>
-    <Modal.Title>Add Discount</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-  <p style={{ fontSize: '16px' }}>Current Discount: {prodDiscount !== null ? prodDiscount * 100 : 0} % </p>
-    <div className="form-group">
-      <label htmlFor="addDiscountInput">New Discount:</label>
-      <input
-        type="text"
-        className="form-control"
-        id="addDiscountInput"
-        placeholder="Enter discount"
-        // Add onChange handler if you need to handle input changes
-        // onChange={handleAddDiscountInputChange}
-      />
-    </div>
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={() => handleaddCloseModal()}>
-      Close
-    </Button>
-    <Button variant="primary" onClick={handleAddDiscountAPI}>
-      Add
-    </Button>
-  </Modal.Footer>
-</Modal>
 
-{/* Update Discount Modal */}
-<Modal
-  show={showUpdateDiscountModal}
-  onHide={() => setShowUpdateDiscountModal(false)}
->
-  <Modal.Header closeButton>
-    <Modal.Title>Update Discount</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-  <p style={{ fontSize: '16px' }}> Current Discount: {prodDiscount !== null ? prodDiscount * 100 : 0} % </p>
-    <div className="form-group">
-      <label htmlFor="updateDiscountInput">New Discount:</label>
-      <input
-        type="text"
-        className="form-control"
-        id="updateDiscountInput"
-        placeholder="Enter new discount"
-        // Add onChange handler if you need to handle input changes
-        // onChange={handleUpdateDiscountInputChange}
-      />
-    </div>
-  </Modal.Body>
-  <Modal.Footer>
-    <Button variant="secondary" onClick={() => handleupdateCloseModal()}>
-      Close
-    </Button>
-    <Button variant="primary" onClick={handleUpdateDiscountAPI}>
-      Update
-    </Button>
-  </Modal.Footer>
-</Modal>
+      {/* Add Discount Modal */}
+      <Modal
+        show={showAddDiscountModal}
+        onHide={() => setShowAddDiscountModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add Discount</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p style={{ fontSize: '16px' }}>Current Discount: {prodDiscount !== null ? prodDiscount * 100 : 0} % </p>
+          <div className="form-group">
+            <label htmlFor="addDiscountInput">New Discount:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="addDiscountInput"
+              placeholder="Enter discount"
+            // Add onChange handler if you need to handle input changes
+            // onChange={handleAddDiscountInputChange}
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => handleaddCloseModal()}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleAddDiscountAPI}>
+            Add
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Update Discount Modal */}
+      <Modal
+        show={showUpdateDiscountModal}
+        onHide={() => setShowUpdateDiscountModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Update Discount</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p style={{ fontSize: '16px' }}> Current Discount: {prodDiscount !== null ? prodDiscount * 100 : 0} % </p>
+          <div className="form-group">
+            <label htmlFor="updateDiscountInput">New Discount:</label>
+            <input
+              type="text"
+              className="form-control"
+              id="updateDiscountInput"
+              placeholder="Enter new discount"
+            // Add onChange handler if you need to handle input changes
+            // onChange={handleUpdateDiscountInputChange}
+            />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => handleupdateCloseModal()}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleUpdateDiscountAPI}>
+            Update
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
 
       <Modal show={showInventoryModal} onHide={handleClose} backdrop="static" keyboard={false} size="lg"

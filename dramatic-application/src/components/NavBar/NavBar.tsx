@@ -2,7 +2,7 @@ import React from 'react';
 import './NavBar.scss';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart, faHeart } from '@fortawesome/free-solid-svg-icons'; // Import the heart icon
+import { faShoppingCart, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useCart } from '../Cart/CartContext';
 import { getAllNotificationsBySellerEmail } from '../../services/apiService';
 
@@ -20,6 +20,7 @@ interface DecodedToken {
 const NavBar = () => {
   const { cartCount } = useCart();
   const navigate = useNavigate();
+
   const handleLogout = () => {
     sessionStorage.clear();
     const cartCount = 0;
@@ -27,56 +28,47 @@ const NavBar = () => {
     window.location.reload();
   };
 
-  const decodedToken = sessionStorage.getItem('decodedToken');
+  const decodedTokenString = sessionStorage.getItem('decodedToken');
+  const decodedToken: DecodedToken | null = decodedTokenString ? JSON.parse(decodedTokenString) : null;
 
   const checkVerificationStatus = () => {
-    const decodedTokenString = sessionStorage.getItem('decodedToken');
     const role = sessionStorage.getItem('role');
 
-    if (decodedTokenString) {
-      const decodedToken: DecodedToken = JSON.parse(decodedTokenString);
-
-      if (decodedToken && decodedToken.verificationStatus === 'VERIFIED') {
-        if (role === 'seller') {
-          navigate("/store")
-        } else if (role === 'user') {
-          navigate("/addressManagement")
-        } else if (role === 'admin') {
-          navigate("/storeInfo")
-        }
-      } else {
-        navigate("/verifyEmail")
+    if (decodedToken && decodedToken.verificationStatus === 'VERIFIED') {
+      if (role === 'seller') {
+        navigate("/store")
+      } else if (role === 'user') {
+        navigate("/addressManagement")
+      } else if (role === 'admin') {
+        navigate("/storeInfo")
       }
     } else {
-      console.error('Decoded token not found in sessionStorage');
+      navigate("/verifyEmail")
     }
   };
 
-   
-  //sellerNotifications
-
   const handleNotificationClick = async () => {
-    const decodedToken = JSON.parse(sessionStorage.getItem('decodedToken') || '{}');
     if (decodedToken && decodedToken.role === 'seller') {
       try {
-        // Fetch and handle notifications
         const notifications = await getAllNotificationsBySellerEmail(decodedToken.email);
         console.log('Notifications:', notifications);
-        // Implement how you want to display notifications (e.g., in a modal or a separate page)
       } catch (error) {
         console.error('Error fetching notifications:', error);
       }
     }
   };
 
-
   return (
     <div className="nav-bar-main">
       <div className="nav-item">
         <ul>
-          <li><Link to="/mensItems">Men</Link></li>
-          <li><Link to="/womenItems">Women</Link></li>
-          <li><Link to="/kidsItems">Kids</Link></li>
+          {decodedToken && decodedToken.role === 'user' && (
+            <>
+              <li><Link to="/mensItems">Men</Link></li>
+              <li><Link to="/womenItems">Women</Link></li>
+              <li><Link to="/kidsItems">Kids</Link></li>
+            </>
+          )}
         </ul>
       </div>
       <div className="nav-logo">
@@ -91,21 +83,15 @@ const NavBar = () => {
               <span className="cart-count" style={{ position: 'absolute', top: '-19px', right: '-10px', backgroundColor: 'red', color: 'white', borderRadius: '50%', padding: '5px 8px', fontSize: '12px', fontWeight: 'bold' }}>{cartCount}</span>
               <FontAwesomeIcon icon={faShoppingCart} className="bi bi-cart" style={{ color: 'black' }} />
             </div>
-
-
           </NavLink>
-          {/* Add heart icon here */}
           <Link to="/viewWish" className="heart-link">
             <FontAwesomeIcon icon={faHeart} className="heart-icon" style={{ color: 'black' }} />
           </Link>
-
           <i className="bi bi-search"></i>
           <i className="bi bi-person" onClick={checkVerificationStatus}></i>
-
           <NavLink to="/notifications">
-          <i className="bi bi-bell" onClick={handleNotificationClick}></i>
+            <i className="bi bi-bell" onClick={handleNotificationClick}></i>
           </NavLink>
-
           <div>
             {decodedToken ? (
               <button className='btn btn-outline-secondary' onClick={handleLogout}>

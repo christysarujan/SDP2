@@ -22,7 +22,6 @@ const SellerManagement = () => {
 
   useEffect(() => {
     viewActiveSellers();
-    //fetchSellers();
   }, []);
 
   const fetchSellers = async () => {
