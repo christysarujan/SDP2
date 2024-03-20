@@ -1,201 +1,207 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import "./storeRequests.scss";
-import { getAllSellers } from "../../services/apiService";
-import { Modal, Button } from "react-bootstrap";
-import {
-  sellerAccountStateChange,
-} from "../../services/apiService";
-
-interface UserData {
-  sub: string;
-  role: string;
-  verificationStatus: string;
-  iss: string;
-  exp: number;
-  iat: number;
-  email: string;
-  username: string;
-}
+import React, { ChangeEvent, useEffect, useState } from "react";
+import "./sellerManagement.scss";
+import { getAllSellers,activateSellerByEmail,suspendSellerByEmail, getSuspendedSellers, getActiveSellers  } from "../../services/apiService";
+import { Modal, Button, Form } from "react-bootstrap";
 
 interface SellerInfo {
-  id: string;
+  sellerId: string
   username: string;
-  firstName: string;
-  lastName: string;
   email: string;
-  gender: string;
   profileStatus: string;
-  dob: string;
-  role: string;
-  verificationStatus: string;
+  id : any ;
 }
 
 const SellerManagement = () => {
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [sellerList, setSellerList] = useState<SellerInfo[] | null>(null);
-
+  const [activeSellers, setActiveSellers] = useState(true);
+  const [suspendedStores, setSuspendedSellers] = useState(true);
+  const [sellerList, setSellerList] = useState<SellerInfo[]>([]);
   const [selectedSeller, setSelectedSeller] = useState<SellerInfo | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const modalRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const tokenData = sessionStorage.getItem("decodedToken");
-
-    if (tokenData) {
-      const parsedUserData: UserData = JSON.parse(tokenData);
-      console.log("sasas", parsedUserData);
-      setUserData(parsedUserData);
-    }
-  }, []);
+  const [suspendModalOpen, setSuspendModalOpen] = useState(false);
+  const [suspendReason, setSuspendReason] = useState('');
+  const [reason, setreason, ] = useState('');
 
   useEffect(() => {
-    getAllSellerList();
+    viewActiveSellers();
+    //fetchSellers();
   }, []);
 
-  const handleClose = () => {
-    setModalOpen(false);
-  };
-  const handleShow = () => {
-    setModalOpen(true);
-  };
-
-  const getAllSellerList = async () => {
+  const fetchSellers = async () => {
     try {
-      const response = await getAllSellers();
-      setSellerList(response);
-    } catch (error) {}
+      const allSellers = await getAllSellers();
+      setSellerList(allSellers);
+    } catch (error) {
+      console.error("Error fetching sellers:", error);
+    }
   };
 
-  const openModal = (seller: SellerInfo) => {
+
+  const openSuspendModal = (seller: SellerInfo) => {
     setSelectedSeller(seller);
-    setModalOpen(true);
-
-    // setModalOpen(true);
+    setSuspendModalOpen(true);
   };
 
-    const sellerStateChange = async (id: any, action: string) => {
-      // setModalOpen(false)
+  const handleCloseSuspendModal = () => {
+    setSuspendModalOpen(false);
+    setSuspendReason('');
+  };
+
+  const handleSuspend = async () => {
+    
+    if (selectedSeller && suspendReason) {
       try {
-        const response = await sellerAccountStateChange(id, action);
-        console.log('Method eke', response);
-
-        if (response === 200) {
-          handleClose();
-          getAllSellerList()
-        }
+        console.log("I m inside handle suspend ",selectedSeller.id)
+    
+        await suspendSellerByEmail(selectedSeller.id, suspendReason);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error suspending seller:", error);
       }
-    };
+    }
+  };
 
+  const handleActivate = async () => {
+    if (selectedSeller) {
+      try {
+        await activateSellerByEmail(selectedSeller.id,"reason");
+        fetchSellers();
+      } catch (error) {
+        console.error("Error activating seller:", error);
+      }
+    }
+  };
+
+  const viewActiveSellers = async () => {
+    try {
+      const activeSellers = await getActiveSellers(); 
+      setSellerList(activeSellers); 
+      setActiveSellers(true); 
+      setSuspendedSellers(false); 
+    } catch (error) {
+      console.error('Error fetching suspended sellers:', error);
+    }
+  };
+
+
+  const viewSuspendedSellers = async () => {
+    try {
+      const suspendedSellers = await getSuspendedSellers(); 
+      setSellerList(suspendedSellers); 
+      setActiveSellers(false); 
+      setSuspendedSellers(true); 
+    } catch (error) {
+      console.error('Error fetching suspended sellers:', error);
+    }
+  };
+
+  
   return (
-    <div className="user-address-details">
+    <div className="seller-details">
       <div className="container">
+      <div className="row sub-headings">
+          <div
+            className={`col  ${activeSellers ? "active-button" : ""}`}
+            onClick={() => viewActiveSellers()}
+          >
+            Active Sellers
+          </div>
+
+          <div
+            className={`col  ${suspendedStores ? "active-button" : ""}`}
+            onClick={() => viewSuspendedSellers()}
+          >
+            Suspended sellers
+          </div>
+        </div>
+
         {sellerList ? (
-          <div>
-            <table className="table table-hover store-data-table">
-              <thead>
-                <tr>
-                  <th className="col-md-1">#</th>
-                  <th className="col-md-4">Seller Name</th>
-                  <th className="col-md-3">Email</th>
-                  <th className="col-md-2">Status</th>
-                  <th className="col-md-2 text-center">Actions</th>
+          <table className="table table-hover seller-data-table">
+            <thead>
+              <tr>
+                <th className="col-md-1">#</th>
+                <th className="col-md-4">Seller Name</th>
+                <th className="col-md-3">Email</th>
+                <th className="col-md-2">Status</th>
+                <th className="col-md-2 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sellerList.map((seller: SellerInfo, index: number) => (
+                <tr key={seller.sellerId}>
+                  <td className="col-md-1">{index + 1}</td>
+                  <td className="col-md-4">{seller.username}</td>
+                  <td className="col-md-3">{seller.email}</td>
+                  <td className="col-md-2">{seller.profileStatus}</td>
+                  <td className="col-md-2">
+                    
+                  
+                    <button
+                      className="btn btn-primary suspend-btn"
+                      onClick={() => openSuspendModal(seller)}
+                    >
+                      View info
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {sellerList.map((seller: SellerInfo, index: number) => (
-                  <tr key={seller.id}>
-                    <td className="col-md-1">{index + 1}</td>
-                    <td className="col-md-4">
-                      {seller.firstName} {seller.firstName}
-                    </td>
-                    <td className="col-md-3">{seller.email}</td>
-
-                    {seller.profileStatus === "SUSPEND" ? (
-                      <td className="col-md-2 success-color">Suspend</td>
-                    ) : (
-                      <td className="col-md-2 danger-color">Active</td>
-                    )}
-
-                    <td className="col-md-2">
-                      <div className="info-button-section">
-                        <button
-                          className="btn btn-primary view-info-btn"
-                          onClick={() => openModal(seller)}
-                        >
-                          View Info
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>{" "}
-          </div>
+              ))}
+            </tbody>
+          </table>
         ) : (
-          <div>
-            <p>No Data Available</p>
-          </div>
+          <p>No Data Available</p>
         )}
 
-
         <Modal
-          show={modalOpen}
-          onHide={handleClose}
+          show={suspendModalOpen}
+          onHide={handleCloseSuspendModal}
           backdrop="static"
           keyboard={false}
           size="sm"
           centered
         >
-          <Modal.Header closeButton>Seller Informationt</Modal.Header>
+          <Modal.Header closeButton>Seller Account Status</Modal.Header>
           <Modal.Body>
-            <p>
-              <b>Seller Name:</b> {selectedSeller?.firstName}{" "}
-              {selectedSeller?.lastName}
-            </p>
-            <p>
-              <b>Username:</b> {selectedSeller?.username}
-            </p>
-            <p>
-              <b>Seller Email:</b> {selectedSeller?.email}
-            </p>
-            <p>
-              <b>Gender:</b> {selectedSeller?.gender}
-            </p>
-            <p>
-              <b>Date of Birth:</b> {selectedSeller?.dob}
-            </p>
-            <p>
-              <b>Profile Status:</b> {selectedSeller?.profileStatus}
-            </p>
+          {selectedSeller && selectedSeller.profileStatus === 'SUSPEND' ? (
+              <Form.Group controlId="suspendReason">
+                <Form.Label>Activate Reason:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter reason for activation"
+                  value={suspendReason}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setSuspendReason(e.target.value)}
+                />
+              </Form.Group>
+            ) : (
+              <Form.Group controlId="suspendReason">
+                <Form.Label>Suspend Reason:</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter reason for suspension"
+                  value={suspendReason}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setSuspendReason(e.target.value)}
+                />
+              </Form.Group>
+            )}
+            
           </Modal.Body>
           <Modal.Footer>
-            <Button
-              className="form-submit-btn"
-              variant="secondary"
-              onClick={handleClose}
-            >
+            <Button variant="secondary" onClick={handleCloseSuspendModal}>
               Close
             </Button>
-            {selectedSeller?.profileStatus === "SUSPEND" ? (
-              <Button
-                className="form-submit-btn"
-                variant="success"
-                onClick={() => sellerStateChange(selectedSeller?.id, 'active')}
-              >
-                Activate
-              </Button>
-            ) : (
-              <Button
-                className="form-submit-btn"
-                variant="danger"
-                onClick={() => sellerStateChange(selectedSeller?.id, 'suspend')}
-              >
-                Suspend
-              </Button>
-            )}
+            {suspendedStores && selectedSeller?.profileStatus === 'SUSPEND' && (
+                      <Button
+                        variant="success"
+                        onClick = {handleActivate}
+                      >
+                        Activate
+                      </Button>
+                    )}
+            {activeSellers && selectedSeller?.profileStatus === 'ACTIVE' && (
+                      <Button
+                        variant="danger"
+                        onClick = {handleSuspend}
+                      >
+                        Suspend
+                      </Button>
+                    )}
+
           </Modal.Footer>
         </Modal>
       </div>
@@ -204,3 +210,7 @@ const SellerManagement = () => {
 };
 
 export default SellerManagement;
+function fetchSuspendedSellers() {
+  throw new Error("Function not implemented.");
+}
+

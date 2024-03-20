@@ -37,7 +37,8 @@ const ProductManagement = () => {
   const [unpublishModalOpen, setUnpublishModalOpen] = useState(false);
   const [unpublishReason, setUnpublishReason, ] = useState('');
   const [reasonModalOpen, setReasonModalOpen] = useState(false);
-
+ 
+  
 // Fetch product list on component mount
   useEffect(() => {
     getAllProductList();
