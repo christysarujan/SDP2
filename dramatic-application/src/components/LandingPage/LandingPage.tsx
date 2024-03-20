@@ -127,25 +127,25 @@ const LandingPage = () => {
                                 <img className='sell-img' src='https://fbpros3v1.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/10/0304505153PNK-1_Ladies-skirt_fashion-bug_srilanka_compressed-300x382.jpg'></img>
                                 <p className="img-des">Slick over tshirt</p>
                                 {/*  <BagCheck className='e-bag'/> */}
-                                <p className='price'>$12.66</p>
+                                <p className='price'>Rs 5,600 </p>
                             </div>
                             <div className="col lg-1 ">
                                 <img className='sell-img' src='https://fbpros3v1.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/11/0304505162WHT-FRE-3Ladies-dress_fashion-bug_srilanka_compressed_compressed-300x382.jpg'></img>
                                 <p className="img-des">Slick over tshirt</p>
                                 {/*  <BagCheck className='e-bag'/> */}
-                                <p className='price'>$12.66</p>
+                                <p className='price'>Rs 6,000</p>
                             </div>
                             <div className="col lg-1 ">
                                 <img className='sell-img' src='https://fbpros3v1.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/10/0304505153PNK-1_Ladies-skirt_fashion-bug_srilanka_compressed-300x382.jpg'></img>
                                 <p className="img-des">Slick over tshirt</p>
                                 {/*  <BagCheck className='e-bag'/> */}
-                                <p className='price'>$12.66</p>
+                                <p className='price'>Rs 3,500</p>
                             </div>
                             <div className="col lg-1 ">
                                 <img className='sell-img' src='https://fbpros3v1.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/10/0304505153PNK-1_Ladies-skirt_fashion-bug_srilanka_compressed-300x382.jpg'></img>
                                 <p className="img-des">Slick over tshirt</p>
                                 {/*  <BagCheck className='e-bag'/> */}
-                                <p className='price'>$12.66</p>
+                                <p className='price'>Rs 4,000</p>
                             </div>
                         </div>
                         <button className="explore-btn">Explore more {/* <ArrowRight /> */}</button>
@@ -192,32 +192,32 @@ const LandingPage = () => {
                                 <img className='sell-img' src='https://fbpros3v1.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/11/0304505162WHT-FRE-3Ladies-dress_fashion-bug_srilanka_compressed_compressed-300x382.jpg'></img>
                                 <p className="img-des">Slick over tshirt</p>
                                 {/*  <BagCheck className='e-bag'/> */}
-                                <p className='price'>$12.66</p>
+                                <p className='price'>Rs 6,000</p>
 
                             </div>
                             <div className="col mx-1 ">
                                 <img className='sell-img' src='https://fbpros3v1.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/10/0304505153PNK-1_Ladies-skirt_fashion-bug_srilanka_compressed-300x382.jpg'></img>
                                 <p className="img-des">Slick over tshirt</p>
                                 {/*  <BagCheck className='e-bag'/> */}
-                                <p className='price'>$12.66</p>
+                                <p className='price'>Rs 4,000</p>
                             </div>
                             <div className="col mx-1 ">
                                 <img className='sell-img' src='https://fbpros3v1.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/11/0304505162WHT-FRE-3Ladies-dress_fashion-bug_srilanka_compressed_compressed-300x382.jpg'></img>
                                 <p className="img-des">Slick over tshirt</p>
                                 {/*  <BagCheck className='e-bag'/> */}
-                                <p className='price'>$12.66</p>
+                                <p className='price'>Rs 5,000</p>
                             </div>
                             <div className="col mx-1 ">
                                 <img className='sell-img' src='https://fbpros3v1.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/10/0304505153PNK-1_Ladies-skirt_fashion-bug_srilanka_compressed-300x382.jpg'></img>
                                 <p className="img-des">Slick over tshirt</p>
                                 {/*  <BagCheck className='e-bag'/> */}
-                                <p className='price'>$12.66</p>
+                                <p className='price'>Rs 3,500</p>
                             </div>
                             <div className="col mx-1 ">
                                 <img className='sell-img' src='https://fbpros3v1.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2023/10/0304505153PNK-1_Ladies-skirt_fashion-bug_srilanka_compressed-300x382.jpg'></img>
                                 <p className="img-des">Slick over tshirt</p>
                                 {/*  <BagCheck className='e-bag'/> */}
-                                <p className='price'>$12.66</p>
+                                <p className='price'>Rs 2,000</p>
                             </div>
                         </div>
                         <button className="explore-btn">Explore more {/* <ArrowRight /> */}</button>

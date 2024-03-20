@@ -10,7 +10,7 @@ function Footer() {
   return (
     <div>
       <div className="section-5">
-        <div className="footer">
+        {/* <div className="footer">
 
           <div className="row">
             <div className="col-sm-3">
@@ -28,10 +28,10 @@ function Footer() {
               <i className="bi bi-google"></i>
             </div>
           </div>
-        </div>
+        </div> */}
 
       </div>
-      <div className="footer-links">
+      <div className="footer-links mt-4">
         <div className="row">
           <div className="col-md-3">
             <h5>Services</h5>
