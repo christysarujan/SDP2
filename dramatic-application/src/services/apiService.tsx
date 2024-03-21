@@ -425,13 +425,16 @@ const getRejectedStoreList = async () => {
 };
 
 
-const rejectStoreRequest = async (email: any) => {
+const  rejectStoreRequest = async (email: any, rejectionReason:String) => {
   try {
     const response = await axiosInstance.put(
       `${storeBaseurl}/seller-store-management-service/stores/reject/${email}`,
       {
+        rejectionReason, // Include rejectionReason in the request body
+      },
+      {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json", // Use application/json content type
         },
       }
     );
@@ -458,6 +461,7 @@ const approveStoreRequest = async (email: any) => {
   }
 };
 
+/* SELLER MANAGEMENT */
 
 export const suspendSeller = async (sellerId: string, reason: string) => {
   try {

@@ -184,7 +184,7 @@ return (
         size="sm"
         centered
       >
-      {/* <Modal.Header closeButton>Product Information </Modal.Header> */}
+   
         <Modal.Body>
 
             {/* Input field for unpublish reason */}
