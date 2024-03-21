@@ -7,7 +7,7 @@ import {
   getRejectedStoreList,
   getActiveStoreList,
 } from "../../services/apiService";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button,Form } from "react-bootstrap";
 
 interface UserData {
   sub: string;
@@ -40,23 +40,33 @@ const StoreRequests = () => {
   const [rejectedStores, setRejectedStores] = useState(false);
 
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [activeStoreList, setActiveStoreList] = useState<StoreInfo[] | null>(
-    null
-  );
-  const [pendingStoreList, setPendingStoreList] = useState<StoreInfo[] | null>(
-    null
-  );
-  const [rejectedStoreList, setRejectedStoreList] = useState<
-    StoreInfo[] | null
-  >(null);
+  const [activeStoreList, setActiveStoreList] = useState<StoreInfo[] | null>( null );
+  const [pendingStoreList, setPendingStoreList] = useState<StoreInfo[] | null>(null);
+  const [rejectedStoreList, setRejectedStoreList] = useState< StoreInfo[] | null >(null);
   const [selectedStore, setSelectedStore] = useState<StoreInfo | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [rejectedReason, setRejectedReason] = useState<string>('');
+  const [modalOpenConfirmRejection,setModalOpenConfirmRejection] = useState(false);
+
 
   const handleClose = () => {
     setModalOpen(false);
+    
   };
   const handleShow = () => {
     setModalOpen(true);
+  };
+
+
+  const handleShowConfirmRejectionModal = () => {
+    setSelectedStore(null);
+    setRejectedReason('');
+    setModalOpenConfirmRejection(true);
+    // setModalOpenConfirmRejection(false)
+  };
+
+  const handleCloseConfirmRejectionModal = () => {
+    setModalOpenConfirmRejection(false);
   };
 
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -119,7 +129,7 @@ const StoreRequests = () => {
   const rejectRequest = async (email: any) => {
     // setModalOpen(false)
     try {
-      const response = await rejectStoreRequest(email);
+      const response = await rejectStoreRequest(email,rejectedReason);
       console.log(response);
 
       if (response === 200) {
@@ -127,6 +137,7 @@ const StoreRequests = () => {
         getAllPendingStoreList();
         getAllActiveStoreList();
         getAllRejectedStoreList();
+        handleShowConfirmRejectionModal(); // Open the Confirm Rejection modal
       }
     } catch (error) {
       console.error("Error:", error);
@@ -147,6 +158,11 @@ const StoreRequests = () => {
     } catch (error) {
       console.error("Error:", error);
     }
+  };
+
+  
+  const openConfirmRejectionModal = () => {
+    setModalOpen(true);
   };
 
   return (
@@ -193,6 +209,7 @@ const StoreRequests = () => {
                         <td className="col-md-4">{store.name}</td>
                         <td className="col-md-3">{store.category}</td>
                         <td className="col-md-2">{store.country}</td>
+                        
                         <td className="col-md-2">
                           <div className="info-button-section">
                             <button
@@ -314,6 +331,7 @@ const StoreRequests = () => {
         >
           <Modal.Header closeButton>Store Creation Request</Modal.Header>
           <Modal.Body>
+
             <p>
               <b>Store Name:</b> {selectedStore?.name}
             </p>
@@ -337,6 +355,7 @@ const StoreRequests = () => {
               {selectedStore?.createDate &&
                 new Date(selectedStore?.createDate).toISOString().split("T")[0]}
             </p>
+            
           </Modal.Body>
           <Modal.Footer>
             <Button
@@ -363,11 +382,64 @@ const StoreRequests = () => {
                   Approve
                 </Button>
               </>
+            ) : selectedStore?.storeStatus === "VERIFIED" ? (
+              <Button
+                className="form-submit-btn"
+                variant="danger"
+                onClick={() =>setModalOpenConfirmRejection(true)}
+              >
+                Reject
+              </Button>
             ) : (
               <></>
             )}
           </Modal.Footer>
         </Modal>
+
+        {/* Confirm Rejection Modal */}
+      <Modal
+        show={modalOpenConfirmRejection}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+        size="sm"
+        centered
+      >
+        <Modal.Header closeButton>Confirm Rejection</Modal.Header>
+        <Modal.Body>
+          <Form.Group controlId="rejectedReason">
+            <Form.Label>Rejection Reason:</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              placeholder="Enter reason for rejecting the store"
+              value={rejectedReason}
+              onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                setRejectedReason(e.target.value)
+              }
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            className="form-submit-btn"
+            variant="secondary"
+            onClick={handleCloseConfirmRejectionModal}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="form-submit-btn"
+            variant="danger"
+            onClick={() => {
+              rejectRequest(selectedStore?.sellerEmail);
+              handleCloseConfirmRejectionModal();
+            }}
+          >
+            Confirm Reject
+          </Button>
+        </Modal.Footer>
+      </Modal>
       </div>
     </div>
   );
