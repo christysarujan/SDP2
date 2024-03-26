@@ -217,10 +217,30 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
     const fileList = event.target.files;
     if (fileList) {
       const filesArray: File[] = Array.from(fileList);
-      setSelectedFiles(filesArray);
+      const allowedTypes = ['image/jpeg', 'image/png'];
+      const invalidFiles: File[] = [];
+  
+      // Check file types
+      filesArray.forEach(file => {
+        if (!allowedTypes.includes(file.type)) {
+          invalidFiles.push(file);
+        }
+      });
+  
+      if (invalidFiles.length > 0) {
+        // Display toast error for invalid files
+        toast.error('Only JPEG and PNG files are allowed.');
+  
+        // Reset file input value to clear added files
+        event.target.value = '';
+  
+        // Clear selected files state
+        setSelectedFiles([]);
+      } else {
+        setSelectedFiles(filesArray);
+      }
     }
   };
-
 
 
   const addToCartClicked = async () => {
@@ -250,59 +270,13 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
             quantity: quantity
           });
 
-          console.log('Response from backend Id:', cartresponse); // Log the response here
-          const cartItems = await getCartsByUserId(userId);
-          const cartCount = cartItems.length;
-          console.log("Cart Count is...", cartCount)
-          setCartCount(cartCount);
+          // console.log('Response from backend Id:', cartresponse); // Log the response here
+             const cartItems = await getCartsByUserId(userId);
+             const cartCount = cartItems.length;
+          // console.log("Cart Count is...", cartCount)
+             setCartCount(cartCount);
 
-          const calresponse = await calculateCost({
-
-            productId: props.productId,
-            cartId: cartresponse.id
-
-          })
-
-          var cartwithcost = await getCartById(cartresponse.id);
-
-          const startTime = new Date().getTime(); // Get current time in milliseconds
-
-          while (cartwithcost.costId === null) {
-
-            console.log("Iterating and Checking Cost Id Update.....");
-
-            cartwithcost = await getCartById(cartresponse.id);
-
-            if (cartwithcost.costId !== null) {
-              break;
-            }
-
-            const currentTime = new Date().getTime(); // Get current time in milliseconds
-            const elapsedTime = currentTime - startTime; // Calculate elapsed time
-
-            // Break the loop if 10 seconds (10000 milliseconds) has passed
-            if (elapsedTime >= 10000) {
-
-              console.log("=== Time limit exceeded. Exiting loop ===");
-              console.log("=== Cost Id not updated in Cart DB ===");
-              console.log("=== Please Check Kafka Server ===");
-              console.log("=== Try To Clean logs and Try to Restart Kafka Server  ===");
-              break;
-            }
-
-            // Add a delay before next iteration to avoid excessive API calls
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Adjust delay as needed
-          }
-
-          if (cartwithcost.costId !== null) {
-
-            const costDetails = await getcostById(cartwithcost.costId);
-
-            //console.log("Costing Cart..", cartwithcost);
-
-            console.log("Costing Details..", costDetails);
-
-          }
+          
 
         } catch (error) {
           console.error('Error adding to cart:', error);
@@ -378,6 +352,8 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
   
   const buynowclick = async () => {
 
+    const orderDetailsArray = []; // Array to store order details
+
     console.log('Order Details:', orderDetails);
   
     if (!selectedColor) {
@@ -443,14 +419,33 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
       
         // Assign costDetails.finalTotal to newFinalTotal
         newFinalTotal = costDetails.finalTotal;
+
+        orderDetailsArray.push({
+          productId: props.productId,
+          productName : product?.name || null,
+          productPrice: product?.newPrice || product?.price || null,
+          color: selectedColor || null,
+          size: selectedSize,
+          quantity: quantity,
+          image: product?.images[0] || null,
+          newFinalTotal: costDetails.finalTotal,
+          deliveryCharge: deliveryCharge
+        });
+         
       
       
       }
+
       
   
-      navigate(`/orderproduct/${props.productId}`, {
-        state: { orderDetails , newFinalTotal , deliveryCharge }
+      // navigate(`/orderproduct/${props.productId}`, {
+      //   state: { orderDetails , newFinalTotal , deliveryCharge }
+      // });
+
+      navigate('/orderDetailsCart', {
+        state: { orderDetailsArray }
       });
+
   
     } catch (error) {
       console.error('Error adding order:', error);

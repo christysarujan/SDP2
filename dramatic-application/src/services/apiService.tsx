@@ -1019,7 +1019,7 @@ const getOrderById = async (id: string): Promise<any> => {
         },
       }
     );
-    toast.success('Order Got successfully');
+   // toast.success('Order Got successfully');
     return response.data;
   } catch (error: unknown) { // Specify type annotation for 'error'
     if (axios.isAxiosError(error)) { // Check if error is an AxiosError
