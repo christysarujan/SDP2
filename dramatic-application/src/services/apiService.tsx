@@ -1038,6 +1038,35 @@ const getOrderById = async (id: string): Promise<any> => {
 };
 
 
+const searchByQuery = async(name:string) =>{
+
+  try {
+     const response = await axiosInstance.get(`http://localhost:8083/api/v1/product-service/products/search?name=${name}`,    {
+    // const response = await axiosInstance.get(`http://localhost:8083/api/v1/product-service/products/women`,    {
+      headers: {
+        'Content-Type': 'application/json', 
+      },
+    })
+    return response.data;
+    
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) { // Check if error is an AxiosError
+      const axiosError = error as AxiosError; // Cast error to AxiosError
+      console.error('Error getting Order:', axiosError.response?.data);
+      toast.error('Failed to add Order');
+      throw axiosError; // Rethrow error to handle it in the component
+    } else {
+      // Handle other types of errors
+      console.error('Error adding to order:', error);
+      toast.error('Failed to add product to order');
+      throw error; // Rethrow error to handle it in the component
+    }
+  }
+
+
+}
+
+
 
 export {
   userRegistration,
@@ -1102,4 +1131,5 @@ export {
   addOrder,
   calculateCostByOrderIdandProductId,
   getOrderById,
+  searchByQuery
 }

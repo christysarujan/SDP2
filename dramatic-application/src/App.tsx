@@ -26,6 +26,7 @@ import ViewWishPage from './components/WishList/WishList';
 import ViewNotifications from './components/Notification/ViewNotification';
 import OrderPageRoute from './components/OrderProduct/orderPageRoute';
 import OrderDetailsCart from './components/OrderProduct/orderDetailsCart';
+import SearchResults from './components/SearchResults/Search';
 // Import ViewNotifications component
 
 const router = createBrowserRouter([
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <LandingPage />
+      },
+      {
+        path: '/search/:name',
+        element: <SearchResults />,
+        
       },
       {
         path: '/auth',
@@ -81,6 +87,7 @@ const router = createBrowserRouter([
         path: '/notifications',
         element: <ViewNotifications />,
       },
+      
       {
         path: '/',
         element: <UserProfile />,
