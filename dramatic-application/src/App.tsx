@@ -25,6 +25,7 @@ import ProductManagement from './components/admin/productManagement';
 import ViewWishPage from './components/WishList/WishList';
 import ViewNotifications from './components/Notification/ViewNotification';
 import OrderPageRoute from './components/OrderProduct/orderPageRoute';
+import OrderDetailsCart from './components/OrderProduct/orderDetailsCart';
 // Import ViewNotifications component
 
 const router = createBrowserRouter([
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
       {
         path: '/viewWish',
         element: <ViewWishPage />,
+      },
+      {
+        path: '/orderDetailsCart',
+        element: <OrderDetailsCart />,
       },
       {
         path: '/notifications',
