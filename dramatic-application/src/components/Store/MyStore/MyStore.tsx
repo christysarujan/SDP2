@@ -70,38 +70,36 @@ const MyStore = () => {
     };
 
     const storeFormEditSubmit = async (values:any) => {
+        setLoading(true); // Set loading to true before making API call
+
         console.log('Submitting form with values:', values);
     
         try {
-            const email = sessionStorage.getItem('email');
+            //const email = sessionStorage.getItem('email');
             const formData = new FormData();
     
-            if(email){
-                formData.append('sellerEmail', email);
-            }
-          
+            formData.append('sellerEmail', sessionStorage.getItem('email') || '');
             formData.append('name', values.name);
             formData.append('contactNo', values.contactNo);
             formData.append('category', values.category);
             formData.append('address', values.address);
             formData.append('country', values.country);
 
-            if (selectedFile) {
-                formData.append('storeLogo', selectedFile, selectedFile.name);
+            if(selectedFile){
+                formData.append('storeLogo', selectedFile);
             }
 
             console.log('Form Data:', formData);
-    
-            const editStore = await sellerStoreEdit(formData);
+          
+            await sellerStoreEdit(formData); // Call sellerStoreEdit with FormData
+
             await getStoreData();
             await getStorePhoto();
             await defaultPageToggle();
-            // console.log('Edit Store Response:', editStore);
-    
-            // Add more console logs or actions here
     
         } catch (error) {
             console.error('Error in storeFormEditSubmit:', error);
+            setLoading(false); // Ensure loading is set back to false in case of error
         }
     }
     
@@ -296,9 +294,7 @@ const MyStore = () => {
                                                 </div>
                                             ) : 'Submit'}
                                         </button>
-{/* onClick={() => {
-                                            storeFormEditSubmit(values)
-                                        }} */}
+
                                     </div>
 
                                 </div>

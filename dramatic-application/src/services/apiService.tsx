@@ -9,6 +9,7 @@ import CostData from "../components/Cart/costData";
 import OrderData from "../components/OrderProduct/orderData";
 import CostCalc from "../components/OrderProduct/costCalc";
 
+
 const baseurl = "http://localhost:8080/api/v1";
 const storeBaseurl = "http://localhost:8082/api/v1";
 const productBaseurl = "http://localhost:8083/api/v1/product-service";
@@ -335,11 +336,11 @@ const getStoreImage = async (email: any) => {
   }
 };
 
-const sellerStoreEdit = async (storeData: object) => {
+const sellerStoreEdit = async (formData: FormData) => {
   try {
     const response = await axiosInstance.put(
       `${storeBaseurl}/seller-store-management-service/stores/updateStore`,
-      storeData,
+      formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",

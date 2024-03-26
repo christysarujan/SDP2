@@ -3,7 +3,6 @@ import "./storeRequests.scss";
 import {  unpublishProduct,getAllProducts,productAccountStateChange} from "../../services/apiService";
 import { Modal, Button,Form  } from "react-bootstrap";
 
-
 interface UserData {
   sub: string;
   role: string;
@@ -63,19 +62,14 @@ const ProductManagement = () => {
     setUnpublishReason("");
   };
 
-  
   const handleUnpublishCancel = () => {
     setUnpublishModalOpen(false);
   };
-  
 
   const openModal = (product: ProductInfo) => {
     setSelectedProduct(product);
     setModalOpen(true);
-    
-    
   };
-
 
   const handleCloseConfirmPublishModal = () => {
     setConfirmPublishModalOpen(false);
@@ -98,14 +92,11 @@ const ProductManagement = () => {
         console.log("unpublish",selectedProduct.productId, unpublishReason); 
         setConfirmPublishModalOpen(false); 
         setModalOpen(false);
-          
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
-
 
   const handleConfirmUnpublish = async () => {
     try {
@@ -184,7 +175,7 @@ return (
         size="sm"
         centered
       >
-   
+
         <Modal.Body>
 
             {/* Input field for unpublish reason */}
@@ -197,9 +188,7 @@ return (
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setUnpublishReason(e.target.value)}
                   />
                 </Form.Group>
-
         </Modal.Body>
-
         <Modal.Footer>
           <Button
             className="form-submit-btn"
@@ -249,10 +238,9 @@ return (
           </Button>
         </Modal.Footer>
       </Modal>   
-
+      
     </div>
   </div>
-
 );
   };
 
