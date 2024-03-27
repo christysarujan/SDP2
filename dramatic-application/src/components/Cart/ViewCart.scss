@@ -1,130 +1,128 @@
 .view-cart-container {
-  h2 {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+
+  .cart-item-list-name {
+    font-weight: bold;
+  }
+  
+  .cart-item-list-quantity {
+    width: 100px; // Set the desired width
+  }
+  
+
+  .view-cart-heading {
+    font-size: 24px;
     margin-bottom: 20px;
   }
 
-  .cart-items {
-    width: 100%;
-    border-collapse: collapse;
-
-    th,
-    td {
+  .cart-items-container {
+    .cart-item-list {
       border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-      position: relative;
-    }
+      padding: 10px;
+      display: flex;
+      margin-bottom: 20px;
 
-    th {
-      background-color: #f2f2f2;
-    }
-
-    tbody {
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    tr.cart-item {
-      &:nth-child(even) {
-        background-color: #f2f2f2;
-      }
-
-      td {
+      .cart-item-list-image {
+        width: 200px; /* Set a fixed width */
+        height: 200px; /* Set a fixed height */
+        margin-right: 20px;
+      
         img {
-          width: 100px;
-          height: 100px;
-          display: block;
-          margin: auto;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-
-          &:hover {
-            transform: scale(1.2);
-            z-index: 1;
-          }
+          width: 100%;
+          height: 100%; /* Ensure the image takes up the entire container */
+          object-fit: contain;
         }
+      }
+      
+      
+      
 
-        .item-details {
-          p {
-            margin: 0;
-          }
-        }
+      .cart-item-list-details {
+        flex: 1;
 
-        .color-square {
-          width: 30px;
-          height: 30px;
-          display: inline-block;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-
-        .quantity-input {
-          width: 100px;
-          margin: 0 auto;
-          text-align: center;
-        }
-
-        button {
-          display: block;
-          margin: 0 auto;
-          text-align: center;
-        }
-
-        .checkout-container {
+        .cart-item-list-actions {
           display: flex;
-          justify-content: center;
+          justify-content: space-between;
           align-items: center;
-          height: 100%;
+          margin-top: 10px;
 
-          .large-checkbox {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
+          .delete-item-button {
+            background-color: transparent;
+            border: none;
+            color: red;
             cursor: pointer;
-            position: relative;
+          }
 
-            &:before {
-              content: "";
-              display: block;
-              width: 100%;
-              height: 100%;
-              border: 2px solid #555;
-              border-radius: 5px;
-              position: absolute;
-              top: 0;
-              left: 0;
-              transition: border-color 0.3s ease;
-            }
+          .checkout-checkbox {
+            display: flex;
+            align-items: center;
 
-            &:after {
-              content: "";
-              display: block;
-              width: 10px;
-              height: 18px;
-             // border: solid #555;
-              border-width: 0 2px 2px 0;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%) rotate(45deg);
-              opacity: 0;
-              transition: opacity 0.3s ease;
-            }
-
-            &:checked:before {
-              border-color: #2196f3;
-            }
-
-            &:checked:after {
-              opacity: 1;
+            .inner-checkbox {
+              transform: scale(1.2);
+              margin-right: 5px;
             }
           }
         }
       }
     }
   }
+
+.checkout-options-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+
+  .checkout-all-label {
+    display: flex;
+    align-items: center;
+
+    .checkout-all-checkbox {
+      transform: scale(2); // Increased scale for larger checkbox
+      margin-right: 10px;
+    }
+  }
+
+  .total-price-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .total-price-label {
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    .total-price-amount {
+      font-weight: bold;
+      margin-right: 10px;
+      color: #e30c0c;
+    }
+  }
+
+  .buy-items-button,
+  .recent-orders-button {
+    padding: 15px 25px; // Increased padding for larger buttons
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 10px; // Rounded corners for buttons
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease; // Smooth transition on hover
+
+    &:hover {
+      background-color: #0056b3; // Darker color on hover
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
   
 
   .delete-confirmation-modal {
@@ -137,36 +135,76 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 999;
 
     .confirmation-box {
-      background-color: white;
+      background-color: #fff;
       padding: 20px;
       border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
 
-      p {
-        margin-bottom: 10px;
+      .confirmation-message {
+        font-size: 18px;
+        margin-bottom: 20px;
       }
 
-      div {
+      .confirmation-buttons {
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
 
         button {
-          margin-left: 10px;
-          padding: 5px 10px;
+          padding: 10px 20px;
+          margin: 0 10px;
+          background-color: #007bff;
+          color: #fff;
           border: none;
-          cursor: pointer;
           border-radius: 5px;
+          cursor: pointer;
 
-          &:first-child {
-            background-color: red;
-            color: white;
+          &:hover {
+            background-color: #0056b3;
           }
 
-          &:last-child {
-            background-color: #ccc;
+          &:focus {
+            outline: none;
           }
         }
+
+        .confirmation-yes-button {
+          background-color: red;
+
+          &:hover {
+            background-color: darkred;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-item-list {
+    flex-direction: column;
+
+    .cart-item-list-image {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+
+    .cart-item-list-details {
+      .cart-item-list-actions {
+        flex-direction: column;
+
+        .delete-item-button {
+          background-color: transparent;
+          border: none;
+          color: red;
+          cursor: pointer;
+          font-size: 24px; // Set the font size to increase the size of the delete icon
+        }
+        
       }
     }
   }

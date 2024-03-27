@@ -36,6 +36,11 @@ function ViewCartPage() {
   const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
+  const divStyle: React.CSSProperties = {
+    fontSize: '16px',
+    fontWeight: 'bold'
+  };
+
   useEffect(() => {
     const fetchUserData = () => {
       const tokenData = sessionStorage.getItem("decodedToken");
@@ -277,114 +282,76 @@ function ViewCartPage() {
     }
   };
 
-
   return (
     <div className="view-cart-container">
-      <h2 style={{ marginLeft: '200px' }}>View Cart</h2>
-      <table className="cart-items">
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Color</th>
-            <th>Size</th>
-            <th>Quantity</th>
-            <th>Total Price</th>
-            <th>Remove</th>
-
-            <th>
-              <label style={{ display: 'flex', alignItems: 'center' }}>
-                <input
-                  type="checkbox"
-                  style={{ transform: 'scale(1.5)', marginRight: '10px' }}
-                  checked={selectedItems.length === cartItems.length && cartItems.length !== 0}
-                  onChange={handleSelectAll}
-                />
-                <span style={{ marginLeft: '5px' }}>Checkout All</span>
-              </label>
-            </th>
-
-
-
-          </tr>
-        </thead>
-        <tbody>
-          {cartItems.map(item => (
-            <tr key={item.id} className="cart-item">
-              <td>
-                <img src={item.image} alt={''} />
-              </td>
-              <td>
-                <div className="item-details">
-                  <p>{item.productDetails?.name}</p>
-                </div>
-              </td>
-              <td>{item.productDetails?.discount === 0 ? item.productDetails?.price : item.productDetails?.newPrice}</td>
-              <td>
-                <span className="color-square" style={{ backgroundColor: item.color }}></span>
-              </td>
-              <td>{item.size}</td>
-              <td>
+      <h2 className="view-cart-heading">View Cart</h2>
+      <div className="cart-items-container">
+        {cartItems.map(item => (
+          <div key={item.id} className="cart-item-list">
+            <div className="cart-item-list-image">
+              <img src={item.image} alt={''} />
+            </div>
+            <div className="cart-item-list-details">
+              <p className="cart-item-list-name">{item.productDetails?.name}</p>
+              <p className="cart-item-list-price">Rs.{item.productDetails?.discount === 0 ? item.productDetails?.price : item.productDetails?.newPrice}</p>
+              <div className="cart-item-list-color" style={{ backgroundColor: item.color }}></div>
+              <p className="cart-item-list-size">Size: {item.size}</p>
+              <div className="cart-item-list-actions">
                 <input
                   type="number"
                   value={item.quantity}
                   min="1"
                   onChange={e => handleQuantityChange(item.id, parseInt(e.target.value))}
-                  className="quantity-input"
+                  className="cart-item-list-quantity"
                 />
-              </td>
-              <td>{item.productDetails?.discount === 0 ? item.productDetails?.price * item.quantity : item.productDetails?.newPrice * item.quantity}</td>
-              <td>
-                <button onClick={() => openDeleteConfirmation(item.id)}>
+                <p className="cart-item-list-total">Total: Rs.{item.productDetails?.discount === 0 ? item.productDetails?.price * item.quantity : item.productDetails?.newPrice * item.quantity}</p>
+                <button className="delete-item-button" onClick={() => setConfirmDeleteItemId(item.id)}>
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
-              </td>
-              <td>
-                <div className="checkout-container">
+                <div style={divStyle} className="checkout-checkbox">
                   <input
                     type="checkbox"
-                    className="large-checkbox"
-                    onChange={() => handleCheckboxChange(item.id)} // Handle checkbox change event
+                    onChange={() => handleCheckboxChange(item.id)}
+                    className="inner-checkbox"
                   />
-
+                  <span>Checkout</span>
                 </div>
-              </td>
-
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan={6}>Total</td>
-            <td colSpan={2}>{calculateTotalPrice().toFixed(2)}</td>
-            <td colSpan={2}>
-              <button onClick={handleBuyItems}>Buy Items</button>
-
-            </td>
-
-          </tr>
-
-          <tr>
-            <td colSpan={10} style={{ textAlign: 'center' }}>
-              <button onClick={handleRecentCheckout}>Recent Orders</button>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="checkout-options-container">
+        <label className="checkout-all-label">
+          <input
+            type="checkbox"
+            checked={selectedItems.length === cartItems.length && cartItems.length !== 0}
+            onChange={handleSelectAll}
+            className="checkout-all-checkbox"
+          />
+          <span style={divStyle}>Checkout All</span>
+        </label>
+        <div className="total-price-container">
+          <span className="total-price-label">Total:</span>
+          <span className="total-price-amount">Rs.{calculateTotalPrice().toFixed(2)}</span>
+        </div>
+        <button className="recent-orders-button" onClick={handleRecentCheckout}>Recent Orders</button>
+        <button className="buy-items-button" onClick={handleBuyItems}>Buy Items</button>
+      </div>
+  
       {confirmDeleteItemId && (
         <div className="delete-confirmation-modal">
           <div className="confirmation-box">
-            <p>Are you sure you want to delete this item?</p>
-            <div>
-              <button onClick={() => handleDeleteCartItem(confirmDeleteItemId)}>Yes</button>
-              <button onClick={closeDeleteConfirmation}>No</button>
+            <p className="confirmation-message">Are you sure you want to delete this item?</p>
+            <div className="confirmation-buttons">
+              <button className="confirmation-yes-button" onClick={() => handleDeleteCartItem(confirmDeleteItemId)}>Yes</button>
+              <button className="confirmation-no-button" onClick={() => setConfirmDeleteItemId(null)}>No</button>
             </div>
           </div>
         </div>
       )}
     </div>
   );
-}
+    }
 
 export default ViewCartPage;
