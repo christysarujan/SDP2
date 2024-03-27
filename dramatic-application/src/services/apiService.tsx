@@ -263,39 +263,24 @@ const getAllSellers = async () => {
 };
 
 
-const suspendSellerByEmail = async (id: string, reason: string) => {
+ const suspendSellerByEmail = async (id: string, reason: string) => {
   try {
     const response = await axiosInstance.put(`${authBaseUrl}/users/seller/${id}/suspend`,
-      { reason },  // Sending reason as a JSON object
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    toast.success('Seller suspended successfully');
+    { reason });
+     toast.success(response.data);
     return response.data;
   } catch (error) {
-    throw new Error("Failed to suspend seller by email");
+    throw new Error('Failed to suspend seller by email');
   }
 };
 
-
 const activateSellerByEmail = async (id: string, reason: string) => {
   try {
-    const response = await axiosInstance.put(`${authBaseUrl}/users/seller/${id}/active`, 
-    { reason },  // Sending reason as a JSON object
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    toast.success('Seller Activated successfully');
+    const response = await axiosInstance.put(`${authBaseUrl}/users/seller/${id}/active`,{ reason });
+     toast.success(response.data);
     return response.data;
   } catch (error) {
-    throw new Error("Failed to activate seller by email");
+    throw new Error('Failed to activate seller by email');
   }
 };
 
@@ -316,6 +301,7 @@ const getActiveSellers = async () => {
     const response = await axiosInstance.get(
       `${authBaseUrl}/users/active/sellers`
     );
+    
     return response.data;
   } catch (error: any) {
     console.error(error.response.data);
