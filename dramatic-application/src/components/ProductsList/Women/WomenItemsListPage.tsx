@@ -160,13 +160,13 @@ function WomenItemsListPage() {
     <div className="women-items-list-page">
       <div className="filters">
         <h2>Filters</h2>
-        <label htmlFor="category">Category:</label>
+        {/* <label htmlFor="category">Category:</label>
         <select id="category" onChange={e => handleFilterChange(e.target.value, 'category')} value={filters.category}>
           <option value="">All</option>
           {uniqueCategories.map((category, index) => (
             <option key={index} value={category}>{category}</option>
           ))}
-        </select>
+        </select> */}
         <label htmlFor="size">Size:</label>
         <select id="size" onChange={e => handleFilterChange(e.target.value, 'size')} value={filters.size}>
           <option value="">All</option>
