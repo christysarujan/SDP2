@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.scss';
 import LandingPage from './components/LandingPage/LandingPage';
 import AuthForm from './components/AuthForm/AuthForm';
@@ -27,7 +27,11 @@ import ViewNotifications from './components/Notification/ViewNotification';
 import OrderPageRoute from './components/OrderProduct/orderPageRoute';
 import OrderDetailsCart from './components/OrderProduct/orderDetailsCart';
 import SearchResults from './components/SearchResults/Search';
+
 // Import ViewNotifications component
+import { useLocation , useNavigate} from 'react-router-dom';
+import { toast } from "react-toastify";
+import { getAllNotificationsBySellerEmail } from './services/apiService';
 
 const router = createBrowserRouter([
   {
@@ -143,6 +147,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  
   return (
     <div className="app-main">
       <CartProvider> 
