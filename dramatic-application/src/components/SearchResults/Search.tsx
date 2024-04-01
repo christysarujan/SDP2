@@ -41,7 +41,7 @@ const SearchResults = () => {
                             <div key={item.id} className="item" onClick={() => itemClick(item)}>
                                 <img src={item.image} alt={item.title} />
                                 <div className="item-details">
-                                    <h2>{item.title}</h2>
+                                    <h2>{item.name}</h2>
                                     <p>{item.price}</p>
                                 </div>
                             </div>

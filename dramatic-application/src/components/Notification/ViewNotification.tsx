@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './ViewNotification.scss'; 
 import { getAllNotificationsBySellerEmail,updateNotificationStatus  } from '../../services/apiService';
 import { Modal, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 
 
 interface Notification {
@@ -59,6 +61,7 @@ const ViewNotifications = () => {
       console.error(error);
     }
   };
+
 
 
   return (
