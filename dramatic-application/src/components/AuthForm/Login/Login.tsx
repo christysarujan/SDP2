@@ -41,6 +41,16 @@ const Login = () => {
                 const email = tokenDecode.email;
                 const role = tokenDecode.role;
     
+
+        // Check the user's profile status after successful login
+        if (tokenDecode.profileStatus === 'SUSPEND') {
+            setLoading(false);
+            toast.error('Your account is suspended. Please contact Dramatic.');
+            return; // Prevent further login actions
+          }
+
+                console.log('Access Token :', accessToken);
+                console.log('tokenDecode :', tokenDecode);
                 sessionStorage.setItem('decodedToken', JSON.stringify(tokenDecode));
                 sessionStorage.setItem('email', email);
                 sessionStorage.setItem('role', role);
