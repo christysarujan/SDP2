@@ -41,8 +41,6 @@ const Login = () => {
                 const email = tokenDecode.email;
                 const role = tokenDecode.role;
     
-<<<<<<< Updated upstream
-=======
 
         // Check the user's profile status after successful login
         if (tokenDecode.profileStatus === 'SUSPEND') {
@@ -53,7 +51,6 @@ const Login = () => {
 
                 console.log('Access Token :', accessToken);
                 console.log('tokenDecode :', tokenDecode);
->>>>>>> Stashed changes
                 sessionStorage.setItem('decodedToken', JSON.stringify(tokenDecode));
                 sessionStorage.setItem('email', email);
                 sessionStorage.setItem('role', role);
