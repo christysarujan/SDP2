@@ -15,6 +15,7 @@ interface StoreData {
     country: string;
     storeLogo: string;
     storeStatus: string;
+    updatedStoreData: string;
 }
 
 interface UserData {
@@ -69,6 +70,8 @@ const MyStore = () => {
         }
     };
 
+
+
     const storeFormEditSubmit = async (values:any) => {
         setLoading(true); // Set loading to true before making API call
 
@@ -92,7 +95,6 @@ const MyStore = () => {
             console.log('Form Data:', formData);
           
             await sellerStoreEdit(formData); // Call sellerStoreEdit with FormData
-
             await getStoreData();
             await getStorePhoto();
             await defaultPageToggle();
@@ -136,8 +138,7 @@ const MyStore = () => {
                         <p>Since 2023</p>
 
                     </div>
-                    <button className='btn btn-success' onClick={defaultPageToggle}>Edit Store</button>
-
+                    <button className='btn btn-success' onClick={defaultPageToggle}>Update Store</button>
                 </div>
                 <hr />
                 <div className="store-content">

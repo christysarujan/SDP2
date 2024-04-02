@@ -37,12 +37,6 @@ const AuthForm = () => {
     setForgetPassword((prev) => !prev);
   };
 
-  /* useEffect(() => {
-    setDecodedToken(jwtDecode(token));
-  }, []);
-
-  console.log('decode token', decodedToken); */
-
   const handleSliderClickUser = () => {
     setIsSliderClicked((prev) => !prev);
 

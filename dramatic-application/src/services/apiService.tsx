@@ -365,6 +365,7 @@ const paymentDataSubmit = async (email: any, bankType: any, data: any) => {
     toast.error(error.response.data);
   }
 };
+
 const paymentDataEdit = async (email: any, bankType: any, data: any) => {
   try {
     const response = await axios.put(
