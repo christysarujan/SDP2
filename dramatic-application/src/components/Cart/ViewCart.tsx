@@ -239,7 +239,9 @@ function ViewCartPage() {
           quantity: item.quantity,
           image: item.image,
           newFinalTotal: costDetails.finalTotal,
-          deliveryCharge: deliveryCharge
+          deliveryCharge: deliveryCharge,
+          orderId : receivedOrderObject.id
+          
         });
       }
 

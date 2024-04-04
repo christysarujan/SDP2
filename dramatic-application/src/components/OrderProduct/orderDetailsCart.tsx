@@ -1,7 +1,7 @@
 import React from 'react';
 import './OrderDetailsCart.scss'; // Import the SCSS file
 
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface UserData {
     firstName: string;
@@ -29,9 +29,12 @@ interface OrderItem {
     quantity: number;
     deliveryCharge: number;
     newFinalTotal: number;
+    orderId:string;
 }
 
 function OrderDetailsCart() {
+
+    const navigate = useNavigate();
 
     // Retrieve user details from sessionStorage
     const userDataString = sessionStorage.getItem("fullUserData");
@@ -52,6 +55,10 @@ function OrderDetailsCart() {
         console.log("Total Price:", totalPriceSum);
         // Add logic to handle payment here
         console.log("Payment processing...");
+
+        navigate('/payment', {
+            state: { orderDetailsArray }
+          });
     };
 
     // Inside the return statement of OrderDetailsCart component
@@ -98,6 +105,7 @@ function OrderDetailsCart() {
                             <p>Size: {item.size}</p>
                             <p>Quantity: {item.quantity}</p>
                             <p>Delivery Charge: Rs. {item.deliveryCharge}</p>
+                            <p>Order Id : {item.orderId}</p>
                         </div>
                         <div className="price">
                             <p>Total Price: Rs. {item.newFinalTotal}</p>

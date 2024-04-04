@@ -429,7 +429,9 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
           quantity: quantity,
           image: product?.images[0] || null,
           newFinalTotal: costDetails.finalTotal,
-          deliveryCharge: deliveryCharge
+          deliveryCharge: deliveryCharge,
+          orderId : receivedOrderObject.id
+
         });
          
       
