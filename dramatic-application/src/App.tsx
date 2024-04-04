@@ -28,10 +28,18 @@ import OrderPageRoute from './components/OrderProduct/orderPageRoute';
 import OrderDetailsCart from './components/OrderProduct/orderDetailsCart';
 import SearchResults from './components/SearchResults/Search';
 
+
 // Import ViewNotifications component
 import { useLocation , useNavigate} from 'react-router-dom';
 import { toast } from "react-toastify";
 import { getAllNotificationsBySellerEmail } from './services/apiService';
+import PaymentForm from './components/payment/paymentForm';
+///////////////////////////
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('pk_test_51P18p1IDcLWdvLLXTtS0WhYEGTtpQ4MFwaN9v1u094ILuzn9iboaK56apikSxghRUU6o9ADAFTK1rMTgOc3UA06E00KbWo6hH3');
+
 
 const router = createBrowserRouter([
   {
@@ -90,6 +98,11 @@ const router = createBrowserRouter([
       {
         path: '/notifications',
         element: <ViewNotifications />,
+      },
+
+      {
+        path: '/payment',
+        element: <PaymentForm />,
       },
       
       {
@@ -150,9 +163,11 @@ function App() {
   
   return (
     <div className="app-main">
+      <Elements stripe={stripePromise}>
       <CartProvider> 
         <RouterProvider router={router} />
       </CartProvider>
+      </Elements>
     </div>
   );
 }
