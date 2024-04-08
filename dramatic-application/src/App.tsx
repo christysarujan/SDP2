@@ -38,6 +38,7 @@ import PaymentForm from './components/payment/paymentForm';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
+// Publishable Key Used Here
 const stripePromise = loadStripe('pk_test_51P18p1IDcLWdvLLXTtS0WhYEGTtpQ4MFwaN9v1u094ILuzn9iboaK56apikSxghRUU6o9ADAFTK1rMTgOc3UA06E00KbWo6hH3');
 
 
