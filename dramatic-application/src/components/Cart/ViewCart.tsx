@@ -229,11 +229,12 @@ function ViewCartPage() {
           // Perform any operations with costDetails if needed
         }
 
-        // Push order details for the current item to the array
+        // Push order details for the current item to the array 
+        // product?.newPrice || product?.price || null,
         orderDetailsArray.push({
           productId: item.productId,
           productName: item.productDetails?.name,
-          productPrice: item.productDetails?.price,
+          productPrice: item.productDetails?.newPrice || item.productDetails?.price || null,
           color: item.color,
           size: item.size,
           quantity: item.quantity,

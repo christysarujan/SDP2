@@ -1,17 +1,17 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import axios from 'axios';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { axiosInstance } from '../../services/Interceptor';
 import './PaymentForm.scss'; // Import the SCSS file
-import { useLocation } from 'react-router-dom';
 
 function PaymentForm() {
-    const [amount, setAmount] = useState<number>(0); // Initialize as a number
+    const [amount, setAmount] = useState<number>(0);
     const [currency, setCurrency] = useState('LKR');
     const [message, setMessage] = useState('');
+    const [paymentMade, setPaymentMade] = useState(false); // State variable to track payment status
     const stripe = useStripe();
     const elements = useElements();
-
+    const navigate = useNavigate();
     const location = useLocation();
 
     interface OrderItem {
@@ -32,17 +32,29 @@ function PaymentForm() {
 
     if (orderDetailsArray !== undefined) {
         totalPriceSum = orderDetailsArray.reduce((total, item) => total + item.newFinalTotal, 0);
-        console.log(totalPriceSum);
-    } else {
-        console.log("orderDetailsArray is undefined");
     }
 
     useEffect(() => {
-        setAmount(totalPriceSum); // Update amount when totalPriceSum changes
-    }, [totalPriceSum]);
+        setAmount(totalPriceSum); // Initialize amount with default value
+        return () => {
+            // Clear state upon component unmount
+            setAmount(0);
+            setCurrency('LKR');
+            setMessage('');
+            setPaymentMade(false);
+        };
+    }, []); // Empty dependency array to run only once on mount
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (paymentMade) {
+            setMessage("You have already made a payment. Please buy a new order.");
+            setAmount(0);
+            setCurrency('LKR');
+            return;
+        }
 
         try {
             if (!stripe || !elements) {
@@ -63,9 +75,7 @@ function PaymentForm() {
             }
 
             const response = await axiosInstance.post('http://localhost:8084/api/v1/payment-management-service/payment/create-payment-intent', {
-
                 orderIds: orderDetailsArray?.map(order => order.orderId),
-
                 amount: totalPriceSum,
                 tokenId: token.id,
                 currency,
@@ -78,6 +88,7 @@ function PaymentForm() {
 
             if (response && response.data) {
                 setMessage(response.data);
+                setPaymentMade(true); // Set payment status to true after successful payment
             } else {
                 setMessage("Unexpected response format");
             }
@@ -88,11 +99,11 @@ function PaymentForm() {
 
     return (
         <div className="payment-form-container">
-            <h2>Create Payment Intent</h2>
+            <h2>Create Payment</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Amount:</label>
-                    <input type="text" value={amount} onChange={(e: ChangeEvent<HTMLInputElement>) => setAmount(parseInt(e.target.value))} />
+                    <input type="text" value={amount} readOnly />
                 </div>
                 <div>
                     <label>Currency:</label>
@@ -100,9 +111,9 @@ function PaymentForm() {
                 </div>
                 <div>
                     <label>Card Details:</label>
-                    <CardElement className="StripeElement" />
+                    <CardElement className="StripeElement" options={{ hidePostalCode: true }} />
                 </div>
-                <button type="submit">Submit</button>
+                <button type="submit">Create Payment</button>
             </form>
             {message && <p>{message}</p>}
         </div>
