@@ -83,11 +83,11 @@ const Inventory = ({ productId, onClose }: { productId: string | null; onClose: 
 
     const handleSubmit = async () => {
         // Transform count state into the desired format for submission
-        const submitData: { color: string; sizeQuantityDTOS: { size: string; qty: number }[] }[] = Object.keys(count).map((key) => {
+        const submitData: { color: string; sizeQuantities: { size: string; qty: number }[] }[] = Object.keys(count).map((key) => {
             const [color, size] = key.split('_');
             return {
                 color,
-                sizeQuantityDTOS: [
+                sizeQuantities: [
                     {
                         size,
                         qty: count[key],
@@ -101,15 +101,15 @@ const Inventory = ({ productId, onClose }: { productId: string | null; onClose: 
             const existingIndex = acc.findIndex((el) => el.color === item.color);
 
             if (existingIndex !== -1) {
-                // Combine sizeQuantityDTOS for the same color
-                acc[existingIndex].sizeQuantityDTOS.push(...item.sizeQuantityDTOS);
+                // Combine sizeQuantities for the same color
+                acc[existingIndex].sizeQuantities.push(...item.sizeQuantities);
             } else {
                 // Add a new entry for a unique color
-                acc.push({ color: item.color, sizeQuantityDTOS: item.sizeQuantityDTOS });
+                acc.push({ color: item.color, sizeQuantities: item.sizeQuantities });
             }
 
             return acc;
-        }, [] as { color: string; sizeQuantityDTOS: { size: string; qty: number }[] }[]);
+        }, [] as { color: string; sizeQuantities: { size: string; qty: number }[] }[]);
 
 
         // Use groupedSubmitData for further processing or submission

@@ -1,0 +1,127 @@
+.delivery-summary-container {
+    // Add user-select property to allow text selection
+    user-select: text;
+
+    .print-only {
+        display: none;
+    }
+   
+    @media print {
+        .print-only {
+            display: block;
+            border-top: 1px solid red !important; /* Change the color here */
+            margin-top: 100px; /* Adjust margin as needed */
+            margin-bottom: 100px; /* Adjust margin as needed */
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .order-item {
+            padding: 10px; // Adjust padding for items
+            margin-bottom: 10px; // Adjust margin between items
+        }
+
+        .paid-icon {
+            background-color: transparent;
+            color: black;
+            border-radius: 0;
+            font-weight: normal;
+        }
+
+        button {
+            display: none; // Hide the print button
+        }
+    }
+
+    max-width: 800px;
+    margin: 0 auto;
+
+    h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .order-list {
+        list-style: none;
+        padding: 0;
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+
+            img {
+                width: 150px;
+                height: 200px;
+                margin-right: 20px;
+            }
+
+            .order-details {
+                flex: 1;
+
+                h3 {
+                    font-size: 18px;
+                    margin-bottom: 10px;
+                }
+
+                p {
+                    margin: 5px 0;
+                }
+            }
+
+            .paid-icon {
+                background-color: #4caf50;
+                color: white;
+                padding: 5px 10px;
+                border-radius: 5px;
+                font-weight: bold;
+            }
+        }
+    }
+
+    .total-summary {
+        margin-top: 20px;
+
+        p {
+            font-weight: bold;
+            font-size: 16px;
+        }
+    }
+
+    .payment-id {
+        margin-top: 10px;
+
+        p {
+            font-weight: bold;
+            font-size: 16px;
+        }
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    // Additional styles for the PDF layout
+    @page {
+        size: A4;
+        margin: 20mm;
+    }
+}

@@ -38,7 +38,7 @@ interface SizeQuantity {
 
 interface Variation {
   color: string;
-  sizeQuantityDTOS: SizeQuantity[];
+  sizeQuantities: SizeQuantity[];
 }
 
 interface Product {
@@ -77,18 +77,29 @@ const SellerProductList = () => {
   const [prodDiscount, setProdDiscount] = useState<number | null>(null);
   const [showAddDiscountModal, setShowAddDiscountModal] = useState(false);
   const [showUpdateDiscountModal, setShowUpdateDiscountModal] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [productIdToDelete, setProductIdToDelete] = useState<string>("");
 
 
+  const showDeleteConfirmationModal = (productId: string) => {
+    setShowDeleteConfirmation(true);
+    setProductIdToDelete(productId);
+  };
+  
+  const handleDeleteConfirmation = async () => {
+    await deleteSellerProduct(productIdToDelete);
+    setShowDeleteConfirmation(false);
+  };
 
   const [variation, setVariations] = useState<Variation[]>([
     {
       color: "",
-      sizeQuantityDTOS: [{ size: "", qty: "" }],
+      sizeQuantities: [{ size: "", qty: "" }],
     },
   ]);
 
   const handleAddVariation = () => {
-    setVariations([...variation, { color: "", sizeQuantityDTOS: [{ size: "", qty: "" }] }]);
+    setVariations([...variation, { color: "", sizeQuantities: [{ size: "", qty: "" }] }]);
   };
 
   const [modalShow, setModalShow] = useState(false)
@@ -167,7 +178,7 @@ const SellerProductList = () => {
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content="Delete"
                   data-tooltip-place="top"
-                  onClick={() => deleteSellerProduct(product.productId)}
+                  onClick={() => showDeleteConfirmationModal(product.productId)}
                 ></i>
                 <Tooltip id="my-tooltip" />
               </td>
@@ -281,7 +292,7 @@ const SellerProductList = () => {
         setVariations([
           {
             color: "",
-            sizeQuantityDTOS: [{ size: "", qty: "" }],
+            sizeQuantities: [{ size: "", qty: "" }],
           },
         ]);
 
@@ -293,12 +304,12 @@ const SellerProductList = () => {
   };
 
   const handleAddColor = () => {
-    setVariations([...variation, { color: "", sizeQuantityDTOS: [{ size: "", qty: "" }] }]);
+    setVariations([...variation, { color: "", sizeQuantities: [{ size: "", qty: "" }] }]);
   };
 
   const handleAddSizeQuantity = (index: number) => {
     const newVariations = [...variation];
-    newVariations[index].sizeQuantityDTOS.push({ size: "", qty: "" });
+    newVariations[index].sizeQuantities.push({ size: "", qty: "" });
     setVariations(newVariations);
   };
   const deleteSellerProduct = async (id: any) => {
@@ -592,17 +603,17 @@ const SellerProductList = () => {
                                     placeholder="Color"
                                   />
                                 </div>
-                                {v.sizeQuantityDTOS.map((sq, sqIndex) => (
+                                {v.sizeQuantities.map((sq, sqIndex) => (
                                   <div key={sqIndex} className="field-input">
                                     <Field
                                       type="text"
-                                      name={`variation[${index}].sizeQuantityDTOS[${sqIndex}].size`}
+                                      name={`variation[${index}].sizeQuantities[${sqIndex}].size`}
                                       placeholder="Size"
 
                                     />
                                     <Field
                                       type="text"
-                                      name={`variation[${index}].sizeQuantityDTOS[${sqIndex}].qty`}
+                                      name={`variation[${index}].sizeQuantities[${sqIndex}].qty`}
                                       placeholder="Quantity"
 
                                     />
@@ -738,6 +749,32 @@ const SellerProductList = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+
+
+      
+<Modal
+  show={showDeleteConfirmation}
+  onHide={() => setShowDeleteConfirmation(false)}
+  backdrop="static"
+  keyboard={false}
+>
+  <Modal.Header closeButton>
+    <Modal.Title>Confirm Delete</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    Are you sure you want to delete this product?
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setShowDeleteConfirmation(false)}>
+      Cancel
+    </Button>
+    <Button variant="danger" onClick={handleDeleteConfirmation}>
+      Delete
+    </Button>
+  </Modal.Footer>
+</Modal>
+
 
 
       <Modal show={showInventoryModal} onHide={handleClose} backdrop="static" keyboard={false} size="lg"

@@ -9,6 +9,7 @@ function PaymentForm() {
     const [currency, setCurrency] = useState('LKR');
     const [message, setMessage] = useState('');
     const [paymentMade, setPaymentMade] = useState(false); // State variable to track payment status
+    const [showPopup, setShowPopup] = useState(false); // State variable to control popup visibility
     const stripe = useStripe();
     const elements = useElements();
     const navigate = useNavigate();
@@ -45,6 +46,13 @@ function PaymentForm() {
         };
     }, []); // Empty dependency array to run only once on mount
 
+    const handlePopupClose = () => {
+        setShowPopup(false);
+       
+        navigate('/deliverySummery', {
+            state: { orderDetailsArray , message}
+          });
+    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -89,6 +97,7 @@ function PaymentForm() {
             if (response && response.data) {
                 setMessage(response.data);
                 setPaymentMade(true); // Set payment status to true after successful payment
+                setShowPopup(true); // Show popup after successful payment
             } else {
                 setMessage("Unexpected response format");
             }
@@ -116,6 +125,14 @@ function PaymentForm() {
                 <button type="submit">Create Payment</button>
             </form>
             {message && <p>{message}</p>}
+            {showPopup && (
+                <div className="popup">
+                    <div className="popup-content">
+                        <p>Payment Successful!</p>
+                        <button onClick={handlePopupClose}>OK</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
