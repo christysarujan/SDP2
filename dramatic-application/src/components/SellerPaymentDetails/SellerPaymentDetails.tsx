@@ -138,6 +138,7 @@ const SellerPaymentDetails = () => {
     }
   };
 
+
   return (
     <div className="seller-payment-main">
       {paymentDetailsStatus ? (

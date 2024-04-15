@@ -6,10 +6,9 @@
   .header {
     display: flex;
     flex-direction: row;
+    align-items: center;
 
     .img {
-      flex: 150px;
-
       width: 150px;
       height: 150px;
       border-radius: 50%;
@@ -18,47 +17,60 @@
       display: flex;
       justify-content: center;
       align-items: center;
+
       .store-img {
-        width: 140px;
-        height: 140px;
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
-        padding: 2px;
-        // background-image: url("https://img.freepik.com/free-vector/shop-with-sign-we-are-open_52683-38687.jpg");
-        // background-image: url("../../assests/images/google-icon.png");
-        background-size: cover;
-        background-position: center;
+        object-fit: cover;
       }
     }
+
     .header-content {
-      flex: calc(100% - 250px);
+      flex: 1;
       padding-left: 40px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: flex-start;
+
+      h2 {
+        margin: 0;
+      }
+
+      p {
+        margin: 5px 0;
+      }
     }
+
     .btn {
-      flex: 100px;
-      height: 29px;
-      padding: 0;
+      margin-left: auto;
+      height: 30px;
+      padding: 0 10px;
     }
   }
+
   .store-content {
-    display: flex;
-    flex-direction: column;
     width: 80%;
     margin: auto;
-    
+
     .content {
       display: flex;
       flex-direction: row;
+      margin-bottom: 10px;
 
       .content-name {
-        flex: 50%;
+        flex: 1;
+        font-weight: bold;
       }
+
       .content-data {
-        flex: 50%;
+        flex: 1;
       }
     }
   }
+}
+
+.store-main {
+  /* Add styles for the update form section if needed */
 }
