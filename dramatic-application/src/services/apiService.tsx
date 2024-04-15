@@ -11,7 +11,7 @@ import CostCalc from "../components/OrderProduct/costCalc";
 
 
 const baseurl = "http://localhost:8080/api/v1";
-const storeBaseurl = "http://localhost:8082/api/v1";
+const storeBaseurl = "http://localhost:8082/api/v1/seller-store-management-service";
 const productBaseurl = "http://localhost:8083/api/v1/product-service";
 const cartBaseurl = "http://localhost:8089/api/v1/shopping-cart-service";
 const wishListBaseurl = "http://localhost:8088/api/v1/shopping-wishlist-service";
@@ -240,7 +240,7 @@ const sellerStoreRegistration = async (storeData: object) => {
 const findStoreByEmail = async (email: any) => {
   try {
     const response = await axiosInstance.get(
-      `${storeBaseurl}/seller-store-management-service/stores/${email}`
+      `${storeBaseurl}/stores/${email}`
     );
     return response.data;
   } catch (error: any) {
@@ -313,7 +313,7 @@ const getActiveSellers = async () => {
 const getStoreImage = async (email: any) => {
   try {
     const response = await axiosInstance.get(
-      `${storeBaseurl}/seller-store-management-service/stores/storeLogo/${email}`,
+      `${storeBaseurl}/stores/storeLogo/${email}`,
       { responseType: "blob" }
     );
     return response.data;
@@ -322,10 +322,10 @@ const getStoreImage = async (email: any) => {
   }
 };
 
-const sellerStoreEdit = async (formData: FormData) => {
+const sellerStoreEdit  = async (formData: FormData) => {
   try {
     const response = await axiosInstance.put(
-      `${storeBaseurl}/seller-store-management-service/stores/updateStore`,
+      `${storeBaseurl}/stores/updateStore`,
       formData,
       {
         headers: {
@@ -344,7 +344,7 @@ const sellerStoreEdit = async (formData: FormData) => {
 const getSellerPaymentInfoByEmail = async (email: any) => {
   try {
     const response = await axiosInstance.get(
-      `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}`
+      `${storeBaseurl}/seller-payment-details/${email}`
     );
     return response.data;
   } catch (error: any) {
@@ -355,7 +355,7 @@ const getSellerPaymentInfoByEmail = async (email: any) => {
 const paymentDataSubmit = async (email: any, bankType: any, data: any) => {
   try {
     const response = await axios.post(
-      `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}?payment-method=${bankType}`,
+      `${storeBaseurl}/seller-payment-details/${email}?payment-method=${bankType}`,
       data
     );
     toast.success("Payment Details Added Successfully");
@@ -369,7 +369,7 @@ const paymentDataSubmit = async (email: any, bankType: any, data: any) => {
 const paymentDataEdit = async (email: any, bankType: any, data: any) => {
   try {
     const response = await axios.put(
-      `${storeBaseurl}/seller-store-management-service/seller-payment-details/update/${email}?payment-method=${bankType}`,
+      `${storeBaseurl}/seller-payment-details/update/${email}?payment-method=${bankType}`,
       data
     );
     toast.success("Payment Details Edit Successfully");
@@ -383,7 +383,7 @@ const paymentDataEdit = async (email: any, bankType: any, data: any) => {
 const getPendingStoreApprovals = async () => {
   try {
     const response = await axiosInstance.get(
-      `${storeBaseurl}/seller-store-management-service/stores/all/pending`
+      `${storeBaseurl}/stores/all/pending`
     );
     return response.data;
   } catch (error: any) {
@@ -393,7 +393,7 @@ const getPendingStoreApprovals = async () => {
 const getActiveStoreList = async () => {
   try {
     const response = await axiosInstance.get(
-      `${storeBaseurl}/seller-store-management-service/stores/all/verified`
+      `${storeBaseurl}/stores/all/verified`
     );
     return response.data;
   } catch (error: any) {
@@ -404,7 +404,7 @@ const getActiveStoreList = async () => {
 const getRejectedStoreList = async () => {
   try {
     const response = await axiosInstance.get(
-      `${storeBaseurl}/seller-store-management-service/stores/all/rejected`
+      `${storeBaseurl}/stores/all/rejected`
     );
     return response.data;
   } catch (error: any) {
@@ -416,7 +416,7 @@ const getRejectedStoreList = async () => {
 const  rejectStoreRequest = async (email: any, rejectionReason:String) => {
   try {
     const response = await axiosInstance.put(
-      `${storeBaseurl}/seller-store-management-service/stores/reject/${email}`,
+      `${storeBaseurl}/stores/reject/${email}`,
       {
         rejectionReason, // Include rejectionReason in the request body
       },
@@ -435,7 +435,7 @@ const  rejectStoreRequest = async (email: any, rejectionReason:String) => {
 const approveStoreRequest = async (email: any) => {
   try {
     const response = await axiosInstance.put(
-      `${storeBaseurl}/seller-store-management-service/stores/verify/${email}`,
+      `${storeBaseurl}/stores/verify/${email}`,
       {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -1073,7 +1073,6 @@ export {
   getSellerPaymentInfoByEmail,
   paymentDataSubmit,
   getPendingStoreApprovals,
-
   addProduct,
   paymentDataEdit,
   updateUser,
