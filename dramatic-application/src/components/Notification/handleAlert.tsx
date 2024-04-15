@@ -20,7 +20,7 @@ const handleAlert = async () => {
     const checkAndSetInterval = () => {
         if (window.location.pathname !== '/notifications') {
             clearInterval(intervalId);
-            intervalId = setInterval(fetchNotifications, 60000);
+            intervalId = setInterval(fetchNotifications, 30000);
         } else {
             clearInterval(intervalId);
         }
@@ -39,8 +39,8 @@ const handleAlert = async () => {
             } else {
                 checkAndSetInterval();
             }
-        }, 60000);
-        await new Promise(resolve => setTimeout(resolve, 60000)); // Wait for 5 seconds before re-checking
+        }, 30000);
+        await new Promise(resolve => setTimeout(resolve, 30000)); // Wait for 30 seconds before re-checking
     }
 
     // Clear interval when navigating to '/notifications'
