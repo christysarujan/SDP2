@@ -3,6 +3,9 @@
   flex-direction: column;
   margin: 40px 25px;
 
+  .field-container {
+    margin-bottom: 20px; 
+
   .header {
     display: flex;
     flex-direction: row;
@@ -73,4 +76,5 @@
 
 .store-main {
   /* Add styles for the update form section if needed */
+}
 }
