@@ -197,11 +197,6 @@ const UserProfile = () => {
                     </NavLink>
                   )}
 
-                    {location.pathname !== "/store" && (
-                      <NavLink to="notifications" className="nav-item">
-                        <li>Notification</li>
-                      </NavLink>
-                    )}
 
                     {storeData && storeData.storeStatus === "VERIFIED" && (
                       <NavLink to="product" className="nav-item">
