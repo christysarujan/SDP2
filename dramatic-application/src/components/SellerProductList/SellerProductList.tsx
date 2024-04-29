@@ -473,7 +473,15 @@ const SellerProductList = () => {
                         <div className="field-container">
                           <div className="field-input">
                             <label>Category <span className="required">*</span> :</label>
-                            <Field type="text" id="category" name="category" />
+                            <Field as="select" type="text" id="category" name="category" className='drop'>
+
+                            <option>Select an option</option>
+                            <option value="Men">Men</option>
+                            <option value="Women">Women</option>
+                            <option value="Kid">Kid</option>
+                            console.log(this.category);
+                            </Field>
+                            
                           </div>
                           <ErrorMessage
                             name="category"
