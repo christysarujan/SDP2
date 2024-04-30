@@ -139,8 +139,6 @@ const SellerPaymentDetails = () => {
     }
   };
 
-<<<<<<< Updated upstream
-=======
   const toggleDeleteModal = () => {
     setShowDeleteModal((prev) => !prev);
   };
@@ -163,7 +161,6 @@ const SellerPaymentDetails = () => {
       });
   }
 
->>>>>>> Stashed changes
 
   return (
     <div className="seller-payment-main">

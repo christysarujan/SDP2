@@ -354,13 +354,8 @@ const getSellerPaymentInfoByEmail = async (email: any) => {
 
 const paymentDataSubmit = async (email: any, bankType: any, data: any) => {
   try {
-<<<<<<< Updated upstream
-    const response = await axios.post(
-      `${storeBaseurl}/seller-payment-details/${email}?payment-method=${bankType}`,
-=======
     const response = await axiosInstance.post(
       `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}?payment-method=${bankType}`,
->>>>>>> Stashed changes
       data
     );
     toast.success("Payment Details Added Successfully");
@@ -373,13 +368,9 @@ const paymentDataSubmit = async (email: any, bankType: any, data: any) => {
 
 const paymentDataEdit = async (email: any, bankType: any, data: any) => {
   try {
-<<<<<<< Updated upstream
-    const response = await axios.put(
-      `${storeBaseurl}/seller-payment-details/update/${email}?payment-method=${bankType}`,
-=======
+
     const response = await axiosInstance.put(
       `${storeBaseurl}/seller-store-management-service/seller-payment-details/update/${email}?payment-method=${bankType}`,
->>>>>>> Stashed changes
       data
     );
     toast.success("Payment Details Edit Successfully");
