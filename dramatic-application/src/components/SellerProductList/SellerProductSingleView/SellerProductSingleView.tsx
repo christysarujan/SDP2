@@ -65,12 +65,12 @@ const SellerProductSingleView = ({ productId }: { productId: any; }) => {
                     <div className="main-img" style={{ backgroundImage: `url(${productImg})` }} >
                     </div>
                 </div>
-                <div className="sub-images">
+                {/* <div className="sub-images">
                     <div className="sub-img1"></div>
                     <div className="sub-img2"></div>
                     <div className="sub-img3"></div>
                     <div className="sub-img4"></div>
-                </div>
+                </div> */}
             </div>
             <div className="product-content">
                 {productData ?

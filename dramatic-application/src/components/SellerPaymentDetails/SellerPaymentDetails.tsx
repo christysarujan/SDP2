@@ -10,7 +10,7 @@ import {
   paypalFormInitialValues,
   paypalFormValidationSchema,
 } from "../../utils/Validation";
-import { getSellerPaymentInfoByEmail, paymentDataEdit, paymentDataSubmit } from "../../services/apiService";
+import { getSellerPaymentInfoByEmail, paymentDataDelete, paymentDataEdit, paymentDataSubmit } from "../../services/apiService";
 
 interface UserData {
   sub: string;
@@ -33,6 +33,7 @@ const SellerPaymentDetails = () => {
   const [bankType, setBankType] = useState("paypal");
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [editFormStatus, setEditFormStatus] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     getPaymentDetails();
@@ -138,9 +139,48 @@ const SellerPaymentDetails = () => {
     }
   };
 
+<<<<<<< Updated upstream
+=======
+  const toggleDeleteModal = () => {
+    setShowDeleteModal((prev) => !prev);
+  };
+
+  function deletePaymentInfo(): void {
+    const email = sessionStorage.getItem('email');
+    paymentDataDelete(email)
+      .then(() => {
+        // Remove the deleted item from the paymentDetails state
+        setPaymentDetails(null);
+        // Optionally, want to reset editFormStatus as well
+        setEditFormStatus(false);
+        // Close the delete modal
+        toggleDeleteModal();
+        // Reload the page
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error('Error deleting payment info:', error);
+      });
+  }
+
+>>>>>>> Stashed changes
 
   return (
     <div className="seller-payment-main">
+
+      {showDeleteModal && (
+        <div className="delete-modal show-delete-modal">
+          <div className="modal-content">
+            <p>Are you sure you want to delete this payment information?</p>
+            <div className="modal-buttons">
+              <button className="cancel-btn" onClick={toggleDeleteModal}>Cancel</button>
+              <button className="delete-btn" onClick={deletePaymentInfo}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
       {paymentDetailsStatus ? (
         /*  */
         <div className="seller-payment-main">
@@ -369,6 +409,11 @@ const SellerPaymentDetails = () => {
               <div className="edit-sum-btn">
                 <button className="btn btn-success" onClick={() => editPaymentInfoToggle()}><i className="bi bi-pencil-square"></i></button>
               </div>
+              <div className="delete-btn">
+                <button className="btn btn-danger" onClick={toggleDeleteModal}><i className="bi bi-trash"></i></button>
+
+              </div>
+
             </div>
             {editFormStatus &&
               <div className="edit-form">
