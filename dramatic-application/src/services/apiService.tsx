@@ -354,8 +354,8 @@ const getSellerPaymentInfoByEmail = async (email: any) => {
 
 const paymentDataSubmit = async (email: any, bankType: any, data: any) => {
   try {
-    const response = await axios.post(
-      `${storeBaseurl}/seller-payment-details/${email}?payment-method=${bankType}`,
+    const response = await axiosInstance.post(
+      `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}?payment-method=${bankType}`,
       data
     );
     toast.success("Payment Details Added Successfully");
@@ -368,11 +368,26 @@ const paymentDataSubmit = async (email: any, bankType: any, data: any) => {
 
 const paymentDataEdit = async (email: any, bankType: any, data: any) => {
   try {
-    const response = await axios.put(
-      `${storeBaseurl}/seller-payment-details/update/${email}?payment-method=${bankType}`,
+
+    const response = await axiosInstance.put(
+      `${storeBaseurl}/seller-store-management-service/seller-payment-details/update/${email}?payment-method=${bankType}`,
       data
     );
     toast.success("Payment Details Edit Successfully");
+    return response.data;
+  } catch (error: any) {
+    console.error(error.response.data);
+    toast.error(error.response.data);
+  }
+};
+
+const paymentDataDelete = async (email: any) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}`
+      
+    );
+    toast.success("Payment Details Deleted Successfully");
     return response.data;
   } catch (error: any) {
     console.error(error.response.data);
@@ -1039,14 +1054,14 @@ const searchByQuery = async(name:string) =>{
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) { // Check if error is an AxiosError
       const axiosError = error as AxiosError; // Cast error to AxiosError
-      console.error('Error getting Order:', axiosError.response?.data);
-      toast.error('Failed to add Order');
+      console.error('Error getting Product:', axiosError.response?.data);
+      toast.error('Failed to get Product');
       throw axiosError; // Rethrow error to handle it in the component
     } else {
       // Handle other types of errors
       console.error('Error adding to order:', error);
-      toast.error('Failed to add product to order');
-      throw error; // Rethrow error to handle it in the component
+     // toast.error('Failed to add product to order');
+     // throw error; // Rethrow error to handle it in the component
     }
   }
 
@@ -1117,5 +1132,6 @@ export {
   addOrder,
   calculateCostByOrderIdandProductId,
   getOrderById,
-  searchByQuery
+  searchByQuery,
+  paymentDataDelete
 }

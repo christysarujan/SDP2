@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faHeart } from '@fortawesome/free-solid-svg-icons';
 import { useCart } from '../Cart/CartContext';
 import { getAllNotificationsBySellerEmail, searchByQuery } from '../../services/apiService';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+
 
 interface DecodedToken {
   sub: string;
@@ -129,16 +131,23 @@ const NavBar = () => {
         </div>
       </div>
 
-      {showHideSearchBar && <div className='search-container'>
-        <div className='search-bar-input-container'>
-          <div className='search'>
-            <form className="d-flex" role="search" >
-              <input onChange={handleSearchinput} className="form-control" type="search" placeholder="Search" aria-label="Search" />
-              <button onClick={clickSearchHandler} className="btn btn-outline-success" type="button">Search</button>
-            </form>
-          </div>
-        </div>
-      </div>}
+      {showHideSearchBar && (
+  <div className='search-container' style={{ margin: '20px' }}>
+    <div className='search-bar-input-container'>
+      <div className='search' style={{ display: 'flex', alignItems: 'center' }}>
+        <form className="d-flex" role="search" style={{ marginRight: '10px' }}>
+          <input onChange={handleSearchinput} className="form-control" type="search" placeholder="Search" aria-label="Search" />
+          <button onClick={clickSearchHandler} className="btn btn-outline-success" type="button" style={{ marginLeft: '5px' }}>Search</button>
+        </form>
+        <button onClick={() => setShowHideSearchBar(false)} style={{ background: 'none', border: 'none', padding: '0', cursor: 'pointer' }} type="button">
+          <FontAwesomeIcon icon={faTimes} style={{ color: 'red', fontSize: '20px' }} />
+        </button> {/* Close button with close icon */}
+      </div>
+    </div>
+  </div>
+)}
+
+
 
     </div>
   );

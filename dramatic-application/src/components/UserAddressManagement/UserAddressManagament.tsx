@@ -229,7 +229,7 @@ const UserAddressManagement = () => {
                   <Form>
                     <div className="field-container">
                       <div className="field-input">
-                        <label>Address Type :</label>
+                        <label>Address Type <span className="required">*</span> :</label>
                         <Field
                           as="select"
                           id="addressType"
@@ -253,7 +253,7 @@ const UserAddressManagement = () => {
 
                     <div className="field-container">
                       <div className="field-input">
-                        <label>Address Line 1 :</label>
+                        <label>Address Line 1 <span className="required">*</span> :</label>
                         <Field
                           type="text"
                           id="addressLine01"
@@ -268,7 +268,7 @@ const UserAddressManagement = () => {
                     </div>
                     <div className="field-container">
                       <div className="field-input">
-                        <label>Address Line 2 :</label>
+                        <label>Address Line 2 <span className="required">*</span> :</label>
                         <Field
                           type="text"
                           id="addressLine02"
@@ -283,7 +283,7 @@ const UserAddressManagement = () => {
                     </div>
                     <div className="field-container">
                       <div className="field-input">
-                        <label>City :</label>
+                        <label>City <span className="required">*</span> :</label>
                         <Field type="text" id="city" name="city" />
                       </div>
                       <ErrorMessage
@@ -294,7 +294,7 @@ const UserAddressManagement = () => {
                     </div>
                     <div className="field-container">
                       <div className="field-input">
-                        <label>Zip Code :</label>
+                        <label>Zip Code <span className="required">*</span> :</label>
                         <Field type="text" id="zipCode" name="zipCode" />
                       </div>
                       <ErrorMessage
@@ -305,7 +305,7 @@ const UserAddressManagement = () => {
                     </div>
                     <div className="field-container">
                       <div className="field-input">
-                        <label>Province :</label>
+                        <label>Province <span className="required">*</span> :</label>
                         <Field type="text" id="province" name="province" />
                       </div>
                       <ErrorMessage
@@ -316,7 +316,7 @@ const UserAddressManagement = () => {
                     </div>
                     <div className="field-container">
                       <div className="field-input">
-                        <label>Country :</label>
+                        <label>Country <span className="required">*</span> :</label>
                         <Field type="text" id="country" name="country" />
                       </div>
                       <ErrorMessage
@@ -327,7 +327,7 @@ const UserAddressManagement = () => {
                     </div>
                     <div className="field-container">
                       <div className="field-input">
-                        <label>Country Code :</label>
+                        <label>Country Code <span className="required">*</span> :</label>
                         <Field
                           type="text"
                           id="countryCode"
@@ -342,7 +342,7 @@ const UserAddressManagement = () => {
                     </div>
                     <div className="field-container">
                       <div className="field-input">
-                        <label>Telephone Number :</label>
+                        <label>Telephone Number <span className="required">*</span> :</label>
                         <Field type="text" id="mobileNo" name="mobileNo" />
                       </div>
                       <ErrorMessage
@@ -389,7 +389,7 @@ const UserAddressManagement = () => {
                           {/** Add your loading indicator here if needed */}
                           {/** Use 'Loading...' or another UI element */}
                           {/** Example: loading ? <LoadingSpinner /> : 'Submit' */}
-                          Submit
+                          Save
                         </button>
                       </div>
                     </div>
