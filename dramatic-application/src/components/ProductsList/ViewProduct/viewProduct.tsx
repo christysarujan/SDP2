@@ -1,14 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import './ProductPage.scss';
-import { getProductsByProductId, getProductImage, findStoreByEmail, addToCart, getCartsByUserId, addToWishList, addToReviewFeedback, getFeedBackById, getFeedBackImage, calculateCost, getCartById, getcostById, addOrder, calculateCostByOrderIdandProductId, getOrderById } from '../../../services/apiService';
-import ReactImageMagnify from 'react-image-magnify';
-import { useCart } from '../../Cart/CartContext';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'; // Import arrow icons
-import Rating from 'react-rating-stars-component';
-import 'react-tabs/style/react-tabs.scss';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import "./ProductPage.scss";
+import {
+  getProductsByProductId,
+  getProductImage,
+  findStoreByEmail,
+  addToCart,
+  getCartsByUserId,
+  addToWishList,
+  addToReviewFeedback,
+  getFeedBackById,
+  getFeedBackImage,
+  calculateCost,
+  getCartById,
+  getcostById,
+  addOrder,
+  calculateCostByOrderIdandProductId,
+  getOrderById,
+} from "../../../services/apiService";
+import ReactImageMagnify from "react-image-magnify";
+import { useCart } from "../../Cart/CartContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHeart,
+  faArrowLeft,
+  faArrowRight,
+} from "@fortawesome/free-solid-svg-icons"; // Import arrow icons
+import Rating from "react-rating-stars-component";
+import "react-tabs/style/react-tabs.scss";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 interface Product {
@@ -71,13 +91,28 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
   const { setCartCount } = useCart();
   const [bump, setBump] = useState(false);
   const [rating, setRating] = useState<number>(0);
-  const [reviewText, setReviewText] = useState<string>('');
+  const [reviewText, setReviewText] = useState<string>("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [reviews, setReviews] = useState<Feedback[]>([]);
   const [refreshFlag, setRefreshFlag] = useState<boolean>(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0); 
-  const [finalTotal, setFinalTotal] = useState<number >(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [finalTotal, setFinalTotal] = useState<number>(0);
   // Add state for current image index
+
+  //pagination start
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4; // Number of reviews per page
+
+  const handlePagination = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentReviews = reviews.slice(startIndex, startIndex + itemsPerPage);
+  const totalPages = Math.ceil(reviews.length / itemsPerPage);
+
+  //paginate end
 
   const navigate = useNavigate();
 
@@ -89,66 +124,69 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
     }
 
     fetchProductData(props.productId)
-      .then(data => {
+      .then((data) => {
         setProduct(data);
         if (data) {
           fetchStoreDetails(data.sellerEmail)
-            .then(storeData => {
+            .then((storeData) => {
               // Assuming fetchStoreDetails returns store data
               // Update store details state here
             })
-            .catch(error => {
-              console.error('Error fetching store details:', error);
+            .catch((error) => {
+              console.error("Error fetching store details:", error);
             });
 
           fetchReviews(props.productId)
-            .then(reviewData => {
+            .then((reviewData) => {
               setReviews(reviewData);
             })
-            .catch(error => {
-              console.error('Error fetching reviews:', error);
+            .catch((error) => {
+              console.error("Error fetching reviews:", error);
             });
         }
       })
-      .catch(error => {
-        console.error('Error fetching product:', error);
+      .catch((error) => {
+        console.error("Error fetching product:", error);
       });
   }, [props.productId]);
 
-
   useEffect(() => {
     // Fetch reviews data
-    fetchReviews(props.productId)
-      .then(data => {
-        setReviews(data);
-
-      });
+    fetchReviews(props.productId).then((data) => {
+      setReviews(data);
+    });
   }, [props.productId, refreshFlag]); // Include refreshFlag in dependencies
-
 
   const fetchReviews = async (productId: string) => {
     try {
       const feedback = await getFeedBackById(productId);
-      const feedbckimages = await Promise.all(feedback.map(async (review: Feedback) => {
-        const images = await Promise.all(review.uploadImageList?.map((image: any) => getFeedBackPhoto(image.productImageUrl)) || []);
-        return images;
-      }));
+      const feedbckimages = await Promise.all(
+        feedback.map(async (review: Feedback) => {
+          const images = await Promise.all(
+            review.uploadImageList?.map((image: any) =>
+              getFeedBackPhoto(image.productImageUrl)
+            ) || []
+          );
+          return images;
+        })
+      );
 
-      const reviewsWithImages = feedback.map((review: Feedback, index: number) => ({
-        ...review,
-        feedbckimages: feedbckimages[index],
-      }));
+      const reviewsWithImages = feedback.map(
+        (review: Feedback, index: number) => ({
+          ...review,
+          feedbckimages: feedbckimages[index],
+        })
+      );
 
       setReviews(reviewsWithImages);
       return reviewsWithImages; // Return the reviews data
     } catch (error) {
-      console.error('Error fetching reviews:', error);
+      console.error("Error fetching reviews:", error);
       // Set reviews state to an empty array
       setReviews([]);
       return []; // Return an empty array in case of error
     }
   };
-
 
   const getProductPhoto = async (imageUrl: string): Promise<string> => {
     try {
@@ -157,7 +195,7 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
       return URL.createObjectURL(blob);
     } catch (error) {
       console.error("Error fetching product image:", error);
-      return '';
+      return "";
     }
   };
 
@@ -168,22 +206,36 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
       return URL.createObjectURL(blob);
     } catch (error) {
       console.error("Error fetching product image:", error);
-      return '';
+      return "";
     }
   };
 
-  const fetchProductData = async (productId: string): Promise<Product | null> => {
+  const fetchProductData = async (
+    productId: string
+  ): Promise<Product | null> => {
     try {
       const productData = await getProductsByProductId(productId);
-      const images = await Promise.all(productData.productImages.map((image: any) => getProductPhoto(image.productImageUrl)));
+      const images = await Promise.all(
+        productData.productImages.map((image: any) =>
+          getProductPhoto(image.productImageUrl)
+        )
+      );
       const availability =
         productData.variations?.some((variation: { sizeQuantities: any[] }) =>
-          variation.sizeQuantities.some(sizeQty => sizeQty.qty > 0)
+          variation.sizeQuantities.some((sizeQty) => sizeQty.qty > 0)
         ) || false;
       const sizes: string[] =
-        productData.variations?.reduce((acc: string[], variation: Variation) => {
-          return [...acc, ...variation.sizeQuantities.map((sizeQty: SizeQuantity) => sizeQty.size)];
-        }, [] as string[]) || [];
+        productData.variations?.reduce(
+          (acc: string[], variation: Variation) => {
+            return [
+              ...acc,
+              ...variation.sizeQuantities.map(
+                (sizeQty: SizeQuantity) => sizeQty.size
+              ),
+            ];
+          },
+          [] as string[]
+        ) || [];
 
       return { ...productData, images, availability, sizes };
     } catch (error) {
@@ -217,23 +269,23 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
     const fileList = event.target.files;
     if (fileList) {
       const filesArray: File[] = Array.from(fileList);
-      const allowedTypes = ['image/jpeg', 'image/png'];
+      const allowedTypes = ["image/jpeg", "image/png"];
       const invalidFiles: File[] = [];
-  
+
       // Check file types
-      filesArray.forEach(file => {
+      filesArray.forEach((file) => {
         if (!allowedTypes.includes(file.type)) {
           invalidFiles.push(file);
         }
       });
-  
+
       if (invalidFiles.length > 0) {
         // Display toast error for invalid files
-        toast.error('Only JPEG and PNG files are allowed.');
-  
+        toast.error("Only JPEG and PNG files are allowed.");
+
         // Reset file input value to clear added files
-        event.target.value = '';
-  
+        event.target.value = "";
+
         // Clear selected files state
         setSelectedFiles([]);
       } else {
@@ -242,18 +294,16 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
     }
   };
 
-
   const addToCartClicked = async () => {
-
     if (!selectedColor) {
-     // alert('Please select a size.');
-      toast.error('Please select a color.');
+      // alert('Please select a size.');
+      toast.error("Please select a color.");
       return;
     }
-  
+
     if (!selectedSize) {
       //alert('Please select a size.');
-      toast.error('Please select a size.');
+      toast.error("Please select a size.");
       return;
     }
 
@@ -264,31 +314,25 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
           const cartresponse = await addToCart({
             productId: props.productId,
             productPrice: product.price,
-            userId: userId, 
+            userId: userId,
             color: selectedColor,
             size: selectedSize,
-            quantity: quantity
+            quantity: quantity,
           });
 
           // console.log('Response from backend Id:', cartresponse); // Log the response here
-             const cartItems = await getCartsByUserId(userId);
-             const cartCount = cartItems.length;
+          const cartItems = await getCartsByUserId(userId);
+          const cartCount = cartItems.length;
           // console.log("Cart Count is...", cartCount)
-             setCartCount(cartCount);
-
-          
-
+          setCartCount(cartCount);
         } catch (error) {
-          console.error('Error adding to cart:', error);
+          console.error("Error adding to cart:", error);
         }
       } else {
-        console.error('User ID not found in session storage');
+        console.error("User ID not found in session storage");
       }
     }
   };
-
-
-  
 
   const addToWishListClicked = async () => {
     setBump(true);
@@ -299,13 +343,13 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
         userId: userData.username,
         color: selectedColor,
         size: selectedSize,
-        quantity: quantity
+        quantity: quantity,
       })
         .then(async () => {
           // Handle wish list addition success
         })
-        .catch(error => {
-          console.error('Error adding to wish list:', error);
+        .catch((error) => {
+          console.error("Error adding to wish list:", error);
         });
     }
   };
@@ -313,7 +357,7 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
   const handleReviewSubmit = async () => {
     try {
       if (!userData || !product) {
-        console.error('User data or product data not available');
+        console.error("User data or product data not available");
         return;
       }
       const feedback: Feedback = {
@@ -324,105 +368,107 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
         uploadImageList: selectedFiles,
       };
       const response = await addToReviewFeedback(feedback, selectedFiles);
-      console.log('Review submitted:', feedback.comment, 'Rating:', feedback.rating);
-      setReviewText('');
+      console.log(
+        "Review submitted:",
+        feedback.comment,
+        "Rating:",
+        feedback.rating
+      );
+      setReviewText("");
       setRating(0);
-      setRefreshFlag(prevFlag => !prevFlag); // Toggle refreshFlag
+      setRefreshFlag((prevFlag) => !prevFlag); // Toggle refreshFlag
       return response;
     } catch (error) {
-      console.error('Error adding review:', error);
+      console.error("Error adding review:", error);
     }
   };
 
-  var newFinalTotal : any;
-
+  var newFinalTotal: any;
 
   const orderDetails = {
     productId: props.productId || null,
-    productName : product?.name || null,
+    productName: product?.name || null,
     productPrice: product?.newPrice || product?.price || null,
     color: selectedColor || null,
     size: selectedSize || null,
     quantity: quantity || null,
-    images: product?.images.map(image => image) || [], // Storing image URLs
-   
+    images: product?.images.map((image) => image) || [], // Storing image URLs
   };
-  
-  
-  
-  const buynowclick = async () => {
 
+  const buynowclick = async () => {
     const orderDetailsArray = []; // Array to store order details
 
-    console.log('Order Details:', orderDetails);
-  
+    console.log("Order Details:", orderDetails);
+
     if (!selectedColor) {
-      toast.error('Please select a color.');
+      toast.error("Please select a color.");
       return;
     }
-   
+
     if (!selectedSize) {
-      toast.error('Please select a size.');
+      toast.error("Please select a size.");
       return;
     }
-  
+
     console.log("Product ID..", props.productId);
-  
+
     try {
       const receivedOrderObject = await addOrder({
         productId: props.productId,
         userId: sessionStorage.getItem("userId") || null,
         color: selectedColor,
         size: selectedSize,
-        quantity: quantity
+        quantity: quantity,
       });
-  
+
       console.log("Received Order Object:", receivedOrderObject);
 
       var deliveryCharge = receivedOrderObject.deliveryChargeAmount;
-  
+
       await calculateCostByOrderIdandProductId({
         productId: props.productId,
-        orderId: receivedOrderObject.id
+        orderId: receivedOrderObject.id,
       });
-  
+
       let updatedOrderObject = await getOrderById(receivedOrderObject.id);
-  
+
       const startTime = new Date().getTime(); // Get current time in milliseconds
-  
+
       while (updatedOrderObject.costId === null) {
         console.log("Iterating and Checking Cost Id Update.....");
-  
+
         updatedOrderObject = await getOrderById(receivedOrderObject.id);
-  
+
         if (updatedOrderObject.costId !== null) {
           break;
         }
-  
+
         const currentTime = new Date().getTime(); // Get current time in milliseconds
         const elapsedTime = currentTime - startTime; // Calculate elapsed time
-  
+
         if (elapsedTime >= 10000) {
           console.log("=== Time limit exceeded. Exiting loop ===");
           console.log("=== Cost Id not updated in Cart DB ===");
           console.log("=== Please Check Kafka Server ===");
-          console.log("=== Try To Clean logs and Try to Restart Kafka Server  ===");
+          console.log(
+            "=== Try To Clean logs and Try to Restart Kafka Server  ==="
+          );
           break;
         }
-  
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Add a delay before next iteration
+
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Add a delay before next iteration
       }
-  
+
       if (updatedOrderObject.costId !== null) {
         let costDetails = await getcostById(updatedOrderObject.costId);
         console.log("Costing Details..", costDetails);
-      
+
         // Assign costDetails.finalTotal to newFinalTotal
         newFinalTotal = costDetails.finalTotal;
 
         orderDetailsArray.push({
           productId: props.productId,
-          productName : product?.name || null,
+          productName: product?.name || null,
           productPrice: product?.newPrice || product?.price || null,
           color: selectedColor || null,
           size: selectedSize,
@@ -430,31 +476,21 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
           image: product?.images[0] || null,
           newFinalTotal: costDetails.finalTotal,
           deliveryCharge: deliveryCharge,
-          orderId : receivedOrderObject.id
-
+          orderId: receivedOrderObject.id,
         });
-         
-      
-      
       }
 
-      
-  
       // navigate(`/orderproduct/${props.productId}`, {
       //   state: { orderDetails , newFinalTotal , deliveryCharge }
       // });
 
-      navigate('/orderDetailsCart', {
-        state: { orderDetailsArray }
+      navigate("/orderDetailsCart", {
+        state: { orderDetailsArray },
       });
-
-  
     } catch (error) {
-      console.error('Error adding order:', error);
+      console.error("Error adding order:", error);
     }
-  }
-  
-
+  };
 
   if (!product) {
     return <div>Loading...</div>;
@@ -478,15 +514,15 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
                 height: 1800,
               }}
               enlargedImageContainerDimensions={{
-                width: '200%',
-                height: '200%',
+                width: "200%",
+                height: "200%",
               }}
               lensStyle={{
-                position: 'absolute',
-                width: '100px',
-                height: '100px',
-                border: '2px solid #333',
-                pointerEvents: 'none',
+                position: "absolute",
+                width: "100px",
+                height: "100px",
+                border: "2px solid #333",
+                pointerEvents: "none",
                 zIndex: 1,
               }}
               isHintEnabled={true}
@@ -499,14 +535,30 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
                 key={index}
                 src={image}
                 alt={`Thumbnail ${index}`}
-                className={`thumbnail ${currentImageIndex === index ? 'active' : ''}`}
+                className={`thumbnail ${
+                  currentImageIndex === index ? "active" : ""
+                }`}
                 onClick={() => setCurrentImageIndex(index)}
               />
             ))}
           </div>
           <div className="navigation-arrows">
-            <FontAwesomeIcon icon={faArrowLeft} onClick={() => setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? product.images.length - 1 : prevIndex - 1))} />
-            <FontAwesomeIcon icon={faArrowRight} onClick={() => setCurrentImageIndex((prevIndex) => (prevIndex === product.images.length - 1 ? 0 : prevIndex + 1))} />
+            <FontAwesomeIcon
+              icon={faArrowLeft}
+              onClick={() =>
+                setCurrentImageIndex((prevIndex) =>
+                  prevIndex === 0 ? product.images.length - 1 : prevIndex - 1
+                )
+              }
+            />
+            <FontAwesomeIcon
+              icon={faArrowRight}
+              onClick={() =>
+                setCurrentImageIndex((prevIndex) =>
+                  prevIndex === product.images.length - 1 ? 0 : prevIndex + 1
+                )
+              }
+            />
           </div>
         </div>
         <div className="product-details col-md-4">
@@ -515,27 +567,31 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
           <h1>{product.name}</h1>
 
           <p>
-            Price: {
-              product.discount === 0 ? (
-                `${product.price} Rs.`
-              ) : (
-                <>
-                  <span style={{ textDecoration: 'line-through' }}>{product.price} Rs.</span>{' '}
-                  
-                  <span style={{ color: 'green' }}>({((product.discount * 100).toFixed(0))}% off)</span>{' '}
-
-                  <strong style={{ color: 'red' }}>{product.newPrice} Rs.</strong>{' '}
-
-                </>
-              ) 
-            }
+            Price:{" "}
+            {product.discount === 0 ? (
+              `${product.price} Rs.`
+            ) : (
+              <>
+                <span style={{ textDecoration: "line-through" }}>
+                  {product.price} Rs.
+                </span>{" "}
+                <span style={{ color: "green" }}>
+                  ({(product.discount * 100).toFixed(0)}% off)
+                </span>{" "}
+                <strong style={{ color: "red" }}>{product.newPrice} Rs.</strong>{" "}
+              </>
+            )}
           </p>
-          <p>Availability: {product.availability ? 'In stock' : 'Out of stock'}</p>
+          <p>
+            Availability: {product.availability ? "In stock" : "Out of stock"}
+          </p>
           <div className="colors">
             {product.variations?.map((variation, index) => (
               <button
                 key={index}
-                className={`color ${selectedColor === variation.color ? 'selected' : ''}`}
+                className={`color ${
+                  selectedColor === variation.color ? "selected" : ""
+                }`}
                 style={{ backgroundColor: variation.color }}
                 onClick={() => handleColorClick(variation.color)}
               ></button>
@@ -544,14 +600,19 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
           <div className="sizes">
             {selectedColor &&
               product.variations
-                ?.find(variation => variation.color === selectedColor)
+                ?.find((variation) => variation.color === selectedColor)
                 ?.sizeQuantities.map((sizeQty, index) => (
                   <div
                     key={index}
-                    className={`size ${selectedSize === sizeQty.size ? 'selected' : ''}`}
+                    className={`size ${
+                      selectedSize === sizeQty.size ? "selected" : ""
+                    }`}
                     style={{
-                      backgroundColor: selectedSize === sizeQty.size ? selectedColor : undefined,
-                      color: selectedSize === sizeQty.size ? 'white' : 'black',
+                      backgroundColor:
+                        selectedSize === sizeQty.size
+                          ? selectedColor
+                          : undefined,
+                      color: selectedSize === sizeQty.size ? "white" : "black",
                     }}
                     onClick={() => handleSizeClick(sizeQty.size)}
                   >
@@ -560,15 +621,43 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
                 ))}
           </div>
           <div>
-            <label htmlFor="quantity" style={{ marginRight: '40px' }}>Quantity:</label>
-            <input type="number" id="quantity" min="1" value={quantity} onChange={handleQuantityChange} style={{ width: '100px' }} />
-            <div className="wishlist-icon" style={{ display: 'inline' }} onClick={addToWishListClicked}>
-              <FontAwesomeIcon icon={faHeart} className={bump ? 'bump' : ''} data-tip="Add to Wishlist" />
+            <label htmlFor="quantity" style={{ marginRight: "40px" }}>
+              Quantity:
+            </label>
+            <input
+              type="number"
+              id="quantity"
+              min="1"
+              value={quantity}
+              onChange={handleQuantityChange}
+              style={{ width: "100px" }}
+            />
+            <div
+              className="wishlist-icon"
+              style={{ display: "inline" }}
+              onClick={addToWishListClicked}
+            >
+              <FontAwesomeIcon
+                icon={faHeart}
+                className={bump ? "bump" : ""}
+                data-tip="Add to Wishlist"
+              />
             </div>
           </div>
-          <button className='btn btn-primary' style={{ width: '400px' }} onClick={addToCartClicked}>Add to Cart</button>
-          <button className='btn btn-danger mt-2' style={{ width: '400px' }} onClick={buynowclick}> Buy Now
-
+          <button
+            className="btn btn-primary"
+            style={{ width: "400px" }}
+            onClick={addToCartClicked}
+          >
+            Add to Cart
+          </button>
+          <button
+            className="btn btn-danger mt-2"
+            style={{ width: "400px" }}
+            onClick={buynowclick}
+          >
+            {" "}
+            Buy Now
           </button>
           {/* Color, size, quantity selectors */}
           {/* Add to cart button */}
@@ -579,10 +668,18 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
           {storeDetails && (
             <>
               <h3>Store Details</h3>
-              <p><strong>Name:</strong> {storeDetails.name}</p>
-              <p><strong>Contact No:</strong> {storeDetails.contactNo}</p>
-              <p><strong>Address:</strong> {storeDetails.address}</p>
-              <p><strong>Country:</strong> {storeDetails.country}</p>
+              <p>
+                <strong>Name:</strong> {storeDetails.name}
+              </p>
+              <p>
+                <strong>Contact No:</strong> {storeDetails.contactNo}
+              </p>
+              <p>
+                <strong>Address:</strong> {storeDetails.address}
+              </p>
+              <p>
+                <strong>Country:</strong> {storeDetails.country}
+              </p>
             </>
           )}
         </div>
@@ -604,7 +701,9 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
                 <div className="rating-stars">
                   <Rating
                     count={5}
-                    onChange={(rating: React.SetStateAction<number>) => setRating(rating)}
+                    onChange={(rating: React.SetStateAction<number>) =>
+                      setRating(rating)
+                    }
                     size={24}
                     activeColor="red"
                     isHalf={false}
@@ -615,13 +714,19 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
                 <button onClick={handleReviewSubmit}>Submit Review</button>
               </div>
               {reviews && (
-                <div className="reviews-list" style={{ marginTop: '80px' }}>
+                <div className="reviews-list" style={{ marginTop: "80px" }}>
                   <hr /> {/* Add a horizontal line */}
-                  {reviews.map((review, index) => (
+                  {currentReviews.map((review, index) => (
                     <div className="review" key={index}>
-                      <p><strong>User:</strong> {review.userId}</p>
-                      <p><strong>Comment:</strong> {review.comment}</p>
-                      <p><strong>Rating:</strong> {review.rating}</p>
+                      <p>
+                        <strong>User:..</strong> {review.userId}
+                      </p>
+                      <p>
+                        <strong>Comment:</strong> {review.comment}
+                      </p>
+                      <p>
+                        <strong>Rating:</strong> {review.rating}
+                      </p>
                       <div className="rating-stars">
                         <Rating
                           count={5}
@@ -632,26 +737,58 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
                           edit={false} // Set edit to false to make stars not clickable
                         />
                       </div>
-
-                      {review.feedbckimages && review.feedbckimages.map((image, imgIndex) => (
-                        <img
-                          key={imgIndex}
-                          src={image}
-                          alt={`Review Image ${imgIndex}`}
-                          style={{
-                            width: '100px',  // Set a fixed width
-                            height: '100px', // Set a fixed height
-                            objectFit: 'cover', // Maintain aspect ratio and cover the entire space
-                            marginRight: '10px', // Add margin-right to create space between images
-                            marginBottom: '10px' // Add margin-bottom to create space between rows of images
-                          }}
-                        />
-                      ))}
-
-
-                      <hr /> {/* Add a horizontal line to separate each feedback */}
+                      {review.feedbckimages &&
+                        review.feedbckimages.map((image, imgIndex) => (
+                          <img
+                            key={imgIndex}
+                            src={image}
+                            alt={`Review Image ${imgIndex}`}
+                            style={{
+                              width: "100px", // Set a fixed width
+                              height: "100px", // Set a fixed height
+                              objectFit: "cover", // Maintain aspect ratio and cover the entire space
+                              marginRight: "10px", // Add margin-right to create space between images
+                              marginBottom: "10px", // Add margin-bottom to create space between rows of images
+                            }}
+                          />
+                        ))}
+                      <hr />{" "}
+                      {/* Add a horizontal line to separate each feedback */}
                     </div>
                   ))}
+                  {/* Pagination buttons */}
+                  {totalPages > 1 && (
+                    <div className="pagination">
+                      {currentPage > 1 && (
+                        <button
+                          className="page-link"
+                          onClick={() => handlePagination(currentPage - 1)}
+                        >
+                          Previous Page
+                        </button>
+                      )}
+                      {/* This is pagination buttons */}
+                      {Array.from({ length: totalPages }, (_, pageNumber) => (
+                        <button
+                        className="page-link"
+                          key={pageNumber + 1}
+                          onClick={() => handlePagination(pageNumber + 1)}
+                        >
+                          {pageNumber + 1}
+                        </button>
+                      ))}
+                      {currentPage < totalPages && (
+                        <button
+                          className="page-link"
+                          onClick={() => handlePagination(currentPage + 1)}
+                        >
+                          Next Page
+                        </button>
+                      )}
+                      {/*pagination buttons end */}
+                    </div>
+                    
+                  )}
                 </div>
               )}
             </TabPanel>
@@ -660,12 +797,9 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
             </TabPanel>
           </Tabs>
         </div>
-
       </div>
     </div>
   );
-}
+};
 
 export default ProductPage;
-
-
