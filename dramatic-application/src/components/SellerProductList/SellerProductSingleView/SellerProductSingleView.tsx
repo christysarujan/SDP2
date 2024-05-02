@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import './SellerProductSingleView.scss'
 import { getProductImages, getProductsByProductId } from '../../../services/apiService';
- 
+
 interface ProductData {
+    discount: number;
     productId: string;
     sellerEmail: string;
     name: string;
@@ -12,11 +13,13 @@ interface ProductData {
     productImages: { productImageUrl: string }[];
     variations: { color: string; sizeQuantities: { size: string; qty: number }[] }[];
     productDescription: string;
+    newPrice: any;
 }
 
 const SellerProductSingleView = ({ productId }: { productId: any; }) => {
     const [pId, setPId] = useState<string | null>('');
     const [productData, setProductData] = useState<ProductData | null>(null);
+    const [discount, setDiscount] = useState<number>(0);
 
     /*     useEffect(() => {
             setPId(productId);
@@ -45,7 +48,7 @@ const SellerProductSingleView = ({ productId }: { productId: any; }) => {
             const imageData = await getProductImages(productName);
             const blob = new Blob([imageData], { type: "image/png" });
             const imageUrl = URL.createObjectURL(blob);
-            
+
             setProductImg(prevState => imageUrl);
             return imageUrl;
         } catch (error) {
@@ -55,8 +58,14 @@ const SellerProductSingleView = ({ productId }: { productId: any; }) => {
     };
 
 
+    // const handleDiscountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const discountValue = parseFloat(event.target.value);
+    //     setDiscount(discountValue);
+    // };   
 
-
+    const calculateDiscountedPrice = (priceX: number, discount: number) => {
+        return priceX - (priceX * (discount / 100));
+    };
 
     return (
         <div className='single-product-main'>
@@ -65,12 +74,12 @@ const SellerProductSingleView = ({ productId }: { productId: any; }) => {
                     <div className="main-img" style={{ backgroundImage: `url(${productImg})` }} >
                     </div>
                 </div>
-                {/* <div className="sub-images">
+                <div className="sub-images">
                     <div className="sub-img1"></div>
                     <div className="sub-img2"></div>
                     <div className="sub-img3"></div>
                     <div className="sub-img4"></div>
-                </div> */}
+                </div>
             </div>
             <div className="product-content">
                 {productData ?
@@ -81,7 +90,23 @@ const SellerProductSingleView = ({ productId }: { productId: any; }) => {
                                 <p>Product ID : {productData.productId}</p>
                             </div>
                             <div className="product-body">
-                                <h6>LKR {productData.price}</h6>
+                                <p>
+                                    Price: {
+                                        productData.discount === 0 ? (
+                                            `${productData.price} Rs.`
+                                        ) : (
+                                            <>
+                                                <span style={{ textDecoration: 'line-through' }}>{productData.price} Rs.</span>{' '}
+
+                                                <span style={{ color: 'green' }}>({((productData.discount * 100).toFixed(0))}% off)</span>{' '}
+
+                                                <strong style={{ color: 'red' }}>{productData.newPrice} Rs.</strong>{' '}
+
+                                            </>
+                                        )
+                                    }
+                                </p>
+
                                 <p>{productData.productDescription}</p>
                             </div>
                             <div className="product-tbl">

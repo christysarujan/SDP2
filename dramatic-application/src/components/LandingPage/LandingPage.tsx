@@ -91,17 +91,17 @@ const LandingPage = () => {
                         </div>
                         <div className="col-md-3">
                             <h5 className='sub-title'>Rich Experience</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae sem at leo ultricies </p>
+                            <p>"Experience the epitome of luxury and convenience with our unparalleled range of products. With years of industry expertise, we have perfected the art of delivering premium quality and exceptional service to our customers. </p>
                             <p className='read'>Read more {/* <ArrowRight /> */}</p>
                         </div>
                         <div className="col-md-3">
                             <h5 className='sub-title'>Affordable prices</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae sem at leo ultricies </p>
+                            <p>Discover unbeatable value without compromising on quality. Our commitment to offering affordable prices ensures that you can enjoy premium products without breaking the bank.  </p>
                             <p className='read'>Read more {/* <ArrowRight /> */}</p>
                         </div>
                         <div className="col-md-3">
                             <h5 className='sub-title'>Many choices</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae sem at leo ultricies </p>
+                            <p>Indulge in a world of endless possibilities with our diverse selection of products. From classic essentials to cutting-edge innovations, we offer a wide array of choices to cater to every taste and preference.  </p>
                             <p className='read'>Read more {/* <ArrowRight /> */}</p>
                         </div>
                     </div>

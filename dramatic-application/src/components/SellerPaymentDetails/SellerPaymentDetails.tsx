@@ -34,6 +34,7 @@ const SellerPaymentDetails = () => {
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [editFormStatus, setEditFormStatus] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [editInitialValues, setEditInitialValues] = useState<any>(null); // New state for initial values when editing
 
   useEffect(() => {
     getPaymentDetails();
@@ -42,7 +43,6 @@ const SellerPaymentDetails = () => {
   const editPaymentInfoToggle = () => {
     setEditFormStatus((prev) => !prev);
   };
-
 
   const handleToggle = () => {
     setEditPaymentDetails((prev) => !prev);
@@ -116,10 +116,11 @@ const SellerPaymentDetails = () => {
       if (paymentInfo) {
         console.log('Have payment Info');
         setPaymentDetailsStatus(false);
+        setEditInitialValues(paymentInfo); // Set initial values for editing
       } else {
         console.log('Dont Have payment Info');
         setPaymentDetailsStatus(true);
-
+        setEditInitialValues(null); // Clear initial values for editing
       }
     } catch (error) { }
   };
@@ -130,12 +131,8 @@ const SellerPaymentDetails = () => {
       const bank = e.target.value
       setBankType(bank)
       console.log(bank);
-      // const userAddress = await findUsersAddressByType(email, addressType)
-      // setAddresses(prevState => userAddress);
-      // setAddresses(userAddress);
     } catch (error) {
       console.error('Error fetching data:', error);
-
     }
   };
 
@@ -147,13 +144,9 @@ const SellerPaymentDetails = () => {
     const email = sessionStorage.getItem('email');
     paymentDataDelete(email)
       .then(() => {
-        // Remove the deleted item from the paymentDetails state
         setPaymentDetails(null);
-        // Optionally, want to reset editFormStatus as well
         setEditFormStatus(false);
-        // Close the delete modal
         toggleDeleteModal();
-        // Reload the page
         window.location.reload();
       })
       .catch((error) => {
@@ -164,7 +157,6 @@ const SellerPaymentDetails = () => {
 
   return (
     <div className="seller-payment-main">
-
       {showDeleteModal && (
         <div className="delete-modal show-delete-modal">
           <div className="modal-content">
@@ -177,15 +169,13 @@ const SellerPaymentDetails = () => {
         </div>
       )}
 
-
       {paymentDetailsStatus ? (
-        /*  */
         <div className="seller-payment-main">
           {addPaymentDetails ? (
             <div className="seller-payment-default">
               <div className="img"></div>
               <p className="msg">It seems like you didn't add payment information yet.</p>
-              <button className='create-btn' onClick={addPaymentInfoToggle} >Add New</button>
+              <button className='create-btn' onClick={addPaymentInfoToggle}>Add New</button>
             </div>
           ) : (
             <div className="payment-form">
@@ -205,9 +195,9 @@ const SellerPaymentDetails = () => {
               <hr />
               {bankType === 'paypal' ? (
                 <Formik
-                  initialValues={paypalFormInitialValues}
+                  initialValues={editFormStatus ? editInitialValues : paypalFormInitialValues}
                   validationSchema={paypalFormValidationSchema}
-                  onSubmit={paypalFormSubmit}
+                  onSubmit={editFormStatus ? paypalEditFormSubmit : paypalFormSubmit}
                   key="paypalForm"
                 >
                   {({ values, handleChange, handleBlur, touched, errors }) => (
@@ -258,8 +248,6 @@ const SellerPaymentDetails = () => {
                         />
                       </div>
 
-
-
                       <div className="field-container">
                         <div className="buttons">
                           <button
@@ -283,9 +271,9 @@ const SellerPaymentDetails = () => {
                 </Formik>
               ) : (
                 <Formik
-                  initialValues={bankFormInitialValues}
+                  initialValues={editFormStatus ? editInitialValues : bankFormInitialValues}
                   validationSchema={bankFormValidationSchema}
-                  onSubmit={bankFormSubmit}
+                  onSubmit={editFormStatus ? bankEditFormSubmit : bankFormSubmit}
                   key="bankForm"
                 >
                   {({ values, handleChange, handleBlur, touched, errors }) => (
@@ -372,9 +360,6 @@ const SellerPaymentDetails = () => {
                   )}
                 </Formik>
               )}
-
-
-
             </div>
           )}
         </div>
@@ -403,6 +388,7 @@ const SellerPaymentDetails = () => {
                   </div>
                 }
               </div>
+              
               <div className="edit-sum-btn">
                 <button className="btn btn-success" onClick={() => editPaymentInfoToggle()}><i className="bi bi-pencil-square"></i></button>
               </div>
@@ -431,9 +417,9 @@ const SellerPaymentDetails = () => {
                   <hr />
                   {bankType === 'paypal' ? (
                     <Formik
-                      initialValues={paypalFormInitialValues}
+                      initialValues={editFormStatus ? editInitialValues : paypalFormInitialValues}
                       validationSchema={paypalFormValidationSchema}
-                      onSubmit={paypalEditFormSubmit}
+                      onSubmit={editFormStatus ? paypalEditFormSubmit : paypalFormSubmit}
                       key="paypalFormEdit"
                     >
                       {({ values, handleChange, handleBlur, touched, errors }) => (
@@ -484,8 +470,6 @@ const SellerPaymentDetails = () => {
                             />
                           </div>
 
-
-
                           <div className="field-container">
                             <div className="buttons">
                               <button
@@ -509,9 +493,9 @@ const SellerPaymentDetails = () => {
                     </Formik>
                   ) : (
                     <Formik
-                      initialValues={bankFormInitialValues}
+                      initialValues={editFormStatus ? editInitialValues : bankFormInitialValues}
                       validationSchema={bankFormValidationSchema}
-                      onSubmit={bankEditFormSubmit}
+                      onSubmit={editFormStatus ? bankEditFormSubmit : bankFormSubmit}
                       key="bankFormEdit"
                     >
                       {({ values, handleChange, handleBlur, touched, errors }) => (
@@ -598,19 +582,11 @@ const SellerPaymentDetails = () => {
                       )}
                     </Formik>
                   )}
-
-
-
                 </div>
               </div>
             }
-
-
           </div>)}
-
-
     </div>
-
   );
 };
 
