@@ -46,6 +46,7 @@ const SellerProductEdit = ({ productId, onClose }: { productId: string | null; o
     setProductData(product);
     setPtId(id);
     console.log('Product data', product);
+  
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,13 +76,21 @@ const SellerProductEdit = ({ productId, onClose }: { productId: string | null; o
   
       productDataForm.append("variation", JSON.stringify(values.variation));
   
-      if (selectedFiles) {
-       // Append each selected file to the FormData object
+  
+          // Add existing product images if available
+    if (productData && productData.productImages.length > 0) {
+      productData.productImages.forEach((image) => {
+        productDataForm.append('productImages', image.productImageUrl);
+      });
+    }
+
+    // Add newly selected images
+    if (selectedFiles) {
       selectedFiles.forEach((file) => {
         productDataForm.append('productImages', file);
       });
-      }
-  
+    }
+
       const updatedProduct = await editProduct(productDataForm, pId);
   
       if (updatedProduct) {
@@ -106,6 +115,13 @@ const SellerProductEdit = ({ productId, onClose }: { productId: string | null; o
           <p className="update-product">Update Product : {productId}</p>
           <p>Pname : {productData?.name}</p>
           <hr />
+
+          {/* <div className="existing-images">
+            <p>Existing Images:</p>
+            {productData.productImages.map((image, index) => (
+              <img key={index} src={image.productImageUrl} alt={`Product Image ${index + 1}`} />
+            ))}
+          </div> */}
 
           <div className="new-item-form">
             <Formik
@@ -195,12 +211,12 @@ const SellerProductEdit = ({ productId, onClose }: { productId: string | null; o
                             multiple // Allow multiple files to be selected
                           />
                         </label>
-                        <div className="fileName">
-                          {selectedFile && (
-                            <div>
-                              <span className="file-name">{selectedFile.name}</span>
+                         <div className="fileName">
+                          {selectedFiles.length === 0 && productData.productImages.map((image, index) => (
+                            <div key={index}>
+                              <span className="file-name">{image.productImageUrl}</span>
                             </div>
-                          )}
+                          ))}
                         </div>
                       </div>
                     </div>

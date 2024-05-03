@@ -136,7 +136,7 @@ const MyStore = () => {
       ) : (
         <div className='store-main'>
           <div className="header">
-            <p>Update Store Details</p>
+            <p>Update Store </p>
             <hr />
           </div>
           <div className="store-form">
@@ -191,7 +191,7 @@ const MyStore = () => {
                   <div className="field-container">
                     <label>Upload Store Logo:</label>
                     <input type="file" onChange={handleFileChange} />
-                    {imageSrc && <img src={imageSrc} alt="Store Logo" style={{ maxWidth: '100px', marginTop: '10px',marginLeft:'10px', marginBottom: '20px'}} />}
+                    {imageSrc && <img src={imageSrc} alt="Store Logo" style={{ maxWidth: '100px', marginTop: '10px' }} />}
                   </div>
                   <div className="field-container">
                   <button type="submit" disabled={loading} className={loading ? 'btn btn-disabled' : 'btn btn-success'}>

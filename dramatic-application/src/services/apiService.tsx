@@ -8,8 +8,8 @@ import Feedback from "../components/FeedBack/FeedBack";
 import CostData from "../components/Cart/costData";
 import OrderData from "../components/OrderProduct/orderData";
 import CostCalc from "../components/OrderProduct/costCalc";
-
-
+ 
+ 
 const baseurl = "http://localhost:8080/api/v1";
 const storeBaseurl = "http://localhost:8082/api/v1/seller-store-management-service";
 const productBaseurl = "http://localhost:8083/api/v1/product-service";
@@ -20,8 +20,8 @@ const notificationBaseurl = "http://localhost:8087/api/v1/notification-service";
 const costBaseUrl = "http://localhost:8086/api/v1/costing-service";
 const authBaseUrl = "http://localhost:8080/api/v1/auth-service";
 const orderBaseUrl = "http://localhost:8091/api/v1/order-management-service";
-
-
+ 
+ 
 const userRegistration = async (userData: object) => {
   try {
     const response = await axios.post(
@@ -40,7 +40,7 @@ const userRegistration = async (userData: object) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const userLogin = async (loginData: any) => {
   try {
     const response = await axios.post(
@@ -101,7 +101,7 @@ const changePassword = async (email: any, userData: object) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const findUserByEmail = async (email: any) => {
   try {
     const response = await axiosInstance.get(
@@ -110,11 +110,11 @@ const findUserByEmail = async (email: any) => {
     //  console.log("I am inside find User" , response.data)
     return response.data;
   } catch (error: any) {
-
+ 
     //console.error(error.response.data);
   }
 };
-
+ 
 const getProfileImage = async (email: any) => {
   try {
     const response = await axiosInstance.get(
@@ -126,8 +126,8 @@ const getProfileImage = async (email: any) => {
     // console.error(error.response.data);
   }
 };
-
-
+ 
+ 
 // Get Product Image
 const getProductImage = async (imagename: any) => {
   try {
@@ -140,9 +140,9 @@ const getProductImage = async (imagename: any) => {
     // console.error(error.response.data);
   }
 };
-
-
-
+ 
+ 
+ 
 const addUserAddress = async (email: any, addressData: object) => {
   try {
     const response = await axiosInstance.post(
@@ -180,7 +180,7 @@ const updateUser = async (email: any, userData: object) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const findUsersAddressByType = async (email: any, addressType: any) => {
   try {
     const response = await axiosInstance.get(
@@ -205,7 +205,7 @@ const sellerAccountStateChange = async (id: any, action: string) => {
   try {
     const response = await axiosInstance.put(
       `${baseurl}/auth-service/users/seller/${id}/${action}`,
-
+ 
     );
     toast.success('Account Status Changed Successfully');
     console.log(response)
@@ -215,9 +215,9 @@ const sellerAccountStateChange = async (id: any, action: string) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 /* Store Management */
-
+ 
 const sellerStoreRegistration = async (storeData: object) => {
   try {
     const response = await axiosInstance.post(
@@ -236,7 +236,7 @@ const sellerStoreRegistration = async (storeData: object) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const findStoreByEmail = async (email: any) => {
   try {
     const response = await axiosInstance.get(
@@ -247,10 +247,10 @@ const findStoreByEmail = async (email: any) => {
     // console.error(error.response.data);
   }
 };
-
-
+ 
+ 
 //SELLER MANAGEMENT
-
+ 
 const getAllSellers = async () => {
   try {
     const response = await axiosInstance.get(
@@ -261,8 +261,8 @@ const getAllSellers = async () => {
     console.error(error.response.data);
   }
 };
-
-
+ 
+ 
  const suspendSellerByEmail = async (id: string, reason: string) => {
   try {
     const response = await axiosInstance.put(`${authBaseUrl}/users/seller/${id}/suspend`,
@@ -273,7 +273,7 @@ const getAllSellers = async () => {
     throw new Error('Failed to suspend seller by email');
   }
 };
-
+ 
 const activateSellerByEmail = async (id: string, reason: string) => {
   try {
     const response = await axiosInstance.put(`${authBaseUrl}/users/seller/${id}/active`,{ reason });
@@ -283,7 +283,7 @@ const activateSellerByEmail = async (id: string, reason: string) => {
     throw new Error('Failed to activate seller by email');
   }
 };
-
+ 
 const getSuspendedSellers = async () => {
   try {
     const response = await axiosInstance.get(
@@ -295,21 +295,21 @@ const getSuspendedSellers = async () => {
     toast.error('Failed to fetch suspended sellers');
   }
 };
-
+ 
 const getActiveSellers = async () => {
   try {
     const response = await axiosInstance.get(
       `${authBaseUrl}/users/active/sellers`
     );
-    
+   
     return response.data;
   } catch (error: any) {
     console.error(error.response.data);
     toast.error('Failed to fetch active sellers');
   }
 };
-
-
+ 
+ 
 const getStoreImage = async (email: any) => {
   try {
     const response = await axiosInstance.get(
@@ -321,7 +321,7 @@ const getStoreImage = async (email: any) => {
     // console.error(error.response.data);
   }
 };
-
+ 
 const sellerStoreEdit  = async (formData: FormData) => {
   try {
     const response = await axiosInstance.put(
@@ -340,7 +340,7 @@ const sellerStoreEdit  = async (formData: FormData) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const getSellerPaymentInfoByEmail = async (email: any) => {
   try {
     const response = await axiosInstance.get(
@@ -351,11 +351,11 @@ const getSellerPaymentInfoByEmail = async (email: any) => {
     // console.error(error.response.data);
   }
 };
-
+ 
 const paymentDataSubmit = async (email: any, bankType: any, data: any) => {
   try {
     const response = await axiosInstance.post(
-      `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}?payment-method=${bankType}`,
+      `${storeBaseurl}/seller-payment-details/${email}?payment-method=${bankType}`,
       data
     );
     toast.success("Payment Details Added Successfully");
@@ -365,12 +365,12 @@ const paymentDataSubmit = async (email: any, bankType: any, data: any) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const paymentDataEdit = async (email: any, bankType: any, data: any) => {
   try {
-
+ 
     const response = await axiosInstance.put(
-      `${storeBaseurl}/seller-store-management-service/seller-payment-details/update/${email}?payment-method=${bankType}`,
+      `${storeBaseurl}/seller-payment-details/update/${email}?payment-method=${bankType}`,
       data
     );
     toast.success("Payment Details Edit Successfully");
@@ -380,12 +380,12 @@ const paymentDataEdit = async (email: any, bankType: any, data: any) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const paymentDataDelete = async (email: any) => {
   try {
     const response = await axiosInstance.delete(
-      `${storeBaseurl}/seller-store-management-service/seller-payment-details/${email}`
-      
+      `${storeBaseurl}/seller-payment-details/${email}`
+     
     );
     toast.success("Payment Details Deleted Successfully");
     return response.data;
@@ -394,7 +394,7 @@ const paymentDataDelete = async (email: any) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const getPendingStoreApprovals = async () => {
   try {
     const response = await axiosInstance.get(
@@ -415,7 +415,7 @@ const getActiveStoreList = async () => {
     // console.error(error.response.data);
   }
 };
-
+ 
 const getRejectedStoreList = async () => {
   try {
     const response = await axiosInstance.get(
@@ -426,8 +426,8 @@ const getRejectedStoreList = async () => {
     // console.error(error.response.data);
   }
 };
-
-
+ 
+ 
 const  rejectStoreRequest = async (email: any, rejectionReason:String) => {
   try {
     const response = await axiosInstance.put(
@@ -463,9 +463,9 @@ const approveStoreRequest = async (email: any) => {
     console.error(error.response.data);
   }
 };
-
+ 
 /* SELLER MANAGEMENT */
-
+ 
 export const suspendSeller = async (sellerId: string, reason: string) => {
   try {
     const response = await axios.put(`${storeBaseurl}/stores/suspend/${sellerId}`, null, {
@@ -476,10 +476,10 @@ export const suspendSeller = async (sellerId: string, reason: string) => {
     throw new Error('Failed to suspend seller');
   }
 };
-
-
-
-
+ 
+ 
+ 
+ 
 /* Product Management */
 const addProduct = async (productData: object) => {
   try {
@@ -499,7 +499,7 @@ const addProduct = async (productData: object) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const getProductsBySellerEmail = async (email: any) => {
   try {
     const response = await axiosInstance.get(
@@ -510,7 +510,7 @@ const getProductsBySellerEmail = async (email: any) => {
     // console.error(error.response.data);
   }
 };
-
+ 
 const getProductsByCategory = async (category: any) => {
   try {
     const response = await axiosInstance.get(
@@ -522,7 +522,7 @@ const getProductsByCategory = async (category: any) => {
     // console.error(error.response.data);
   }
 };
-
+ 
 const getProductImages = async (name: any) => {
   try {
     const response = await axiosInstance.get(
@@ -534,7 +534,7 @@ const getProductImages = async (name: any) => {
     // console.error(error.response.data);
   }
 };
-
+ 
 const deleteProduct = async (id: any) => {
   try {
     const response = await axiosInstance.delete(
@@ -546,7 +546,7 @@ const deleteProduct = async (id: any) => {
     console.error(error.response.data);
   }
 };
-
+ 
 const getProductsByProductId = async (id: string) => {
   try {
     const response = await axiosInstance.get(
@@ -557,7 +557,7 @@ const getProductsByProductId = async (id: string) => {
     console.error(error.response.data);
   }
 };
-
+ 
 const editProduct = async (productData: object, id: string) => {
   try {
     const response = await axiosInstance.put(
@@ -595,8 +595,8 @@ const updateColorQuantity = async (data: object, id: string) => {
     toast.error(error.response.data);
   }
 };
-
-
+ 
+ 
 const getAllProducts = async () => {
   try {
     const response = await axiosInstance.get(
@@ -606,13 +606,13 @@ const getAllProducts = async () => {
     // console.error(error.response.data);
   }
 };
-
-
+ 
+ 
 const productAccountStateChange = async (id: any, action: string) => {
   try {
     const response = await axiosInstance.put(
       `${baseurl}/auth-service/users/seller/${id}/${action}`,
-
+ 
     );
     toast.success('Account Status Changed Successfully');
     console.log(response)
@@ -622,7 +622,7 @@ const productAccountStateChange = async (id: any, action: string) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const unpublishProduct = async (id: string, reason: string) => {
   try {
     const response = await axiosInstance.put(
@@ -636,17 +636,17 @@ const unpublishProduct = async (id: string, reason: string) => {
     );
     toast.success(response.data);
     return response.data;
-
+ 
   } catch (error) {
     throw error;
   }
 };
-
+ 
 const applyDiscount = async (id: any, discount: any) => {
   try {
     const response = await axiosInstance.post(
       `${productBaseurl}/products/discount/${id}/${discount}`,
-
+ 
     );
     toast.success("Discont Added Successfully");
     return response.data;
@@ -655,12 +655,12 @@ const applyDiscount = async (id: any, discount: any) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 const updateDiscount = async (id: any, discount: any) => {
   try {
     const response = await axiosInstance.put(
       `${productBaseurl}/products/updateDiscount/${id}/${discount}`,
-
+ 
     );
     toast.success("Discont Updated Successfully");
     return response.data;
@@ -669,9 +669,9 @@ const updateDiscount = async (id: any, discount: any) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 // Cart Management
-
+ 
 const addToCart = async (cartData: CartData): Promise<any> => {
   try {
     const response = await axiosInstance.post(
@@ -699,12 +699,12 @@ const addToCart = async (cartData: CartData): Promise<any> => {
     }
   }
 };
-
+ 
 const updateCartQuantity = async (id: string, cartQuantityData: CartQuantityData) => {
   try {
     const response = await axiosInstance.put(
       `${cartBaseurl}/cart/update-quantity/${id}`,
-
+ 
       cartQuantityData,
       {
         headers: {
@@ -719,9 +719,9 @@ const updateCartQuantity = async (id: string, cartQuantityData: CartQuantityData
     toast.error(error.response.data);
   }
 };
-
-
-
+ 
+ 
+ 
 const getCartsByUserId = async (userId: any) => {
   try {
     const response = await axiosInstance.get(
@@ -733,7 +733,7 @@ const getCartsByUserId = async (userId: any) => {
     // console.error(error.response.data);
   }
 };
-
+ 
 const getCartById = async (cartId: any) => {
   try {
     const response = await axiosInstance.get(
@@ -745,7 +745,7 @@ const getCartById = async (cartId: any) => {
     // console.error(error.response.data);
   }
 };
-
+ 
 const deleteCartByUserIdAndCartId = async (userId: any, cartId: any) => {
   try {
     const response = await axiosInstance.delete(
@@ -757,10 +757,10 @@ const deleteCartByUserIdAndCartId = async (userId: any, cartId: any) => {
     console.error(error.response.data);
   }
 };
-
-
+ 
+ 
 //// WishList Management
-
+ 
 const addToWishList = async (cartData: CartData): Promise<any> => {
   try {
     const response = await axiosInstance.post(
@@ -789,7 +789,7 @@ const addToWishList = async (cartData: CartData): Promise<any> => {
     }
   }
 };
-
+ 
 const getWishListByUserId = async (userId: any) => {
   try {
     const response = await axiosInstance.get(
@@ -801,7 +801,7 @@ const getWishListByUserId = async (userId: any) => {
     // console.error(error.response.data);
   }
 };
-
+ 
 const deleteWishByWishId = async (wishId: any) => {
   try {
     const response = await axiosInstance.delete(
@@ -813,9 +813,9 @@ const deleteWishByWishId = async (wishId: any) => {
     console.error(error.response.data);
   }
 };
-
+ 
 // Review Management
-
+ 
 const addToReviewFeedback = async (feedback: Feedback, files: File[]): Promise<any> => {
   try {
     const formData = new FormData();
@@ -823,18 +823,18 @@ const addToReviewFeedback = async (feedback: Feedback, files: File[]): Promise<a
     formData.append('productId', feedback.productId);
     formData.append('comment', feedback.comment);
     formData.append('rating', feedback.rating.toString());
-
+ 
     // Append each selected file to the FormData object
     files.forEach((file) => {
       formData.append('uploadImages', file);
     });
-
+ 
     const response = await axiosInstance.post(`${feedbackBaseurl}/feedback/addFeedback`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data', // Change content type to multipart form data
       },
     });
-
+ 
     toast.success('Review added Successfully');
     return response.data;
   } catch (error: unknown) {
@@ -852,7 +852,7 @@ const addToReviewFeedback = async (feedback: Feedback, files: File[]): Promise<a
     }
   }
 };
-
+ 
 const getFeedBackById = async (id: string) => {
   try {
     const response = await axiosInstance.get(
@@ -863,8 +863,8 @@ const getFeedBackById = async (id: string) => {
     console.error(error.response.data);
   }
 };
-
-
+ 
+ 
 // Get Feedback Image
 const getFeedBackImage = async (imagename: any) => {
   try {
@@ -877,10 +877,10 @@ const getFeedBackImage = async (imagename: any) => {
     // console.error(error.response.data);
   }
 };
-
-
+ 
+ 
 /*Cost Management*/
-
+ 
 const calculateCost = async (costData: CostData): Promise<any> => {
   try {
     const response = await axiosInstance.post(
@@ -908,8 +908,8 @@ const calculateCost = async (costData: CostData): Promise<any> => {
     }
   }
 };
-
-
+ 
+ 
 const calculateCostByOrderIdandProductId = async (costCalc: CostCalc): Promise<any> => {
   try {
     const response = await axiosInstance.post(
@@ -937,9 +937,9 @@ const calculateCostByOrderIdandProductId = async (costCalc: CostCalc): Promise<a
     }
   }
 };
-
-
-
+ 
+ 
+ 
 const getcostById = async (costId: string) => {
   try {
     const response = await axiosInstance.get(
@@ -951,9 +951,9 @@ const getcostById = async (costId: string) => {
     throw error;
   }
 };
-
-
-
+ 
+ 
+ 
 const getAllNotificationsBySellerEmail = async (sellerEmail: string) => {
   try {
     const response = await axiosInstance.get(
@@ -966,7 +966,7 @@ const getAllNotificationsBySellerEmail = async (sellerEmail: string) => {
     throw error;
   }
 };
-
+ 
 const updateNotificationStatus = async (notificationId: string) => {
   try {
     const response = await axios.put(
@@ -979,9 +979,9 @@ const updateNotificationStatus = async (notificationId: string) => {
     toast.error(error.response.data);
   }
 };
-
+ 
 // Order Management
-
+ 
 const addOrder = async (orderData: OrderData): Promise<any> => {
   try {
     const response = await axiosInstance.post(
@@ -1009,13 +1009,13 @@ const addOrder = async (orderData: OrderData): Promise<any> => {
     }
   }
 };
-
-
+ 
+ 
 const getOrderById = async (id: string): Promise<any> => {
   try {
     const response = await axiosInstance.get(
       `${orderBaseUrl}/orders/${id}`,
-      
+     
       {
         headers: {
           'Content-Type': 'application/json', // Change content type to JSON
@@ -1038,19 +1038,19 @@ const getOrderById = async (id: string): Promise<any> => {
     }
   }
 };
-
-
+ 
+ 
 const searchByQuery = async(name:string) =>{
-
+ 
   try {
      const response = await axiosInstance.get(`http://localhost:8083/api/v1/product-service/products/search?name=${name}`,    {
     // const response = await axiosInstance.get(`http://localhost:8083/api/v1/product-service/products/women`,    {
       headers: {
-        'Content-Type': 'application/json', 
+        'Content-Type': 'application/json',
       },
     })
     return response.data;
-    
+   
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) { // Check if error is an AxiosError
       const axiosError = error as AxiosError; // Cast error to AxiosError
@@ -1064,12 +1064,10 @@ const searchByQuery = async(name:string) =>{
      // throw error; // Rethrow error to handle it in the component
     }
   }
-
-
+ 
+ 
 }
-
-
-
+ 
 export {
   userRegistration,
   userLogin,
