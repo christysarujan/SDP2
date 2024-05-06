@@ -7,6 +7,28 @@
   background-color: white;
   border-radius: 10px;
 
+  .product-data-table {
+    thead {
+      border-top: 1px solid rgb(201, 201, 201);
+      th {
+        font-size: 12px;
+        text-align: center;
+      }
+    }
+    tbody {
+      td {
+        font-size: 12px;
+        font-weight: 600;
+        vertical-align: middle;
+        text-align: center;
+
+        .actions-tab {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
   // Sub-heading styles
   .sub-headings {
     margin-bottom: 10px;
