@@ -225,6 +225,7 @@ const SellerProductList = () => {
       const products = await getProductsBySellerEmail(email);
       setProducts(products);
       setLoading(false);
+      console.log("seller products", products);
     } catch (error) {
       setLoading(false);
       // Handle error

@@ -511,6 +511,18 @@ const getProductsBySellerEmail = async (email: any) => {
   }
 };
  
+
+const getProductsByAdminEmail = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${productBaseurl}/products`
+    );
+    return response.data;
+  } catch (error: any) {
+    // console.error(error.response.data);
+  }
+}
+
 const getProductsByCategory = async (category: any) => {
   try {
     const response = await axiosInstance.get(
@@ -1131,5 +1143,6 @@ export {
   calculateCostByOrderIdandProductId,
   getOrderById,
   searchByQuery,
-  paymentDataDelete
+  paymentDataDelete,
+  getProductsByAdminEmail
 }
