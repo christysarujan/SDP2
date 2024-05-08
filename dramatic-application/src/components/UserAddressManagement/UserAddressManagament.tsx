@@ -352,7 +352,7 @@ const UserAddressManagement = () => {
                       />
                     </div>
 
-                    {addresses.map((address, index) => {
+                    {addresses?.map((address, index) => {
                       const matchError =
                         address.addressLine01 === values.addressLine01 &&
                         address.addressLine02 === values.addressLine02 &&
