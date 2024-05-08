@@ -261,8 +261,18 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
     setSelectedColor(color);
   };
 
+  // const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setQuantity(parseInt(event.target.value));
+  // };
+
   const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuantity(parseInt(event.target.value));
+    const value = parseInt(event.target.value);
+    if (value <= getMaxAvailableQuantity()) {
+      setQuantity(value);
+    } else {
+      // Notify user that the entered quantity exceeds available quantity
+      toast.error("Selected quantity exceeds available quantity.");
+    }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -307,6 +317,11 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
       return;
     }
 
+    if (quantity > getMaxAvailableQuantity()) {
+      toast.error("Selected quantity exceeds available quantity.");
+      return;
+    }
+
     if (product && selectedColor && selectedSize && userData) {
       const userId = sessionStorage.getItem("userId");
       if (userId !== null) {
@@ -332,6 +347,18 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
         console.error("User ID not found in session storage");
       }
     }
+  };
+
+  const getMaxAvailableQuantity = () => {
+    if (!product || !selectedColor || !selectedSize) return 0;
+    
+    const variation = product.variations?.find(variation => variation.color === selectedColor);
+    if (!variation) return 0;
+  
+    const sizeQty = variation.sizeQuantities.find(sq => sq.size === selectedSize);
+    if (!sizeQty) return 0;
+  
+    return sizeQty.qty;
   };
 
   const addToWishListClicked = async () => {
