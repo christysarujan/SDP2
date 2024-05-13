@@ -15,8 +15,9 @@ function PaymentForm() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    interface OrderItem {
+    interface OrderItemDTO {
         image: string;
+        productId: string;
         productName: string;
         productPrice: number;
         color: string;
@@ -27,7 +28,7 @@ function PaymentForm() {
         orderId: string;
     }
 
-    const orderDetailsArray: OrderItem[] | undefined = location.state?.orderDetailsArray;
+    const orderDetailsArray: OrderItemDTO[] | undefined = location.state?.orderDetailsArray;
 
     let totalPriceSum: number = 0;
 
@@ -35,16 +36,61 @@ function PaymentForm() {
         totalPriceSum = orderDetailsArray.reduce((total, item) => total + item.newFinalTotal, 0);
     }
 
-    useEffect(() => {
-        setAmount(totalPriceSum); // Initialize amount with default value
-        return () => {
-            // Clear state upon component unmount
-            setAmount(0);
-            setCurrency('LKR');
-            setMessage('');
-            setPaymentMade(false);
-        };
-    }, []); // Empty dependency array to run only once on mount
+   
+
+// Payment Delay Processing Using SSE (SERVER SENT EVENT)
+
+const userId = sessionStorage.getItem("userId");
+
+console.log("User Id : " , userId)
+
+useEffect(() => {
+  const eventSource = new EventSource(`http://localhost:8083/api/v1/product-service/products/sse/${userId}`);
+ 
+
+  eventSource.onopen = () => {
+    console.log("SSE connection opened");
+  };
+
+  eventSource.onerror = (error) => {
+    console.error("SSE error:", error);
+  };
+
+  const paymentStatusListener = (event: { data: any; }) => {
+    console.log("Payment status received:", event.data);
+    // Display a message box
+    sessionStorage.removeItem("orderDetails");
+    alert("Payment status received: " + event.data);
+
+     // Navigate to root URL
+     window.location.href = "/";
+  };
+
+  eventSource.addEventListener("paymentStatus", paymentStatusListener);
+
+  return () => {
+    eventSource.removeEventListener("paymentStatus", paymentStatusListener);
+    eventSource.close();
+    console.log("SSE connection closed");
+  };
+}, [userId]); // Close a
+
+///////////END OF SERVER SENT EVENT/////////////////////
+
+
+/// PAYMENT PPROCESSING USING STRIPE
+
+
+useEffect(() => {
+    setAmount(totalPriceSum); // Initialize amount with default value
+    return () => {
+        // Clear state upon component unmount
+        setAmount(0);
+        setCurrency('LKR');
+        setMessage('');
+        setPaymentMade(false);
+    };
+}, []); // Empty dependency array to run only once on mount
 
     const handlePopupClose = () => {
         setShowPopup(false);
@@ -82,8 +128,10 @@ function PaymentForm() {
                 return;
             }
 
+            console.log("Order Details Array.." , orderDetailsArray)
+
             const response = await axiosInstance.post('http://localhost:8084/api/v1/payment-management-service/payment/create-payment-intent', {
-                orderIds: orderDetailsArray?.map(order => order.orderId),
+                OrderItems: orderDetailsArray,
                 amount: totalPriceSum,
                 tokenId: token.id,
                 currency,

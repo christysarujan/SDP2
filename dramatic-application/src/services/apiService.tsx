@@ -681,7 +681,41 @@ const updateDiscount = async (id: any, discount: any) => {
     toast.error(error.response.data);
   }
 };
+<<<<<<< Updated upstream
  
+=======
+
+const updateProductQuantity = async (productData: any): Promise<any> => {
+  try {
+    const response = await axiosInstance.put(
+      `${productBaseurl}/products/updateProductQuantity`,
+      productData,
+      {
+        headers: {
+          'Content-Type': 'application/json', // Change content type to JSON
+        },
+      }
+    );
+    toast.success(response.data);
+    return response.data;
+  } catch (error: unknown) { // Specify type annotation for 'error'
+    const axiosError = error as AxiosError | undefined;
+    if (axiosError?.response?.data) {
+      const responseData = axiosError.response.data;
+      if (typeof responseData === 'string') {
+        toast.error(responseData);
+      } else {
+        toast.error(JSON.stringify(responseData));
+      }
+      return responseData; // Return the response data in case of error
+    } else {
+      // Handle other types of errors
+      console.error(error);
+    }
+  }
+};
+
+>>>>>>> Stashed changes
 // Cart Management
  
 const addToCart = async (cartData: CartData): Promise<any> => {
@@ -1144,5 +1178,9 @@ export {
   getOrderById,
   searchByQuery,
   paymentDataDelete,
+<<<<<<< Updated upstream
   getProductsByAdminEmail
+=======
+  updateProductQuantity
+>>>>>>> Stashed changes
 }

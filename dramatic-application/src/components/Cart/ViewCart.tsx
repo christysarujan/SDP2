@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getCartsByUserId, updateCartQuantity, deleteCartByUserIdAndCartId, getProductsByProductId, getProductImage, addOrder, calculateCostByOrderIdandProductId, getOrderById, getcostById } from '../../services/apiService';
+import { getCartsByUserId, updateCartQuantity, deleteCartByUserIdAndCartId, getProductsByProductId, getProductImage, addOrder, calculateCostByOrderIdandProductId, getOrderById, getcostById, updateProductQuantity } from '../../services/apiService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import './ViewCart.scss';
@@ -191,6 +191,26 @@ function ViewCartPage() {
 
         console.log("Received Object...", receivedOrderObject)
 
+        var responseupdateProductQuantity;
+
+        try {
+          responseupdateProductQuantity = await updateProductQuantity({
+            productId: item.productId,
+            color: item.color,
+            size: item.size,
+            quantity: item.quantity,
+            orderId: receivedOrderObject.id,
+            userId: sessionStorage.getItem("userId") || null,
+          });
+        
+          // Handle the response here
+          console.log("Update response:", responseupdateProductQuantity);
+        } catch (error) {
+          // Handle errors here
+          console.error("Error updating product quantity:", error);
+        }
+        
+
         var deliveryCharge = receivedOrderObject.deliveryChargeAmount;
 
         // Calculate cost for the order
@@ -231,7 +251,9 @@ function ViewCartPage() {
 
         // Push order details for the current item to the array 
         // product?.newPrice || product?.price || null,
-        orderDetailsArray.push({
+        if(responseupdateProductQuantity === "outofstock"){
+
+          orderDetailsArray.push({
           productId: item.productId,
           productName: item.productDetails?.name,
           productPrice: item.productDetails?.newPrice || item.productDetails?.price || null,
@@ -239,11 +261,32 @@ function ViewCartPage() {
           size: item.size,
           quantity: item.quantity,
           image: item.image,
+          newFinalTotal: 0,
+          deliveryCharge: 0,
+          orderId : "outofstock"
+  
+          });
+
+
+        } else {
+
+        orderDetailsArray.push({
+          
+          productId: item.productId,
+          productName: item.productDetails?.name,
+          productPrice: item.productDetails?.newPrice ||       item.productDetails?.price || null,
+          color: item.color,
+          size: item.size,
+          quantity: item.quantity,
+          image: item.image,
           newFinalTotal: costDetails.finalTotal,
           deliveryCharge: deliveryCharge,
           orderId : receivedOrderObject.id
-          
+
         });
+
+      }
+
       }
 
       sessionStorage.setItem("orderDetails", JSON.stringify(orderDetailsArray));
