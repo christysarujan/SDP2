@@ -1,36 +1,3 @@
-<<<<<<< Updated upstream
-import React, { useState, useEffect } from "react";
-import "./ProductPage.scss";
-import {
-  getProductsByProductId,
-  getProductImage,
-  findStoreByEmail,
-  addToCart,
-  getCartsByUserId,
-  addToWishList,
-  addToReviewFeedback,
-  getFeedBackById,
-  getFeedBackImage,
-  calculateCost,
-  getCartById,
-  getcostById,
-  addOrder,
-  calculateCostByOrderIdandProductId,
-  getOrderById,
-} from "../../../services/apiService";
-import ReactImageMagnify from "react-image-magnify";
-import { useCart } from "../../Cart/CartContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHeart,
-  faArrowLeft,
-  faArrowRight,
-} from "@fortawesome/free-solid-svg-icons"; // Import arrow icons
-import Rating from "react-rating-stars-component";
-import "react-tabs/style/react-tabs.scss";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { Link, useNavigate } from "react-router-dom";
-=======
 import React, { useState, useEffect } from 'react';
 import './ProductPage.scss';
 import { getProductsByProductId, getProductImage, findStoreByEmail, addToCart, getCartsByUserId, addToWishList, addToReviewFeedback, getFeedBackById, getFeedBackImage, calculateCost, getCartById, getcostById, addOrder, calculateCostByOrderIdandProductId, getOrderById, updateProductQuantity } from '../../../services/apiService';
@@ -42,7 +9,6 @@ import Rating from 'react-rating-stars-component';
 import 'react-tabs/style/react-tabs.scss';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Link, useNavigate } from 'react-router-dom';
->>>>>>> Stashed changes
 import { toast } from "react-toastify";
 
 interface Product {
@@ -467,8 +433,6 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
 
       var deliveryCharge = receivedOrderObject.deliveryChargeAmount;
 
-<<<<<<< Updated upstream
-=======
       var responseupdateProductQuantity;
 
       try {
@@ -489,7 +453,6 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
       }
       
   
->>>>>>> Stashed changes
       await calculateCostByOrderIdandProductId({
         productId: props.productId,
         orderId: receivedOrderObject.id,
@@ -562,14 +525,11 @@ const ProductPage: React.FC<ProductPageProps> = (props) => {
           deliveryCharge: deliveryCharge,
           orderId: receivedOrderObject.id,
         });
-<<<<<<< Updated upstream
-=======
 
       }
          
       
       
->>>>>>> Stashed changes
       }
 
       // navigate(`/orderproduct/${props.productId}`, {
