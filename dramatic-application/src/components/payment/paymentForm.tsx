@@ -136,10 +136,7 @@ useEffect(() => {
                 tokenId: token.id,
                 currency,
             }, {
-                headers: {
-                    Authorization: 'Bearer sk_test_51P18p1IDcLWdvLLXcFaCdKAxk3G7wx8X4fLbVMFOXRnkAn9jY0ieskYm6tdqJIzWSybHOwqcYh8k3sj5gv6a7CqO00Zh1gJNek',
-                    'Content-Type': 'application/json'
-                }
+                
             });
 
             if (response && response.data) {
